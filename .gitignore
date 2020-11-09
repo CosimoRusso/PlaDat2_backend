@@ -30,3 +30,7 @@ node_modules/
 .env
 
 .DS_Store
+
+# IDE folders
+.idea
+.vscode
