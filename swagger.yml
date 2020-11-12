@@ -45,42 +45,7 @@ paths:
                 type: "string"
             example:
               msg: "Internal Server error."
-  /api/company/register:
-    post:
-      tags:
-        - "company"
-      summary: "Creates company"
-      description: "..."
-      # nice to have: consumes/produces
-      operationId: "createCompany"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Company that needs to register"
-          required: true
-          schema:
-            $ref: "#/definitions/Company" #TODO: does not compose the example, manually fix
-      responses:
-        201:
-          description: "Company registered"
-        400:
-          description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "email already used."
-        500:
-          description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+ 
   /api/student/login:
     post:
       tags:
@@ -539,7 +504,7 @@ paths:
           type: "integer"
       responses:
         201:
-          description: "Succesfully applied to the job"
+          description: "Successfully applied to the job"
         400:
           description: "Bad Request"
           schema:
@@ -571,6 +536,42 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "student"
+  /api/company/register:
+    post:
+      tags:
+        - "company"
+      summary: "Creates company"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "createCompany"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Company that needs to register"
+          required: true
+          schema:
+            $ref: "#/definitions/Company" #TODO: does not compose the example, manually fix
+      responses:
+        201:
+          description: "Company registered"
+        400:
+          description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "email already used."
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
 definitions:
   LoginResponse:
     type: "object"
