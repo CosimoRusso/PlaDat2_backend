@@ -5,6 +5,7 @@ const path = require('path');
 const Router = require('koa-router');
 const swagger = require('swagger2');
 const { ui } = require('swagger2-koa');
+const sequelize = require('../models/db');
 
 const swaggerDocument = swagger.loadDocumentSync('./swagger.yml');
 
@@ -23,9 +24,13 @@ function applyApiMiddleware(app) {
       const api = require(path.join(__dirname, file))(Router);
       router.use(api.routes());
     });
-
   app.use(ui(swaggerDocument, '/swagger'));
   app.use(router.routes()).use(router.allowedMethods());
+
+  router.get('/', async ctx => {
+    console.dir(sequelize);
+    ctx.body = JSON.stringify(sequelize);
+  });
 }
 
 module.exports = applyApiMiddleware;
