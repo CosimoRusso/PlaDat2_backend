@@ -572,6 +572,499 @@ paths:
                 type: "string"
             example:
               msg: "Internal Server error."
+  /api/company/login:
+    post:
+      tags:
+        - "company"
+      summary: "Login company"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "loginCompany"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Company credentials"
+          required: true
+          schema:
+            $ref: "#/definitions/Credentials"
+      responses:
+        201:
+          description: "Company logged in successfully"
+          schema:
+            type: "object"
+            properties:
+              jwt: 
+                type: "string"
+        400:
+          description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'" #TODO fix: wrong password?
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "email already used."
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+
+  /api/company/logout:
+    post:
+      tags:
+        - "company"
+      summary: "Logout company"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "logoutCompany"
+      responses:
+        201:
+          description: "Company logged out successfully" #todo: search succesfully and Unauthrorized and fix
+        401:
+          description: "Unauthorized"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "You must be logged in to do this"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "company"
+
+  /api/company/profile/{companyId}:
+    get:
+      tags:
+        - "company"
+      summary: "Company profile"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "getCompanyProfile"
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Shows the company's profile"
+          schema:
+            $ref: "#/definitions/Company"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company profile not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+    post:
+      tags:
+        - "company"
+      summary: "Edit Company profile"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "postCompanyProfile"
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          type: "integer"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Company"
+      responses:
+        200:
+          description: "Shows company profile"
+          schema:
+            $ref: "#/definitions/Company"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "company"
+  /api/company/profile/{companyId}/jobOffers: 
+    get:
+      tags:
+        - "company"
+      summary: "Job offered by the company"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "getJobsOffered"
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "List of jobs"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Job"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+    put:
+      tags:
+        - "company"
+      summary: "Add a Job"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "addJob"
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          type: "integer"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties: 
+              job:
+                $ref: "#/definitions/Job"
+      responses:
+        201:
+          description: "Job offer added"
+          schema:
+            $ref: "#/definitions/Student"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "company"
+    delete:
+      tags:
+        - "company"
+      summary: "Removes a job from the ones available at that company"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "removeJob"
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          type: "integer"
+        - name: "jobId"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties: 
+              id:
+                type: "integer"
+      responses:
+        201:
+          description: "Job removed"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company or job id is not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company or job not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "company"
+  /api/company/profile/{companyId}/candidateStudents/search:
+    get:
+      tags:
+        - "company"
+      summary: "List of students for a job"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "scrollThroughCandidates"
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "List of students"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/StudentFullProfile"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+  /api/company/profile/{companyId}/jobs/discard/{studentId}:
+    post:
+      tags:
+        - "company"
+      summary: "Marks the student as discarded"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "discardStudent"
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          type: "integer"
+        - name: "studentId"
+          in: "path"
+          description: "id of the student to discard"
+          required: true
+          type: "integer"
+      responses:
+        201:
+          description: "Student discarded"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "company"  
+  /api/company/profile/{companyId}/jobs/accepy/{studentId}:
+    post:
+      tags:
+        - "company"
+      summary: "Accept the student for the job"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "acceptStudent"
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          type: "integer"
+        - name: "studentId"
+          in: "path"
+          description: "id of the student to discard"
+          required: true
+          type: "integer"
+      responses:
+        201:
+          description: "Succesfully accepted a student"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Company not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "company"
+        
+
+
 definitions:
   LoginResponse:
     type: "object"
@@ -671,7 +1164,7 @@ definitions:
       - type: object
         properties:
           jobs:
-            type: array
+            type: "array"
             $ref: "#/definitions/Job"
 
   Company: #TODO: examples (??)
@@ -711,6 +1204,8 @@ definitions:
         id: 15
         title: "JuniorDeveloper"
         description: "Junior Developer position at PippoCompany "
+        requiredCapabilities: {id: 12, name: "Java"}
+        optionalCapabilities: {id: 13, name: "C"}
   Image:
     type: "string"
     format: "url"
