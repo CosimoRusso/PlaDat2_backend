@@ -50,7 +50,7 @@ paths:
       tags:
         - "company"
       summary: "Creates company"
-      description: "Prova push"
+      description: "..."
       # nice to have: consumes/produces
       operationId: "createCompany"
       parameters:
@@ -59,7 +59,7 @@ paths:
           description: "Company that needs to register"
           required: true
           schema:
-            $ref: "#/definitions/Company"
+            $ref: "#/definitions/Company" #TODO: does not compose the example, manually fix
       responses:
         201:
           description: "Company registered"
@@ -323,29 +323,46 @@ definitions:
       - $ref: "#/definitions/StudentFullProfile"
       - $ref: "#/definitions/Credentials"
 
-  Company:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-      name:
-        type: "string"
-      email:
-        type: "string"
-        format: "email"
-      password:
-        type: "string"
-      address:
-        type: "string"
-      description:
-        type: "string"
+  CompanyBasicProfile:
+    allOf:
+      - type: "object"
+        properties:
+          id:
+            type: "integer"
+          name:
+            type: "string"
+          email:
+            type: "string"
+            format: "email"
+          description:
+            type: "string"
+          profilePicture:
+            type: "string"
+            format: "url"
+          address:  
+            type: "string"
     example:
-      pippo:
-      name: "Microsoft"
-      email: "bill@gates.com"
-      password: "ubuntu"
-      address: "piazza leo 2"
-      description: "we make computers"
+      pippoCompany:
+        id: 15 ##todo: check because it makes no sense to have them choose the id
+        name: "pippoCompany"
+        email: "pippo@pippoCompany.com"
+        description: "Topolinia's best company"
+        profilePicture: "www.my-pictures-api.com/picture42"
+        address: "82, pippo's street, Topolinia"
+  
+  CompanyFullProfile:
+    allOf:
+      - $ref: "#/definitions/CompanyBasicProfile"
+      - type: object
+        properties:
+          jobs:
+            type: array
+            $ref: "#/definitions/Job"
+
+  Company: #TODO: examples (??)
+    allOf:
+      - $ref: "#definitions/CompanyFullProfile"
+      - $ref: "#/definitions/Credentials"
   Capability:
     type: "object"
     properties:
@@ -353,6 +370,10 @@ definitions:
         type: "integer"
       name:
         type: "string"
+    example:
+      id: 12
+      name: "Java"
+
   Job:
     type: "object"
     properties:
@@ -370,6 +391,11 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Capability"
+    example:
+      JuniorDeveloper:
+        id: 15
+        title: "JuniorDeveloper"
+        description: "Junior Developer position at PippoCompany "
   Image:
     type: "string"
     format: "url"
