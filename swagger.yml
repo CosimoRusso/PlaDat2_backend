@@ -50,7 +50,7 @@ paths:
       tags:
         - "company"
       summary: "Creates company"
-      description: "..."
+      description: "Prova push"
       # nice to have: consumes/produces
       operationId: "createCompany"
       parameters:
