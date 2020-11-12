@@ -1,0 +1,382 @@
+swagger: "2.0"
+info:
+  description: "This is the API reference of The Spoon project.\n \n VERSIONING: The version number works in this way: it's composed of two numbers separated by a point. The first number identifies the Sprint, so for example the version 2.1 of the API reference is related to the Sprint number 2. The second number starts from 0 and has to be increased by one each time the file is modified. The person who modifies this document is responsible for increasing the number.\n \n GROUPING OF ENDPOINTS: The endpoints are grouped by dividing them into customers' operations and owners' operations. All the endpoints that are not strictly related to customers nor owners remain inside the default group.\n \n AUTHENTICATION/AUTHORIZATION: The json web token returned when the login is performed is supposed to be put into x-auth-token header in the endpoints that require authorization"
+  version: "1.0"
+  title: "PlaDat API reference"
+tags:
+  - name: "student"
+    description: "Operations about students"
+  - name: "company"
+    description: "Operations about companies"
+paths:
+  /api/student/register:
+    post:
+      tags:
+        - "student"
+      summary: "Creates student"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "createStudent"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Student that needs to register"
+          required: true
+          schema:
+            $ref: "#/definitions/Student"
+      responses:
+        201:
+          description: "Student registered"
+        400:
+          description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "email already used."
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+  /api/company/register:
+    post:
+      tags:
+        - "company"
+      summary: "Creates company"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "createCompany"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Company that needs to register"
+          required: true
+          schema:
+            $ref: "#/definitions/Company"
+      responses:
+        201:
+          description: "Company registered"
+        400:
+          description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "email already used."
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+  /api/student/login:
+    post:
+      tags:
+        - "student"
+      summary: "Login student"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "loginStudent"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Student credentials"
+          required: true
+          schema:
+            $ref: "#/definitions/Credentials"
+      responses:
+        201:
+          description: "Student logged in succesfully"
+          schema:
+            type: "object"
+            properties:
+              jwt: 
+                type: "string"
+        400:
+          description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "email already used."
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+  /api/student/logout:
+    post:
+      tags:
+        - "student"
+      summary: "Logout student"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "logoutStudent"
+      responses:
+        201:
+          description: "Student logged out succesfully"
+        401:
+          description: "Unauthrorized"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "You must be logged in to do this"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "student"
+  /api/student/profile/{studentId}:
+    get:
+      tags:
+        - "student"
+      summary: "Student profile"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "getStudentProfile"
+      parameters:
+        - name: "studentId"
+          in: "path"
+          description: "id of the student"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Shows student profile"
+          schema:
+            $ref: "#/definitions/Student"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+    post:
+      tags:
+        - "student"
+      summary: "Edit Student profile"
+      description: "..."
+      # nice to have: consumes/produces
+      operationId: "postStudentProfile"
+      parameters:
+        - name: "studentId"
+          in: "path"
+          description: "id of the student"
+          required: true
+          type: "integer"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Student"
+      responses:
+        200:
+          description: "Shows student profile"
+          schema:
+            $ref: "#/definitions/Student"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "student"
+  
+
+definitions:
+  LoginResponse:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      userId:
+        type: "integer"
+    example:
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjI5LCJpYXQiOjE1NjE5OTg2NjB9.SWYMJXTTM8pe6NQw1QwS-d8Btt6Isuzzk5JtH775uV0"
+      userId: 4
+  Credentials:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        format: "email"
+      password:
+        type: "string"
+  StudentBasicProfile:
+    allOf:
+      - type: "object"
+        properties:
+          firstName:
+            type: "string"
+          lastName:
+            type: "string"
+          profilePicture:
+            type: "string"
+            format: "url"
+          birthDate:
+            type: "string"
+            format: "date"
+          email:
+            type: "string"
+            format: "email"
+    example:
+      pippo:
+        firstName: "Pippo"
+        lastName: "Poppi"
+        profilePicture: "www.my-pictures-api.com/picture45"
+        birthDate: "15-10-1997"
+        email: "pippo@poppi.com"
+  StudentFullProfile:
+    allOf:
+      - $ref: "#/definitions/StudentBasicProfile"
+      - type: "object"
+        properties:
+          capabilities:
+            type: "array"
+            items:
+              type: "integer"
+    example:
+      pippo:
+        firstName: "Pippo"
+        lastName: "Poppi"
+        profilePicture: "www.my-pictures-api.com/picture45"
+        birthDate: "15-10-1997"
+        email: "pippo@poppi.com"
+        password: "s3cr3t"
+        capabilities: [2,4,6]
+  Student:
+    allOf:
+      - $ref: "#/definitions/StudentFullProfile"
+      - $ref: "#/definitions/Credentials"
+
+  Company:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      password:
+        type: "string"
+      address:
+        type: "string"
+      description:
+        type: "string"
+    example:
+      pippo:
+      name: "Microsoft"
+      email: "bill@gates.com"
+      password: "ubuntu"
+      address: "piazza leo 2"
+      description: "we make computers"
+  Capability:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+  Job:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      requiredCapabilities:
+        type: "array"
+        items:
+          $ref: "#/definitions/Capability"
+      optionalCapabilities:
+        type: "array"
+        items:
+          $ref: "#/definitions/Capability"
+  Image:
+    type: "string"
+    format: "url"
+
+
+securityDefinitions:
+  Bearer:
+    type: "apiKey"
+    name: "x-auth-token"
+    in: "header"

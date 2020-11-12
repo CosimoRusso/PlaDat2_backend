@@ -3,6 +3,10 @@
 const fs = require('fs');
 const path = require('path');
 const Router = require('koa-router');
+const swagger = require('swagger2');
+const { ui } = require('swagger2-koa');
+
+const swaggerDocument = swagger.loadDocumentSync('./swagger.yml');
 
 const { apiVersion } = require('../config').server;
 const baseName = path.basename(__filename);
@@ -20,6 +24,7 @@ function applyApiMiddleware(app) {
       router.use(api.routes());
     });
 
+  app.use(ui(swaggerDocument, '/swagger'));
   app.use(router.routes()).use(router.allowedMethods());
 }
 
