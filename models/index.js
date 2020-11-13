@@ -11,6 +11,9 @@ fs.readdirSync(__dirname)
     models[model.name] = model;
   });
 
+//create relations
+//models.Student.hasMany()
+
 async function sync() {
   for (const [name, model] of Object.entries(models)) {
     await model.sync();

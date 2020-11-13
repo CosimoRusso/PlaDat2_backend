@@ -7,7 +7,14 @@ const swagger = require('swagger2');
 const { ui } = require('swagger2-koa');
 const sequelize = require('../models/db');
 
-const swaggerDocument = swagger.loadDocumentSync('./swagger.yml');
+let swaggerDocument = null;
+try{
+  swaggerDocument = swagger.loadDocumentSync('./swagger.yml');
+}catch (e){
+  console.error("Unable to load the swagger document");
+  console.dir(e);
+}
+
 
 const { apiVersion } = require('../config').server;
 const baseName = path.basename(__filename);
@@ -24,13 +31,17 @@ function applyApiMiddleware(app) {
       const api = require(path.join(__dirname, file))(Router);
       router.use(api.routes());
     });
-  app.use(ui(swaggerDocument, '/swagger'));
+  if(swaggerDocument){
+    app.use(ui(swaggerDocument, '/swagger'));
+  }else{
+    app.use(async (ctx, next) => {
+      if (ctx.path === "/swagger")
+        ctx.body = "Sorry, there was an error with the swagger document and it currently not available";
+      else
+        await next();
+    });
+  }
   app.use(router.routes()).use(router.allowedMethods());
-
-  router.get('/', async ctx => {
-    console.dir(sequelize);
-    ctx.body = JSON.stringify(sequelize);
-  });
 }
 
 module.exports = applyApiMiddleware;

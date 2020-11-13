@@ -1194,11 +1194,11 @@ definitions:
               "description": "Junior Developer position at PippoCompany ",
               "requiredCapabilities": {
                 "id": 12,
-                "name": "Java"
+                "name": "Java",
               },
               "optionalCapabilities": {
                 "id": 13,
-                "name": "C"
+                "name": "C",
               }
             }
           }
