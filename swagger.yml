@@ -541,7 +541,7 @@ paths:
       tags:
         - "company"
       summary: "Creates company"
-      description: "..."
+      description: "Lets the company register to the PlaDat service, some information are not required (you may register without address, for example)"
       # nice to have: consumes/produces
       operationId: "createCompany"
       parameters:
@@ -577,7 +577,7 @@ paths:
       tags:
         - "company"
       summary: "Login company"
-      description: "..."
+      description: "Allows the company to log into the Pladat site"
       # nice to have: consumes/produces
       operationId: "loginCompany"
       parameters:
@@ -619,7 +619,7 @@ paths:
       tags:
         - "company"
       summary: "Logout company"
-      description: "..."
+      description: "Lets the company log out of the service"
       # nice to have: consumes/produces
       operationId: "logoutCompany"
       responses:
@@ -653,7 +653,7 @@ paths:
       tags:
         - "company"
       summary: "Company profile"
-      description: "..."
+      description: "Returns the complete profile of the company indicated by the id"
       # nice to have: consumes/produces
       operationId: "getCompanyProfile"
       parameters:
@@ -698,7 +698,7 @@ paths:
       tags:
         - "company"
       summary: "Edit Company profile"
-      description: "..."
+      description: "Modifies the company's profile, it's worth mentioning that this request doesn't modify the job offers, but only the information about the company"
       # nice to have: consumes/produces
       operationId: "postCompanyProfile"
       parameters:
@@ -753,7 +753,7 @@ paths:
       tags:
         - "company"
       summary: "Job offered by the company"
-      description: "..."
+      description: "Returns the job offers of the company specified by the companyId"
       # nice to have: consumes/produces
       operationId: "getJobsOffered"
       parameters:
