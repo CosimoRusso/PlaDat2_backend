@@ -11,8 +11,38 @@ fs.readdirSync(__dirname)
     models[model.name] = model;
   });
 
-//create relations
-//models.Student.hasMany()
+let Student = models['Student'];
+let Matching = models['Matching'];
+let Job = models['Job'];
+let Company = models['Company'];
+let Application = models['Application'];
+let JobCategory = models['JobCategory'];
+let Skill = models['Skill'];
+
+// associations definition
+Student.hasMany(Matching);
+Matching.belongsTo(Student);
+
+Job.hasMany(Matching);
+Matching.belongsTo(Job);
+
+Student.hasMany(Application);
+Application.belongsTo(Student);
+
+Job.hasMany(Application);
+Application.belongsTo(Job);
+
+Company.hasMany(Job);
+Job.belongsTo(Company);
+
+JobCategory.hasMany(Job);
+Job.belongsTo(JobCategory);
+
+Job.belongsToMany(Skill, { through: 'SkillSetReq' });
+Skill.belongsToMany(Job, { through: 'SkillSetReq' });
+
+Job.belongsToMany(Skill, { through: 'SkillSetOpt' });
+Skill.belongsToMany(Job, { through: 'SkillSetOpt' });
 
 async function sync() {
   for (const [name, model] of Object.entries(models)) {

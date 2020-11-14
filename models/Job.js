@@ -3,30 +3,33 @@ const { Model, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize().getInstance();
 
-class Student extends Model {}
+class Job extends Model {}
 
-Student.init({
+Job.init({
   name: {
     type: DataTypes.STRING
   },
-  surname: {
+  description: {
     type: DataTypes.STRING
-  },
-  email: {
-    type: DataTypes.STRING
-  },
-  password: {
-    type: DataTypes.STRING
-  },
-  dateOfBirth: {
-    type: DataTypes.DATEONLY
   },
   city: {
     type: DataTypes.STRING
+  },
+  timeLimit: {
+    type: DataTypes.DATE
+  },
+  salary: {
+    type: DataTypes.INTEGER
+  },
+  partTime: {
+    type: DataTypes.BOOLEAN
+  },
+  remote: {
+    type: DataTypes.BOOLEAN 
   }
 }, {
   sequelize,
-  modelName: "Student"
+  modelName: "Job"
 });
 
-module.exports = Student;
+module.exports = Job;

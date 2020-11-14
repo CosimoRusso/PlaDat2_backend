@@ -3,13 +3,16 @@ const { Model, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize().getInstance();
 
-class Student extends Model {}
+class Company extends Model {}
 
-Student.init({
+Company.init({
   name: {
     type: DataTypes.STRING
   },
-  surname: {
+  description: {
+    type: DataTypes.STRING
+  },
+  city: {
     type: DataTypes.STRING
   },
   email: {
@@ -17,16 +20,10 @@ Student.init({
   },
   password: {
     type: DataTypes.STRING
-  },
-  dateOfBirth: {
-    type: DataTypes.DATEONLY
-  },
-  city: {
-    type: DataTypes.STRING
   }
 }, {
   sequelize,
-  modelName: "Student"
+  modelName: "Company"
 });
 
-module.exports = Student;
+module.exports = Company;
