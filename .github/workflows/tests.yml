@@ -30,7 +30,6 @@ jobs:
           npm start &
           sleep 2
           npm run test
-          kill -9 `lsof -i:3000 -t`
         env:
           NODE_ENV: development
           DB_USER: pladat
