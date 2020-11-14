@@ -1,8 +1,11 @@
+const Sequelize = require("./db");
 const fs = require('fs');
 const path = require('path');
+const { databaseConfig } = require("../config/components/database.config");
 
 const baseName = path.basename(__filename);
 let models = {};
+const sequelize = new Sequelize().getInstance();
 
 fs.readdirSync(__dirname)
   .filter(file => file.indexOf('.') !== 0 && file !== baseName && file !== 'db.js')
@@ -45,9 +48,7 @@ Job.belongsToMany(Skill, { through: 'SkillSetOpt' });
 Skill.belongsToMany(Job, { through: 'SkillSetOpt' });
 
 async function sync() {
-  for (const [name, model] of Object.entries(models)) {
-    await model.sync();
-  }
+  await sequelize.sync({ force: databaseConfig.reset });
 }
 
 module.exports = { sync, models }
