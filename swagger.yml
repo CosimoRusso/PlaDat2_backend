@@ -540,20 +540,34 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/{studentId}/jobs/search:
+  /api/student/jobs/search:
     get:
       tags:
         - "student"
       summary: "List of jobs for the student"
       description: "Fetches the job that the student will have to scroll through (and then accept/refuse)"
-      # nice to have: consumes/produces
       operationId: "studentScrollJobs"
       parameters:
-        - name: "studentId"
-          in: "path"
-          description: "id of the student"
-          required: true
-          type: "integer"
+        - name: "remote"
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: "city"
+          in: query
+          required: false
+          schema:
+            type: "integer"
+        - name: "salary"
+          in: query
+          required: false
+          schema:
+            type: "integer"
+        - name: "fulltime"
+          in: query
+          required: false
+          schema:
+            type: "boolean"
       responses:
         200:
           description: "List of jobs"
@@ -588,7 +602,11 @@ paths:
                 type: "string"
             example:
               msg: "Internal Server error."
-  /api/student/{studentId}/jobs/discard/{jobId}:
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "student"
+  /api/student/jobs/discard/{jobId}:
     post:
       tags:
         - "student"
@@ -641,7 +659,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/{studentId}/jobs/apply/{jobId}:
+  /api/student/jobs/apply/{jobId}:
     post:
       tags:
         - "student"
@@ -926,7 +944,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Job"
+              $ref: "#/definitions/PopulatedJob"
         400:
           description: "Bad Request"
           schema:
@@ -1390,21 +1408,57 @@ definitions:
         type: "string"
       description:
         type: "string"
+      cityId:
+        type: "integer"
+      remote:
+        type: boolean
+      salary:
+        type: integer
+      fulltime:
+        type: boolean
       requiredCapabilities:
         type: "array"
         items:
-          $ref: "#/definitions/Capability"
+          type: "integer"
       optionalCapabilities:
         type: "array"
         items:
-          $ref: "#/definitions/Capability"
+          type: "integer"
     example:
       JuniorDeveloper:
         id: 15
         title: "JuniorDeveloper"
         description: "Junior Developer position at PippoCompany "
-        requiredCapabilities: {id: 12, name: "Java"}
-        optionalCapabilities: {id: 13, name: "C"}
+        cityId: 1
+        remote: true
+        salary: 10
+        fulltime: false
+        requiredCapabilities: [1,2,3]
+        optionalCapabilities: [4,5,6]
+  PopulatedJob:
+    allOf:
+      - $ref: "#/definitions/Job"
+      - type: "object"
+        properties: 
+          requiredCapabilities:
+            type: "array"
+            items:
+              $ref: "#/definitions/Capability"
+          optionalCapabilities:
+            type: "array"
+            items:
+              $ref: "#/definitions/Capability"
+    example:
+      JuniorDeveloper:
+        id: 15
+        title: "JuniorDeveloper"
+        description: "Junior Developer position at PippoCompany "
+        cityId: 1
+        remote: true
+        salary: 10
+        fulltime: false
+        requiredCapabilities: [{id: 1, name: "mysql"}]
+        optionalCapabilities: [{id: 2, name: "NodeJS"}]
   Image:
     type: "string"
     format: "url"
