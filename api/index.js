@@ -36,7 +36,8 @@ function applyApiMiddleware(app) {
   }else{
     app.use(async (ctx, next) => {
       if (ctx.path === "/swagger")
-        ctx.body = "Sorry, there was an error with the swagger document and it currently not available";
+        // if you change this message remember to change it in the test too
+        ctx.body = "Sorry, there was an error with the swagger document and it is currently not available";
       else
         await next();
     });
