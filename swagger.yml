@@ -120,7 +120,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/profile/{studentId}:
+  /api/student/{studentId}/profile:
     get:
       tags:
         - "student"
@@ -220,7 +220,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "student"  
-  /api/student/profile/{studentId}/capabilities:
+  /api/student/{studentId}/capabilities:
     get:
       tags:
         - "student"
@@ -292,8 +292,6 @@ paths:
       responses:
         201:
           description: "Capability added"
-          schema:
-            $ref: "#/definitions/Student"
         400:
           description: "Bad Request"
           schema:
@@ -382,20 +380,194 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/profile/{studentId}/jobs/search:
+  /api/student/{studentId}/otherCapabilities:
     get:
       tags:
         - "student"
-      summary: "List of jobs for the student"
-      description: "Fetches the job that the student will have to scroll through (and then accept/refuse)"
+      summary: "Student capabilities"
+      description: "Returns the other capabilities of the student specified by the Id"
       # nice to have: consumes/produces
-      operationId: "studentScrollJobs"
+      operationId: "getStudentOtherCapabilities"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
           type: "integer"
+      responses:
+        200:
+          description: "List of capabilities"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Capability"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+    put:
+      tags:
+        - "student"
+      summary: "Add a capability"
+      description: "Add a capability to the student specified by the Id"
+      # nice to have: consumes/produces
+      operationId: "addStudentOtherCapability"
+      parameters:
+        - name: "studentId"
+          in: "path"
+          description: "id of the student"
+          required: true
+          type: "integer"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties: 
+              value:
+                type: "string"
+      responses:
+        201:
+          description: "Capability added"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "student"
+    delete:
+      tags:
+        - "student"
+      summary: "Removes a capability"
+      description: "Removes a capability from the student specified by the Id"
+      # nice to have: consumes/produces
+      operationId: "removeStudentOtherCapability"
+      parameters:
+        - name: "studentId"
+          in: "path"
+          description: "id of the student"
+          required: true
+          type: "integer"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties: 
+              id:
+                type: "integer"
+      responses:
+        201:
+          description: "Capability added"
+          schema:
+            $ref: "#/definitions/Student"
+        400:
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student id not valid"
+        404:
+          description: "Not Found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Student not Found"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+            example:
+              msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "student"
+  /api/student/jobs/search:
+    get:
+      tags:
+        - "student"
+      summary: "List of jobs for the student"
+      description: "Fetches the job that the student will have to scroll through (and then accept/refuse)"
+      operationId: "studentScrollJobs"
+      parameters:
+        - name: "remote"
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: "city"
+          in: query
+          required: false
+          schema:
+            type: "integer"
+        - name: "salary"
+          in: query
+          required: false
+          schema:
+            type: "integer"
+        - name: "fulltime"
+          in: query
+          required: false
+          schema:
+            type: "boolean"
       responses:
         200:
           description: "List of jobs"
@@ -430,7 +602,11 @@ paths:
                 type: "string"
             example:
               msg: "Internal Server error."
-  /api/student/profile/{studentId}/jobs/discard/{jobId}:
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "student"
+  /api/student/jobs/discard/{jobId}:
     post:
       tags:
         - "student"
@@ -483,7 +659,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/profile/{studentId}/jobs/apply/{jobId}:
+  /api/student/jobs/apply/{jobId}:
     post:
       tags:
         - "student"
@@ -648,7 +824,7 @@ paths:
       x-security-scopes:
         - "company"
 
-  /api/company/profile/{companyId}:
+  /api/company/{companyId}/profile:
     get:
       tags:
         - "company"
@@ -748,7 +924,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "company"
-  /api/company/profile/{companyId}/jobOffers: 
+  /api/company/{companyId}/jobOffers: 
     get:
       tags:
         - "company"
@@ -768,7 +944,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Job"
+              $ref: "#/definitions/PopulatedJob"
         400:
           description: "Bad Request"
           schema:
@@ -908,7 +1084,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "company"
-  /api/company/profile/{companyId}/candidateStudents/{jobId}/search:
+  /api/company/{companyId}/candidateStudents/{jobId}/search:
     get:
       tags:
         - "company"
@@ -961,7 +1137,7 @@ paths:
                 type: "string"
             example:
               msg: "Internal Server error."
-  /api/company/profile/{companyId}/jobs/{jobId}/discard/{studentId}:
+  /api/company/{companyId}/jobs/{jobId}/discard/{studentId}:
     post:
       tags:
         - "company"
@@ -1014,7 +1190,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "company"  
-  /api/company/profile/{companyId}/jobs/{jobId}/accept/{studentId}:
+  /api/company/{companyId}/jobs/{jobId}/accept/{studentId}:
     post:
       tags:
         - "company"
@@ -1127,6 +1303,10 @@ definitions:
             type: "array"
             items:
               type: "integer"
+          otherCapabilities:
+            type: "array"
+            items:
+              type: "integer"
     example:
       pippo:
         firstName: "Pippo"
@@ -1136,6 +1316,7 @@ definitions:
         email: "pippo@poppi.com"
         password: "s3cr3t"
         capabilities: [2,4,6]
+        otherCapabilities: [1,2,3,5]
   Student:
     allOf:
       - $ref: "#/definitions/StudentFullProfile"
@@ -1227,21 +1408,57 @@ definitions:
         type: "string"
       description:
         type: "string"
+      cityId:
+        type: "integer"
+      remote:
+        type: boolean
+      salary:
+        type: integer
+      fulltime:
+        type: boolean
       requiredCapabilities:
         type: "array"
         items:
-          $ref: "#/definitions/Capability"
+          type: "integer"
       optionalCapabilities:
         type: "array"
         items:
-          $ref: "#/definitions/Capability"
+          type: "integer"
     example:
       JuniorDeveloper:
         id: 15
         title: "JuniorDeveloper"
         description: "Junior Developer position at PippoCompany "
-        requiredCapabilities: {id: 12, name: "Java"}
-        optionalCapabilities: {id: 13, name: "C"}
+        cityId: 1
+        remote: true
+        salary: 10
+        fulltime: false
+        requiredCapabilities: [1,2,3]
+        optionalCapabilities: [4,5,6]
+  PopulatedJob:
+    allOf:
+      - $ref: "#/definitions/Job"
+      - type: "object"
+        properties: 
+          requiredCapabilities:
+            type: "array"
+            items:
+              $ref: "#/definitions/Capability"
+          optionalCapabilities:
+            type: "array"
+            items:
+              $ref: "#/definitions/Capability"
+    example:
+      JuniorDeveloper:
+        id: 15
+        title: "JuniorDeveloper"
+        description: "Junior Developer position at PippoCompany "
+        cityId: 1
+        remote: true
+        salary: 10
+        fulltime: false
+        requiredCapabilities: [{id: 1, name: "mysql"}]
+        optionalCapabilities: [{id: 2, name: "NodeJS"}]
   Image:
     type: "string"
     format: "url"
