@@ -15,6 +15,7 @@ const envSchema = joi
       .empty(''),
     DB_DATABASE: joi.string(),
     DB_PORT: joi.number(),
+    RESET_DB: joi.boolean(),
   })
   .unknown()
   .required();
@@ -34,6 +35,7 @@ const config = {
     password: envVars.DB_PASSWORD,
     database: envVars.DB_DATABASE,
     port: envVars.DB_PORT,
+    reset: envVars.RESET_DB,
   },
 };
 
