@@ -6,10 +6,10 @@ const sequelize = new Sequelize().getInstance();
 class Student extends Model {}
 
 Student.init({
-  name: {
+  firstName: {
     type: DataTypes.STRING
   },
-  surname: {
+  lastName: {
     type: DataTypes.STRING
   },
   email: {
