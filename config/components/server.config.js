@@ -30,6 +30,7 @@ const config = {
     port: envVars.PORT || 3000,
     apiVersion: envVars.API_VERSION || 'v1',
   },
+  jwtSecret: envVars.JWT_SECRET || 'mySuperSecret',
 };
 
 module.exports = config;
