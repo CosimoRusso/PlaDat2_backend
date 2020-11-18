@@ -1,4 +1,9 @@
-swagger: "2.0"
+openapi: "3.0.0"
+servers:
+  - url: "http://localhost:3000/api/v1"
+    description: "for local development"
+  - url: "https://pladat2.herokuapp.com/"
+    description: "production environment"
 info:
   description: "This is the API reference of PlaDat2."
   version: "1.0"
@@ -9,13 +14,12 @@ tags:
   - name: "company"
     description: "Operations about companies"
 paths:
-  /api/student/register:
+  /student/register:
     post:
       tags:
         - "student"
       summary: "Creates student"
-      description: "Standard registration, some parameters may be optional" #todo: fix
-      # nice to have: consumes/produces
+      description: "Standard registration, some parameters may be optional"
       operationId: "createStudent"
       parameters:
         - in: "body"
@@ -23,36 +27,39 @@ paths:
           description: "Student that needs to register"
           required: true
           schema:
-            $ref: "#/definitions/Student"
+            $ref: "#/components/schemas/StudentBasicProfile"
       responses:
         201:
           description: "Student registered"
         400:
           description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "email already used."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "email already used."
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
  
-  /api/student/login:
+  /student/login:
     post:
       tags:
         - "student"
       summary: "Login student"
       description: "Login request for the student side of the application"
-      # nice to have: consumes/produces
       operationId: "loginStudent"
       parameters:
         - in: "body"
@@ -60,227 +67,262 @@ paths:
           description: "Student credentials"
           required: true
           schema:
-            $ref: "#/definitions/Credentials"
+            $ref: "#/components/schemas/Credentials"
       responses:
         201:
-          description: "Student logged in succesfully"
-          schema:
-            type: "object"
-            properties:
-              jwt: 
-                type: "string"
+          description: "Student logged in sucessfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  jwt:
+                    type: "string"
+                  id:
+                    type: "integer"
         400:
           description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "email already used."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "email already used."
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
-  /api/student/logout:
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+  /student/logout:
     post:
       tags:
         - "student"
       summary: "Logout student"
       description: "Lets the student log out of the service"
-      # nice to have: consumes/produces
       operationId: "logoutStudent"
       responses:
         201:
-          description: "Student logged out succesfully"
+          description: "Student logged out sucessfully"
         401:
-          description: "Unauthrorized"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "You must be logged in to do this"
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "You must be logged in to do this"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/{studentId}/profile:
+  /student/{studentId}/profile:
     get:
       tags:
         - "student"
       summary: "Student profile"
       description: "Get request that returns the full student profile"
-      # nice to have: consumes/produces
       operationId: "getStudentProfile"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         200:
           description: "Shows student profile"
-          schema:
-            $ref: "#/definitions/Student"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
     post:
       tags:
         - "student"
       summary: "Edit Student profile"
       description: "Request that edits the student's profile"
-      # nice to have: consumes/produces
       operationId: "postStudentProfile"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "body"
           in: "body"
           required: true
           schema:
-            $ref: "#/definitions/Student"
+            $ref: "#/components/schemas/Student"
       responses:
         200:
           description: "Shows student profile"
-          schema:
-            $ref: "#/definitions/Student"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "student"  
-  /api/student/{studentId}/capabilities:
+  /student/{studentId}/capabilities:
     get:
       tags:
         - "student"
       summary: "Student capabilities"
       description: "Returns the capabilities of the student specified by the Id"
-      # nice to have: consumes/produces
       operationId: "getStudentCapabilities"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         200:
           description: "List of capabilities"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Capability"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Capability"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
     put:
       tags:
         - "student"
       summary: "Add a capability"
       description: "Add a capability to the student specified by the Id"
-      # nice to have: consumes/produces
       operationId: "addStudentCapability"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "body"
           in: "body"
           required: true
@@ -294,31 +336,37 @@ paths:
           description: "Capability added"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
@@ -328,14 +376,14 @@ paths:
         - "student"
       summary: "Removes a capability"
       description: "Removes a capability from the student specified by the Id"
-      # nice to have: consumes/produces
       operationId: "removeStudentCapability"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "body"
           in: "body"
           required: true
@@ -347,100 +395,116 @@ paths:
       responses:
         201:
           description: "Capability added"
-          schema:
-            $ref: "#/definitions/Student"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/{studentId}/otherCapabilities:
+  /student/{studentId}/otherCapabilities:
     get:
       tags:
         - "student"
       summary: "Student capabilities"
       description: "Returns the other capabilities of the student specified by the Id"
-      # nice to have: consumes/produces
       operationId: "getStudentOtherCapabilities"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         200:
           description: "List of capabilities"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Capability"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Capability"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
     put:
       tags:
         - "student"
       summary: "Add a capability"
       description: "Add a capability to the student specified by the Id"
-      # nice to have: consumes/produces
       operationId: "addStudentOtherCapability"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "body"
           in: "body"
           required: true
@@ -454,31 +518,37 @@ paths:
           description: "Capability added"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
@@ -488,14 +558,14 @@ paths:
         - "student"
       summary: "Removes a capability"
       description: "Removes a capability from the student specified by the Id"
-      # nice to have: consumes/produces
       operationId: "removeStudentOtherCapability"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "body"
           in: "body"
           required: true
@@ -507,40 +577,48 @@ paths:
       responses:
         201:
           description: "Capability added"
-          schema:
-            $ref: "#/definitions/Student"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/jobs/search:
+  /student/jobs/search:
     get:
       tags:
         - "student"
@@ -571,154 +649,175 @@ paths:
       responses:
         200:
           description: "List of jobs"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Job"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Job"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/jobs/discard/{jobId}:
+  /student/jobs/discard/{jobId}:
     post:
       tags:
         - "student"
       summary: "Marks the job as discarded"
       description: "Marks the job offer as not interesting for the student"
-      # nice to have: consumes/produces
       operationId: "discardJob"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "jobId"
           in: "path"
           description: "id of the job to discard"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         201:
           description: "Job discarded"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/student/jobs/apply/{jobId}:
+  /student/jobs/apply/{jobId}:
     post:
       tags:
         - "student"
       summary: "Apply the student to the job"
       description: "Marks the offer as interesting for the student (and thus applies the student for the position)"
-      # nice to have: consumes/produces
       operationId: "applyToJob"
       parameters:
         - name: "studentId"
           in: "path"
           description: "id of the student"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "jobId"
           in: "path"
           description: "id of the job to discard"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         201:
           description: "Successfully applied to the job"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Student not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "student"
-  /api/company/register:
+  /company/register:
     post:
       tags:
         - "company"
       summary: "Creates company"
       description: "Lets the company register to the PlaDat service, some information are not required (you may register without address, for example)"
-      # nice to have: consumes/produces
       operationId: "createCompany"
       parameters:
         - in: "body"
@@ -726,35 +825,38 @@ paths:
           description: "Company that needs to register"
           required: true
           schema:
-            $ref: "#/definitions/Company" #TODO: does not compose the example, manually fix
+            $ref: "#/components/schemas/CompanyBasicProfile"
       responses:
         201:
           description: "Company registered"
         400:
           description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "email already used."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "email already used."
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
-  /api/company/login:
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+  /company/login:
     post:
       tags:
         - "company"
       summary: "Login company"
-      description: "Allows the company to log into the Pladat site"
-      # nice to have: consumes/produces
+      description: "Allows the company to log into the PlaDat website"
       operationId: "loginCompany"
       parameters:
         - in: "body"
@@ -762,229 +864,262 @@ paths:
           description: "Company credentials"
           required: true
           schema:
-            $ref: "#/definitions/Credentials"
+            $ref: "#/components/schemas/Credentials"
       responses:
         201:
           description: "Company logged in successfully"
-          schema:
-            type: "object"
-            properties:
-              jwt: 
-                type: "string"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  jwt:
+                    type: "string"
         400:
-          description: "A string describing the error. Could be for example 'email already used.' or 'Invalid input.'" #TODO fix: wrong password?
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "email already used."
+          description: "A string describing the error. Could be for example 'Invalid email' or 'Wrong password.'"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Invalid email"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
 
-  /api/company/logout:
+  /company/logout:
     post:
       tags:
         - "company"
       summary: "Logout company"
       description: "Lets the company log out of the service"
-      # nice to have: consumes/produces
       operationId: "logoutCompany"
       responses:
         201:
-          description: "Company logged out successfully" #todo: search succesfully and Unauthrorized and fix
+          description: "Company logged out successfully"
         401:
           description: "Unauthorized"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "You must be logged in to do this"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "You must be logged in to do this"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "company"
 
-  /api/company/{companyId}/profile:
+  /company/{companyId}/profile:
     get:
       tags:
         - "company"
       summary: "Company profile"
       description: "Returns the complete profile of the company indicated by the id"
-      # nice to have: consumes/produces
       operationId: "getCompanyProfile"
       parameters:
         - name: "companyId"
           in: "path"
           description: "id of the company"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         200:
           description: "Shows the company's profile"
-          schema:
-            $ref: "#/definitions/Company"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company profile not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company profile not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
     post:
       tags:
         - "company"
       summary: "Edit Company profile"
       description: "Modifies the company's profile, it's worth mentioning that this request doesn't modify the job offers, but only the information about the company"
-      # nice to have: consumes/produces
       operationId: "postCompanyProfile"
       parameters:
         - name: "companyId"
           in: "path"
           description: "id of the company"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "body"
           in: "body"
           required: true
           schema:
-            $ref: "#/definitions/CompanyFullProfile"
+            $ref: "#/components/schemas/CompanyFullProfile"
       responses:
         200:
           description: "Shows company profile"
-          schema:
-            $ref: "#/definitions/Company"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "company"
-  /api/company/{companyId}/jobOffers: 
+  /company/{companyId}/jobOffers:
     get:
       tags:
         - "company"
       summary: "Job offered by the company"
       description: "Returns the job offers of the company specified by the companyId"
-      # nice to have: consumes/produces
       operationId: "getJobsOffered"
       parameters:
         - name: "companyId"
           in: "path"
           description: "id of the company"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         200:
           description: "List of jobs"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/PopulatedJob"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PopulatedJob"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
     put:
       tags:
         - "company"
       summary: "Add a Job"
       description: "Adds a job offer on the profile of the company "
-      # nice to have: consumes/produces
       operationId: "addJob"
       parameters:
         - name: "companyId"
           in: "path"
           description: "id of the company"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "body"
           in: "body"
           required: true
@@ -992,39 +1127,47 @@ paths:
             type: "object"
             properties: 
               job:
-                $ref: "#/definitions/Job"
+                $ref: "#/components/schemas/Job"
       responses:
         201:
           description: "Job offer added"
-          schema:
-            $ref: "#/definitions/Student"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
@@ -1034,14 +1177,14 @@ paths:
         - "company"
       summary: "Removes a job"
       description: "Removes a job from the ones available at that company"
-      # nice to have: consumes/produces
       operationId: "removeJob"
       parameters:
         - name: "companyId"
           in: "path"
           description: "id of the company"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "jobId"
           in: "body"
           required: true
@@ -1055,195 +1198,225 @@ paths:
           description: "Job removed"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company or job id is not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company or job id is not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company or job not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company or job not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "company"
-  /api/company/{companyId}/candidateStudents/{jobId}/search:
+  /company/{companyId}/candidateStudents/{jobId}/search:
     get:
       tags:
         - "company"
       summary: "List of students for a job"
       description: "Returnes the list of students that applied for the specific job, in case the Id is not corresponding to the company that's asking the list a 400 code is returned "
-      # nice to have: consumes/produces
       operationId: "scrollThroughCandidates"
       parameters:
         - name: "companyId"
           in: "path"
           description: "id of the company"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "jobId"
           in: "path"
           description: "id of the job that we are searching candidates for"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         200:
           description: "List of students"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/StudentFullProfile"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/StudentFullProfile"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
-  /api/company/{companyId}/jobs/{jobId}/discard/{studentId}:
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+  /company/{companyId}/jobs/{jobId}/discard/{studentId}:
     post:
       tags:
         - "company"
       summary: "Marks the student as discarded"
       description: "Discards a student from the list of candidates for a job"
-      # nice to have: consumes/produces
       operationId: "discardStudent"
       parameters:
         - name: "companyId"
           in: "path"
           description: "id of the company"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "studentId"
           in: "path"
           description: "id of the student to discard"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         201:
           description: "Student discarded"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
         - "company"  
-  /api/company/{companyId}/jobs/{jobId}/accept/{studentId}:
+  /company/{companyId}/jobs/{jobId}/accept/{studentId}:
     post:
       tags:
         - "company"
       summary: "Accept the student for the job"
       description: "Accepts the student specified by the id for the job (also specified by the id) "
-      # nice to have: consumes/produces
       operationId: "acceptStudent"
       parameters:
         - name: "companyId"
           in: "path"
           description: "id of the company"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "jobId"
           in: "path"
           description: "id of the job"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
         - name: "studentId"
           in: "path"
           description: "id of the student to discard"
           required: true
-          type: "integer"
+          schema:
+            type: "integer"
       responses:
         201:
-          description: "Succesfully accepted a student"
+          description: "sucessfully accepted a student"
         400:
           description: "Bad Request"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company id not valid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company id not valid"
         404:
           description: "Not Found"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Company not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company not Found"
         500:
           description: "Internal server error"
-          schema:
-            type: "object"
-            properties:
-              msg:
-                type: "string"
-            example:
-              msg: "Internal Server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - Bearer: []
       x-security-scopes:
@@ -1251,221 +1424,219 @@ paths:
         
 
 
-definitions:
-  LoginResponse:
-    type: "object"
-    properties:
-      token:
-        type: "string"
-      userId:
-        type: "integer"
-    example:
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjI5LCJpYXQiOjE1NjE5OTg2NjB9.SWYMJXTTM8pe6NQw1QwS-d8Btt6Isuzzk5JtH775uV0"
-      userId: 4
-  Credentials:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-        format: "email"
-      password:
-        type: "string"
-  StudentBasicProfile:
-    allOf:
-      - type: "object"
-        properties:
-          firstName:
-            type: "string"
-          lastName:
-            type: "string"
-          profilePicture:
-            type: "string"
-            format: "url"
-          birthDate:
-            type: "string"
-            format: "date"
-          email:
-            type: "string"
-            format: "email"
-    example:
-      pippo:
-        firstName: "Pippo"
-        lastName: "Poppi"
-        profilePicture: "www.my-pictures-api.com/picture45"
-        birthDate: "15-10-1997"
-        email: "pippo@poppi.com"
-  StudentFullProfile:
-    allOf:
-      - $ref: "#/definitions/StudentBasicProfile"
-      - type: "object"
-        properties:
-          capabilities:
-            type: "array"
-            items:
-              type: "integer"
-          otherCapabilities:
-            type: "array"
-            items:
-              type: "integer"
-    example:
-      pippo:
-        firstName: "Pippo"
-        lastName: "Poppi"
-        profilePicture: "www.my-pictures-api.com/picture45"
-        birthDate: "15-10-1997"
-        email: "pippo@poppi.com"
-        password: "s3cr3t"
-        capabilities: [2,4,6]
-        otherCapabilities: [1,2,3,5]
-  Student:
-    allOf:
-      - $ref: "#/definitions/StudentFullProfile"
-      - $ref: "#/definitions/Credentials"
+components:
+  schemas:
+    LoginResponse:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+        userId:
+          type: "integer"
+      example:
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjI5LCJpYXQiOjE1NjE5OTg2NjB9.SWYMJXTTM8pe6NQw1QwS-d8Btt6Isuzzk5JtH775uV0"
+        userId: 4
+    Credentials:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+          format: "email"
+        password:
+          type: "string"
+    StudentBasicProfile:
+      allOf:
+        - type: "object"
+          properties:
+            firstName:
+              type: "string"
+            lastName:
+              type: "string"
+            profilePicture:
+              type: "string"
+              format: "url"
+            birthDate:
+              type: "string"
+              format: "date"
+            email:
+              type: "string"
+              format: "email"
+      example:
+        pippo:
+          firstName: "Pippo"
+          lastName: "Poppi"
+          profilePicture: "www.my-pictures-api.com/picture45"
+          birthDate: "15-10-1997"
+          email: "pippo@poppi.com"
+    StudentFullProfile:
+      allOf:
+        - $ref: "#/components/schemas/StudentBasicProfile"
+        - type: "object"
+          properties:
+            capabilities:
+              type: "array"
+              items:
+                type: "integer"
+            otherCapabilities:
+              type: "array"
+              items:
+                type: "integer"
+      example:
+        pippo:
+          firstName: "Pippo"
+          lastName: "Poppi"
+          profilePicture: "www.my-pictures-api.com/picture45"
+          birthDate: "15-10-1997"
+          email: "pippo@poppi.com"
+          password: "s3cr3t"
+          capabilities: [2,4,6]
+          otherCapabilities: [1,2,3,5]
+    Student:
+      allOf:
+        - $ref: "#/components/schemas/StudentFullProfile"
+        - $ref: "#/components/schemas/Credentials"
 
-  CompanyBasicProfile:
-    allOf:
-      - type: "object"
-        properties:
-          id:
-            type: "integer"
-          name:
-            type: "string"
-          description:
-            type: "string"
-          profilePicture:
-            type: "string"
-            format: "url"
-          address:  
-            type: "string"
-    example:
-      pippoCompany:
-        id: 15 # todo: check because it makes no sense to have them choose the id
-        name: "pippoCompany"
-        description: "Topolinia's best company"
-        profilePicture: "www.my-pictures-api.com/picture42"
-        address: "82, pippo's street, Topolinia"
-  
-  CompanyFullProfile:
-    allOf:
-      - $ref: "#/definitions/CompanyBasicProfile"
-      - type: object
-        properties:
-          jobs:
-            type: "array"
-            $ref: "#/definitions/Job"
-    
+    CompanyBasicProfile:
+      allOf:
+        - type: "object"
+          properties:
+            name:
+              type: "string"
+            description:
+              type: "string"
+            profilePicture:
+              type: "string"
+              format: "url"
+            address:
+              type: "string"
+      example:
+        pippoCompany:
+          name: "pippoCompany"
+          description: "Topolinia's best company"
+          profilePicture: "www.my-pictures-api.com/picture42"
+          address: "82, pippo's street, Topolinia"
 
-  Company: #TODO: examples (??)
-    allOf:
-      - $ref: "#definitions/CompanyFullProfile"
-      - $ref: "#/definitions/Credentials"
-    example:
-      pippoCompany:
-        id: 15 # todo: check because it makes no sense to have them choose the id
-        name: "pippoCompany"
-        description: "Topolinia's best company"
-        profilePicture: "www.my-pictures-api.com/picture42"
-        address: "82, pippo's street, Topolinia"
-        jobs: [
-          {
-          "job": {
-            "JuniorDeveloper": {
-              "id": 15,
-              "title": "JuniorDeveloper",
-              "description": "Junior Developer position at PippoCompany ",
-              "requiredCapabilities": {
-                "id": 12,
-                "name": "Java",
-              },
-              "optionalCapabilities": {
-                "id": 13,
-                "name": "C",
+    CompanyFullProfile:
+      allOf:
+        - $ref: "#/components/schemas/CompanyBasicProfile"
+        - type: object
+          properties:
+            id:
+              type: "integer"
+            jobs:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/Job"
+
+
+    Company:
+      allOf:
+        - $ref: "#definitions/CompanyFullProfile"
+        - $ref: "#/components/schemas/Credentials"
+      example:
+        pippoCompany:
+          id: 15
+          name: "pippoCompany"
+          description: "Topolinia's best company"
+          profilePicture: "www.my-pictures-api.com/picture42"
+          address: "82, pippo's street, Topolinia"
+          jobs: [
+            {
+            "job": {
+              "JuniorDeveloper": {
+                "id": 15,
+                "title": "JuniorDeveloper",
+                "description": "Junior Developer position at PippoCompany ",
+                "requiredCapabilities": {
+                  "id": 12,
+                  "name": "Java",
+                },
+                "optionalCapabilities": {
+                  "id": 13,
+                  "name": "C",
+                }
               }
             }
           }
-        }
-        ]
-        email: "pippo@pippoCompany.com"
-        password: "s3cr3t"
-        
-  Capability:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-      name:
-        type: "string"
-    example:
-      id: 12
-      name: "Java"
+          ]
+          email: "pippo@pippoCompany.com"
+          password: "s3cr3t"
 
-  Job:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-      title:
-        type: "string"
-      description:
-        type: "string"
-      cityId:
-        type: "integer"
-      remote:
-        type: boolean
-      salary:
-        type: integer
-      fulltime:
-        type: boolean
-      requiredCapabilities:
-        type: "array"
-        items:
+    Capability:
+      type: "object"
+      properties:
+        id:
           type: "integer"
-      optionalCapabilities:
-        type: "array"
-        items:
+        name:
+          type: "string"
+      example:
+        id: 12
+        name: "Java"
+
+    Job:
+      type: "object"
+      properties:
+        id:
           type: "integer"
-    example:
-      JuniorDeveloper:
-        id: 15
-        title: "JuniorDeveloper"
-        description: "Junior Developer position at PippoCompany "
-        cityId: 1
-        remote: true
-        salary: 10
-        fulltime: false
-        requiredCapabilities: [1,2,3]
-        optionalCapabilities: [4,5,6]
-  PopulatedJob:
-    allOf:
-      - $ref: "#/definitions/Job"
-      - type: "object"
-        properties: 
-          requiredCapabilities:
-            type: "array"
-            items:
-              $ref: "#/definitions/Capability"
-          optionalCapabilities:
-            type: "array"
-            items:
-              $ref: "#/definitions/Capability"
-    example:
-      JuniorDeveloper:
-        id: 15
-        title: "JuniorDeveloper"
-        description: "Junior Developer position at PippoCompany "
-        cityId: 1
-        remote: true
-        salary: 10
-        fulltime: false
-        requiredCapabilities: [{id: 1, name: "mysql"}]
-        optionalCapabilities: [{id: 2, name: "NodeJS"}]
-  Image:
-    type: "string"
-    format: "url"
-
-
-securityDefinitions:
-  Bearer:
-    type: "apiKey"
-    name: "x-auth-token"
-    in: "header"
+        title:
+          type: "string"
+        description:
+          type: "string"
+        cityId:
+          type: "integer"
+        remote:
+          type: boolean
+        salary:
+          type: integer
+        fulltime:
+          type: boolean
+        requiredCapabilities:
+          type: "array"
+          items:
+            type: "integer"
+        optionalCapabilities:
+          type: "array"
+          items:
+            type: "integer"
+      example:
+        JuniorDeveloper:
+          id: 15
+          title: "JuniorDeveloper"
+          description: "Junior Developer position at PippoCompany "
+          cityId: 1
+          remote: true
+          salary: 10
+          fulltime: false
+          requiredCapabilities: [1,2,3]
+          optionalCapabilities: [4,5,6]
+    PopulatedJob:
+      allOf:
+        - $ref: "#/components/schemas/Job"
+        - type: "object"
+          properties:
+            requiredCapabilities:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/Capability"
+            optionalCapabilities:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/Capability"
+      example:
+        JuniorDeveloper:
+          id: 15
+          title: "JuniorDeveloper"
+          description: "Junior Developer position at PippoCompany "
+          cityId: 1
+          remote: true
+          salary: 10
+          fulltime: false
+          requiredCapabilities: [{id: 1, name: "mysql"}]
+          optionalCapabilities: [{id: 2, name: "NodeJS"}]
+    Image:
+      type: "string"
+      format: "url"
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
