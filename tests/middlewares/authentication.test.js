@@ -1,17 +1,19 @@
 const signJWT = require('../../utils/signJWT');
 const authMiddleware = require('../../middleware/authentication');
 const { Student } = require('../../models').models;
+const Sequelize = require('../../models/db');
 
 const noop = () => {};
 const email = 'pippo@poppi.it';
+const sequelize = new Sequelize().getInstance();
 
-beforeAll(() => {
-  console.dir(Student);
-  return Student.create({ firstName: 'Pippo', lastName: 'Pluto', email });
+beforeAll(async () => {
+  await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email });
 });
 
-afterAll(() => {
-  return Student.destroy({ where: { email } });
+afterAll(async () => {
+  await Student.destroy({ where: { email } });
+  await sequelize.close();
 });
 
 // unit tests

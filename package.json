@@ -9,10 +9,9 @@
     "format": "prettier --write \"**/*.+(js|yml|yaml|json)\"",
     "lint": "eslint .",
     "start": "node index.js",
-    "test": "NODE_ENV=test jest --coverage"
+    "test": "jest --coverage"
   },
   "devDependencies": {
-    "eslint": "5.16.0",
     "eslint-config-prettier": "4.3.0",
     "eslint-config-standard": "12.0.0",
     "eslint-plugin-import": "2.17.2",
@@ -21,7 +20,6 @@
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-promise": "4.1.1",
     "eslint-plugin-standard": "4.0.0",
-    "husky": "2.3.0",
     "jest": "^26.6.3",
     "nodemon": "1.19.0",
     "prettier": "1.17.1"
