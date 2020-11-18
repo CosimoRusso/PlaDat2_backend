@@ -1295,7 +1295,7 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
-  /company/{companyId}/jobs/{jobId}/discard/{studentId}:
+  /company/jobs/{jobId}/discard/{studentId}:
     post:
       tags:
         - "company"
@@ -1303,9 +1303,9 @@ paths:
       description: "Discards a student from the list of candidates for a job"
       operationId: "discardStudent"
       parameters:
-        - name: "companyId"
+        - name: "jobId"
           in: "path"
-          description: "id of the company"
+          description: "id of the job"
           required: true
           schema:
             type: "integer"
@@ -1339,7 +1339,7 @@ paths:
                   msg:
                     type: "string"
                 example:
-                  msg: "Company not Found"
+                  msg: "Job not Found"
         500:
           description: "Internal server error"
           content:
