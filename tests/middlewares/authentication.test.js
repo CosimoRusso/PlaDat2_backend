@@ -1,5 +1,5 @@
 const signJWT = require('../../utils/signJWT');
-const authMiddleware = require('../../middleware/authentication');
+const { authentication } = require('../../middleware/authentication');
 const { Student } = require('../../models').models;
 const Sequelize = require('../../models/db');
 
@@ -21,6 +21,6 @@ test('authentication works', async function() {
   const student = await Student.findOne({ where: { email } });
   const token = signJWT({ id: student.id, userType: 'student' });
   const ctx = { header: { authorization: 'Bearer ' + token } };
-  await authMiddleware(ctx, noop);
+  await authentication(ctx, noop);
   expect(ctx.user.email).toBe(email);
 });

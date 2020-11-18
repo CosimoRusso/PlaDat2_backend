@@ -1355,7 +1355,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "company"  
-  /company/{companyId}/jobs/{jobId}/accept/{studentId}:
+  /company/jobs/{jobId}/accept/{studentId}:
     post:
       tags:
         - "company"
@@ -1363,12 +1363,6 @@ paths:
       description: "Accepts the student specified by the id for the job (also specified by the id) "
       operationId: "acceptStudent"
       parameters:
-        - name: "companyId"
-          in: "path"
-          description: "id of the company"
-          required: true
-          schema:
-            type: "integer"
         - name: "jobId"
           in: "path"
           description: "id of the job"
