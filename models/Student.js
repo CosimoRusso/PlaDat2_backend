@@ -21,7 +21,7 @@ Student.init({
   dateOfBirth: {
     type: DataTypes.DATEONLY
   },
-  city: {
+  picture: {
     type: DataTypes.STRING
   }
 }, {

@@ -12,9 +12,6 @@ Job.init({
   description: {
     type: DataTypes.STRING
   },
-  city: {
-    type: DataTypes.STRING
-  },
   timeLimit: {
     type: DataTypes.DATE
   },
