@@ -1,6 +1,6 @@
 const r2 = require("r2");
 const { companyAcceptStudent } = require("../../api/companies/company.controller");
-const { Student, Application, Matching, Company, Job } = require('../../models').models;
+const { Student, Application, Company, Job } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 
@@ -48,26 +48,27 @@ test("The company cannot accept a student that did not apply", async function ()
 });
 
 test('The company can actually accept the student', async function() {
-  const { student, job, company } = o;
+  const { student, job, company, application } = o;
+  expect(application.declined).toBe(null);
   const ctx = {params: { studentId: student.id, jobId: job.id }, user: company};
   await companyAcceptStudent(ctx, noop);
-  o.matching = await Matching.findOne({where: { JobId: job.id, StudentId: student.id }});
+  await application.reload();
   expect(student.id).toBeGreaterThan(0);
-  expect(o.matching.StudentId).toBe(student.id);
-  expect(o.matching.JobId).toBe(job.id);
-  expect(o.matching.id).toBeGreaterThan(0);
+  expect(application.StudentId).toBe(student.id);
+  expect(application.JobId).toBe(job.id);
+  expect(application.id).toBeGreaterThan(0);
+  expect(application.declined).toBe(false);
 });
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
 test("The company can actually accept the student - API version", async function (){
-  const { company, studentAPI, job } = o;
+  const { company, studentAPI, job, applicationAPI } = o;
+  expect(applicationAPI.declined).toBe(null);
   const studentId = studentAPI.id, jobId = job.id;
   const jwt = signJWT({id: company.id, userType: "company"});
   const url = `http://localhost:3000/api/v1/company/jobs/${jobId}/accept/${studentId}`;
   const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
+  await applicationAPI.reload();
   expect(response.status).toBe(201);
-  o.newMatching = await Matching.findOne({where: { StudentId: studentId, JobId: jobId }});
-  expect(o.newMatching.id).toBeGreaterThan(0);
-  expect(o.newMatching.StudentId).toBe(studentId);
-  expect(o.newMatching.JobId).toBe(jobId);
+  expect(applicationAPI.declined).toBe(false);
 });
