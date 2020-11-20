@@ -38,7 +38,7 @@ afterAll(async () => {
 
 test("Only the company that proposed the job can visualize the applicants", async function(){
     const{companyThatDidntCreateJob, job} = o;
-    const ctx = {params: {jobId: job}, user: companyThatDidntCreateJob};
+    const ctx = {params: {jobId: job.id}, user: companyThatDidntCreateJob};
 
     try{
         await getCandidatesForJob(ctx, noop);

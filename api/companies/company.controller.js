@@ -22,13 +22,7 @@ exports.getCandidatesForJob = async ctx =>{ //todo: ask Cosimo if companyId is u
   const company = ctx.user;
 
   //check if the job belongs to the company
-  try{
-    const jobObj = await Job.findOne({where: {id: jobId, CompanyId: company.id}});
-  }catch(e){
-    console.dir(e);
-  }
-  console.dir("hello")
-  console.dir(jobObj)
+  const jobObj = await Job.findOne({where: {id: jobId, CompanyId: company.id}});
 
   if(!jobObj) throw { status: 400, message: "This job does not belong to you" };
 
