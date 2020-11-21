@@ -49,29 +49,6 @@ test("Only the company that proposed the job can visualize the applicants", asyn
 });
 
 /*
-// unit tests - here you can include directly the middleware so you skip authorization!
-test("The company cannot accept a student that did not apply", async function (){
-  const { studentNotApplied, job, company } = o;
-  const ctx = {params: { studentId: studentNotApplied.id, jobId: job.id }, user:company};
-  try{
-    await companyAcceptStudent(ctx, noop);
-  }catch(e){
-    expect(e.status).toBe(400);
-    expect(e.message).toBeDefined();
-  }
-});
-
-test('The company can actually accept the student', async function() {
-  const { student, job, company } = o;
-  const ctx = {params: { studentId: student.id, jobId: job.id }, user: company};
-  await companyAcceptStudent(ctx, noop);
-  o.matching = await Matching.findOne({where: { JobId: job.id, StudentId: student.id }});
-  expect(student.id).toBeGreaterThan(0);
-  expect(o.matching.StudentId).toBe(student.id);
-  expect(o.matching.JobId).toBe(job.id);
-  expect(o.matching.id).toBeGreaterThan(0);
-});
-
 //api test - here you can test the API with an actual HTTP call, a more realistic test
 test("The company can actually accept the student - API version", async function (){
   const { company, studentAPI, job } = o;
@@ -85,3 +62,16 @@ test("The company can actually accept the student - API version", async function
   expect(o.newMatching.StudentId).toBe(studentId);
   expect(o.newMatching.JobId).toBe(jobId);
 });*/
+
+
+test("The function returns all and only the candidates", async function(){
+  const{company, job, student, studentAPI} = o; 
+  const jobId = job.id;
+  const jwt = signJWT({id: company.id, userType: "company"});
+  const url = `http://localhost:3000/api/v1/company/candidateStudents/${jobId}`;
+  const response = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).response;
+  console.dir(response.body);
+  console.log(job.id)
+
+
+});

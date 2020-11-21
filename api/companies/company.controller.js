@@ -20,10 +20,10 @@ exports.companyAcceptStudent = async ctx => {
 exports.getCandidatesForJob = async ctx =>{ //todo: ask Cosimo if companyId is useless
   const {jobId} = ctx.params;
   const company = ctx.user;
+  console.log("hi before query")
 
   //check if the job belongs to the company
   const jobObj = await Job.findOne({where: {id: jobId, CompanyId: company.id}});
-
   if(!jobObj) throw { status: 400, message: "This job does not belong to you" };
 
   const studentsApplied = await Student.findAll(
@@ -32,6 +32,7 @@ exports.getCandidatesForJob = async ctx =>{ //todo: ask Cosimo if companyId is u
       where:{JobId:jobObj.id, declined:false}
     }]}
   )
+  console.dir(studentsApplied)
   ctx.body = studentsApplied
   ctx.status = 200
 }
