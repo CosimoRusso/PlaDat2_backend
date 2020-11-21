@@ -64,14 +64,11 @@ test("The company can actually accept the student - API version", async function
 });*/
 
 
-test("The function returns all and only the candidates", async function(){
+test.only("The function returns all and only the candidates", async function(){
   const{company, job, student, studentAPI} = o; 
   const jobId = job.id;
   const jwt = signJWT({id: company.id, userType: "company"});
   const url = `http://localhost:3000/api/v1/company/candidateStudents/${jobId}`;
-  const response = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).response;
-  console.dir(response.body);
-  console.log(job.id)
-
-
+  const response = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).json;
+  console.dir(response);
 });

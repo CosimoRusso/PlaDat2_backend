@@ -17,11 +17,9 @@ exports.companyAcceptStudent = async ctx => {
   ctx.status = 201;
 };
 
-exports.getCandidatesForJob = async ctx =>{ //todo: ask Cosimo if companyId is useless
+exports.getCandidatesForJob = async ctx =>{
   const {jobId} = ctx.params;
   const company = ctx.user;
-  console.log("hi before query")
-
   //check if the job belongs to the company
   const jobObj = await Job.findOne({where: {id: jobId, CompanyId: company.id}});
   if(!jobObj) throw { status: 400, message: "This job does not belong to you" };
@@ -29,10 +27,9 @@ exports.getCandidatesForJob = async ctx =>{ //todo: ask Cosimo if companyId is u
   const studentsApplied = await Student.findAll(
     {include: [{
       model: Application,
-      where:{JobId:jobObj.id, declined:false}
+      where:{JobId:jobObj.id, declined:null}
     }]}
-  )
-  console.dir(studentsApplied)
+  );
   ctx.body = studentsApplied
   ctx.status = 200
 }
