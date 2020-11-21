@@ -1,0 +1,20 @@
+'use strict';
+
+const controller = require('./student.controller');
+const { authentication, studentAuthentication } = require("../../middleware/authentication");
+
+module.exports = Router => {
+  const router = new Router({
+    prefix: `/student`,
+  });
+
+  router
+    .use(authentication)
+    .use(studentAuthentication)
+    .get('/applications', controller.getApplications)
+    .get('/:userId', controller.getOne)
+    .get('/', controller.getAll)
+    .post('/', controller.createOne);
+
+  return router;
+};

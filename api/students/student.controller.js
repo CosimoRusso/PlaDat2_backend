@@ -1,6 +1,6 @@
 'use strict';
 const { models } = require('../../models');
-const { Student } = models;
+const { Student, Job, Company } = models;
 
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
@@ -23,3 +23,15 @@ exports.createOne = async ctx => {
   ctx.status = 201;
   ctx.body = newStudent;
 };
+
+exports.getApplications = async ctx => {
+  const student = ctx.user;
+  ctx.body = await student.getApplications({
+    where: { declined: null },
+    include: [ {
+      model: Job,
+      as: "Job",
+      include: [ {model: Company, as: "Company"} ]
+    } ]
+  });
+}
