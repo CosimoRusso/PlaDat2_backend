@@ -24,12 +24,16 @@ exports.getCandidatesForJob = async ctx =>{
   const jobObj = await Job.findOne({where: {id: jobId, CompanyId: company.id}});
   if(!jobObj) throw { status: 400, message: "This job does not belong to you" };
 
+  /**
+   * Takes the jobIds, queries in Application to find the studentId
+   * Returns a list of students (fetched using the studentsIds)
+   */
   const studentsApplied = await Student.findAll(
     {include: [{
       model: Application,
       where:{JobId:jobObj.id, declined:null}
     }]}
   );
+  ctx.status=200;
   ctx.body = studentsApplied
-  ctx.status = 200
 }

@@ -13,7 +13,7 @@ const o = {};
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
   o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@lol.c" });
-  o.studentNotApplied = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentNotApplied@lol.c" });
+  o.studentNotApplied = await Student.create({ firstName: 'PippoNotApplied', lastName: 'PlutoNotApplied', email: "studentNotApplied@lol.c" });
   o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@lol.c" });
   o.company = await Company.create({email: "company@company.com"});
   o.companyThatDidntCreateJob = await Company.create({email: "companynotauth@company.com"});
@@ -48,27 +48,16 @@ test("Only the company that proposed the job can visualize the applicants", asyn
     }
 });
 
-/*
-//api test - here you can test the API with an actual HTTP call, a more realistic test
-test("The company can actually accept the student - API version", async function (){
-  const { company, studentAPI, job } = o;
-  const studentId = studentAPI.id, jobId = job.id;
-  const jwt = signJWT({id: company.id, userType: "company"});
-  const url = `http://localhost:3000/api/v1/company/jobs/${jobId}/accept/${studentId}`;
-  const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-  expect(response.status).toBe(201);
-  o.newMatching = await Matching.findOne({where: { StudentId: studentId, JobId: jobId }});
-  expect(o.newMatching.id).toBeGreaterThan(0);
-  expect(o.newMatching.StudentId).toBe(studentId);
-  expect(o.newMatching.JobId).toBe(jobId);
-});*/
-
-
-test.only("The function returns all and only the candidates", async function(){
+test("The function returns all and only the candidates", async function(){
   const{company, job, student, studentAPI} = o; 
   const jobId = job.id;
   const jwt = signJWT({id: company.id, userType: "company"});
   const url = `http://localhost:3000/api/v1/company/candidateStudents/${jobId}`;
-  const response = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).json;
-  console.dir(response);
+  const responseStatus = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).response; 
+  const responseBody = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).json;
+  expect(responseStatus.status).toBe(200);
+  expect(responseBody.length).toBe(2); //makes sure that studentNotApplied is not in the students returned 
+  expect(responseBody[0].email ==="studentAPI@lol.c" || responseBody[1].email === "studentAPI@lol.c")
+  expect(responseBody[0].email ==="student@lol.c" || responseBody[1].email === "student@lol.c")
+
 });
