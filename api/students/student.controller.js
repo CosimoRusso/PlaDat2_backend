@@ -27,7 +27,6 @@ exports.createOne = async ctx => {
 exports.getApplications = async ctx => {
   const student = ctx.user;
   ctx.body = await student.getApplications({
-    where: { declined: null },
     include: [ {
       model: Job,
       as: "Job",

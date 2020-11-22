@@ -697,6 +697,37 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "student"
+  /student/applications:
+    get:
+      tags:
+        - "student"
+      summary: "List of jobs to which the student applied and their current status"
+      description: "Fetches the job that the student applied to and the state in which they are in (pending, accepted, refused)"
+      operationId: "studentListApplications"
+      responses:
+        200:
+          description: "List of applications, each application includes the job and the job includes the company"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ApplicationFullPopulated"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - Bearer: [ ]
+      x-security-scopes:
+        - "student"
   /student/jobs/discard/{jobId}:
     post:
       tags:
@@ -1517,7 +1548,35 @@ components:
           description: "Topolinia's best company"
           profilePicture: "www.my-pictures-api.com/picture42"
           address: "82, pippo's street, Topolinia"
-
+    ApplicationBasic:
+      allOf:
+        - type: "object"
+          properties:
+            id:
+              type: "integer"
+            date:
+              type: "string"
+              format: "date"
+            declined:
+              type: "boolean"
+            studentId:
+              type: "integer"
+            jobId:
+              type: "integer"
+      example:
+        application:
+          id: 1
+          date: "2020-11-10"
+          declined: false
+          studentId: 2
+          jobId: 1
+    ApplicationWithCompany:
+      allOf:
+        - $ref: "#/components/schemas/ApplicationBasic"
+        - type: "object"
+          properties:
+            Job:
+              $ref: "#/components/schemas/JobWithCompany"
     CompanyFullProfile:
       allOf:
         - $ref: "#/components/schemas/CompanyBasicProfile"
@@ -1624,6 +1683,13 @@ components:
               type: "array"
               items:
                 $ref: "#/components/schemas/Capability"
+    JobWithCompany:
+      allOf:
+        - $ref: "#/components/schemas/Job"
+        - type: "object"
+          properties:
+            company:
+              $ref: "#/components/schemas/Company"
       example:
         JuniorDeveloper:
           id: 15
