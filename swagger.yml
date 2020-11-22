@@ -13,6 +13,8 @@ tags:
     description: "Operations about students"
   - name: "company"
     description: "Operations about companies"
+  - name: "General"
+    description: "General operations that are about both students and companies"
 paths:
   /student/register:
     post:
@@ -712,7 +714,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/ApplicationFullPopulated"
+                  $ref: "#/components/schemas/ApplicationWithCompany" #todo: ask Cosimo
         500:
           description: "Internal server error"
           content:
@@ -1210,6 +1212,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "company"
+  /company/jobOffers/{jobId}:
     delete:
       tags:
         - "company"
@@ -1217,9 +1220,9 @@ paths:
       description: "Removes a job from the ones available at that company"
       operationId: "removeJob"
       parameters:
-        - name: "companyId"
+        - name: "jobId"
           in: "path"
-          description: "id of the company"
+          description: "id of the job to delete"
           required: true
           schema:
             type: "integer"
@@ -1272,7 +1275,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "company"
-  /company/{companyId}/candidateStudents/{jobId}/search:
+  /company/candidateStudents/{jobId}:
     get:
       tags:
         - "company"
@@ -1280,12 +1283,6 @@ paths:
       description: "Returnes the list of students that applied for the specific job, in case the Id is not corresponding to the company that's asking the list a 400 code is returned "
       operationId: "scrollThroughCandidates"
       parameters:
-        - name: "companyId"
-          in: "path"
-          description: "id of the company"
-          required: true
-          schema:
-            type: "integer"
         - name: "jobId"
           in: "path"
           description: "id of the job that we are searching candidates for"
@@ -1334,6 +1331,10 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - "company"
   /company/jobs/{jobId}/discard/{studentId}:
     post:
       tags:
@@ -1454,7 +1455,93 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "company"
-        
+  /cities/{cityId}:
+    get:
+      tags:
+        - "general"
+      summary: "Returns the details about a city"
+      description: "Returns the details about a city (such as name, state, longitude, latitude) given the city id "
+      operationId: "getCity"
+      parameters:
+        - name: "cityId"
+          in: "path"
+          description: "id of the city"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Details of the city"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/City"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "City id not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+  /skills:
+    get:
+      tags:
+        - "general"
+      summary: "Return the skills requested by the query"
+      description: "Given a query, returns all the skills that match the input string"
+      parameters:
+      - name: skills
+        in : query
+        description: "Skill query"
+        required: true
+        schema: 
+            type: string
+      responses:
+        200:
+          description: "List of possible skills related to the start of the word"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Capability"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Query not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
 
 
 components:
@@ -1592,7 +1679,7 @@ components:
 
     Company:
       allOf:
-        - $ref: "#definitions/CompanyFullProfile"
+        - $ref: "#/components/schemas/CompanyFullProfile"
         - $ref: "#/components/schemas/Credentials"
       example:
         pippoCompany:
@@ -1704,7 +1791,29 @@ components:
     Image:
       type: "string"
       format: "url"
+    City:
+      type: object
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        state:
+          type: "string"
+        latitude:
+          type: "number"
+        longitude:
+          type: "number"
+      example:
+        Piacenza:
+          id: 1
+          name: "Piacenza"
+          state: "Italy"
+          latitude: 45.05
+          longitude: 9.7
+
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
+  
