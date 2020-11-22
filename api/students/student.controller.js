@@ -1,7 +1,8 @@
 'use strict';
 const { models } = require('../../models');
-const { Student, Job, Company } = models;
+const { Student, Job, Company, Application } = models;
 const signJWT=require('../../utils/signJWT');
+const { compare } = require("../../utils/password");
 
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
@@ -42,17 +43,28 @@ exports.login = async ctx => {
   if(user.length<1){
     throw { status: 401, message: "Mail not found, user does not exist" };
   }
-  const p= ctx.request.body.password.localeCompare(user.password)
-    if(!p){
-      const token= signJWT({userType: "student", id:user.id});
-      ctx.body={
-        message:"Succesfully logged in",
-        token:token
-      }
-    }else{
-      throw { status: 401, message: "Auth failed" };
+  const p = await compare(ctx.request.body.password, user.password);
+  if(!p){
+    const token= signJWT({userType: "student", id:user.id});
+    ctx.body={
+      message:"Succesfully logged in",
+      token:token
     }
+  }else{
+    throw { status: 401, message: "Auth failed" };
+  }
 };
 
+exports.apply = async ctx => {
+  const { jobId } = ctx.params;
+  const studentId = ctx.user.id;
+
+  const application = await Application.findOne({where: { JobId: jobId, StudentId: studentId }});
+  if(application) throw { status: 400, message: "This student already applied for this job." };
+
+  await Application.create( {date: null, declined: null, StudentId: studentId, JobId: jobId});
+  ctx.body = "Student applied"
+  ctx.status = 201;
+};
 
 

@@ -15,7 +15,8 @@ module.exports = Router => {
     .get('/applications', controller.getApplications)
     .get('/:userId', controller.getOne)
     .get('/', controller.getAll)
-    .post('/', controller.createOne);
+    .post('/', controller.createOne)
+    .post('/jobs/apply/:jobId', controller.apply);
 
   return router;
 };
