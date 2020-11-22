@@ -11,6 +11,18 @@ Application.init({
   },
   declined: {
     type: DataTypes.BOOLEAN
+  },
+  createdAt: {
+    type: DataTypes.DATE
+  },
+  updatedAt: {
+    type: DataTypes.DATE
+  },
+  StudentId: {
+    type: DataTypes.INTEGER
+  },
+  JobId: {
+    type: DataTypes.INTEGER
   }
 }, {
   sequelize,
