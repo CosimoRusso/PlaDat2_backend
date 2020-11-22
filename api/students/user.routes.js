@@ -10,7 +10,8 @@ module.exports = Router => {
   router
     .get('/:userId', controller.getOne)
     .get('/', controller.getAll)
-    .post('/', controller.createOne);
+    .post('/', controller.createOne)
+    .post('/login',controller.login);
 
   return router;
 };
