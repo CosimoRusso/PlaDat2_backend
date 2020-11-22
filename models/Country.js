@@ -8,6 +8,9 @@ class Country extends Model {}
 Country.init({
   name: {
     type: DataTypes.STRING
+  },
+  code: {
+    type: DataTypes.STRING
   }
 }, {
   sequelize,

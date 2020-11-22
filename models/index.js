@@ -2,6 +2,7 @@ const Sequelize = require("./db");
 const fs = require('fs');
 const path = require('path');
 const { databaseConfig } = require("../config/components/database.config");
+const fillDatabase = require("../utils/fillDatabase.util");
 
 const baseName = path.basename(__filename);
 let models = {};
@@ -66,6 +67,7 @@ Skill.belongsToMany(Student, { through: 'StudentSkill' });
 
 async function sync() {
   await sequelize.sync({ force: databaseConfig.reset });
+  await fillDatabase(models);
 }
 
 module.exports = { sync, models }

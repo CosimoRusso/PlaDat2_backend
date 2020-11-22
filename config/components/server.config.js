@@ -31,6 +31,7 @@ const config = {
     apiVersion: envVars.API_VERSION || 'v1',
   },
   jwtSecret: envVars.JWT_SECRET || 'mySuperSecret',
+  saltRounds: 7,
 };
 
 module.exports = config;

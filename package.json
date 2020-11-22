@@ -26,6 +26,8 @@
   },
   "dependencies": {
     "@koa/cors": "2.2.3",
+    "bcrypt": "^5.0.0",
+    "cities.json": "^1.1.5",
     "dotenv": "8.0.0",
     "joi": "14.3.1",
     "jsonwebtoken": "^8.5.1",
