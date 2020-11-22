@@ -1,6 +1,7 @@
 'use strict';
 const { models } = require('../../models');
 const { Student, Job, Company } = models;
+const signJWT=require('../../utils/signJWT');
 
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
@@ -34,3 +35,29 @@ exports.getApplications = async ctx => {
     } ]
   });
 }
+
+
+exports.login = async ctx => {
+  const user =await Student.findOne({where: {email:ctx.request.body.email}})
+
+    if(user.length<1){
+      throw { status: 401, message: "Mail not found, user does not exist" };
+    }
+    var p= ctx.request.body.password.localeCompare(user.password)
+    if(p==0){
+      console.log(user.id);
+    const  token= signJWT({userType: "student",id:user.id});
+
+      ctx.body={
+    message:"Succesfully logged in"  ,
+    token:token
+  }
+  return
+    }
+    throw { status: 401, message: "Auth failed" };
+
+
+};
+
+
+
