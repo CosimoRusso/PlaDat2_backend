@@ -10,7 +10,8 @@ module.exports = Router => {
   router
     .get('/:userId', controller.getOne)
     .get('/', controller.getAll)
-    .post('/', controller.createOne);
+    .post('/', controller.createOne)
+    .post('/jobs/:jobId/accept/:studentId', controller.apply);
 
   return router;
 };
