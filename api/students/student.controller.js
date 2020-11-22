@@ -38,25 +38,20 @@ exports.getApplications = async ctx => {
 
 
 exports.login = async ctx => {
-  const user =await Student.findOne({where: {email:ctx.request.body.email}})
-
-    if(user.length<1){
-      throw { status: 401, message: "Mail not found, user does not exist" };
-    }
-    var p= ctx.request.body.password.localeCompare(user.password)
-    if(p==0){
-      console.log(user.id);
-    const  token= signJWT({userType: "student",id:user.id});
-
-      ctx.body={
-    message:"Succesfully logged in"  ,
-    token:token
+  const user = await Student.findOne({where: {email:ctx.request.body.email}})
+  if(user.length<1){
+    throw { status: 401, message: "Mail not found, user does not exist" };
   }
-  return
+  const p= ctx.request.body.password.localeCompare(user.password)
+    if(!p){
+      const token= signJWT({userType: "student", id:user.id});
+      ctx.body={
+        message:"Succesfully logged in",
+        token:token
+      }
+    }else{
+      throw { status: 401, message: "Auth failed" };
     }
-    throw { status: 401, message: "Auth failed" };
-
-
 };
 
 

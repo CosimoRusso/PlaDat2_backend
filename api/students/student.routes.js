@@ -9,6 +9,7 @@ module.exports = Router => {
   });
 
   router
+    .post('/login', controller.login)
     .use(authentication)
     .use(studentAuthentication)
     .get('/applications', controller.getApplications)
