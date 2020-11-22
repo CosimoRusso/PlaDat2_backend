@@ -1,16 +1,10 @@
 const { hash } = require("./password");
 const countrieslist = require("../data/countries.json");
 
-const { env } = require("../config");
-let cities;
-if (env === "production"){
-  cities = require('cities.json');
-}else{
-  cities = [
+const cities = [
     {name: "Milan", country: "IT", lat: "45.46427", lng: "9.18951"},
     {name: "Västerås", country: "SE", lat: "59.61617", lng: "16.55276"},
   ];
-}
 console.log("I'm going to load " + cities.length + " cities");
 
 module.exports = async ({ Application, City, Company, Country, Job, JobCategory, Matching, Skill, Student }) => {
