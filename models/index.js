@@ -24,6 +24,9 @@ let JobCategory = models['JobCategory'];
 let Skill = models['Skill'];
 let Country = models['Country'];
 let City = models['City'];
+let SkillsRequired = models['SkillsRequired'];
+let SkillsOptional = models['SkillsOptional'];
+let StudentSkill = models['StudentSkill'];
 
 // associations definition
 Student.hasMany(Matching);
@@ -56,14 +59,26 @@ Job.belongsTo(City);
 City.hasMany(Student);
 Student.belongsTo(City);
 
-Job.belongsToMany(Skill, { through: 'SkillSetReq' });
-Skill.belongsToMany(Job, { through: 'SkillSetReq' });
+Job.hasMany(SkillsRequired);
+SkillsRequired.belongsTo(Job);
+Skill.hasMany(SkillsRequired);
+SkillsRequired.belongsTo(Job);
+Skill.belongsToMany(Job, { through: SkillsRequired, as: "requiredSkills" });
+Job.belongsToMany(Skill, { through: SkillsRequired, as: "requiredSkills" });
 
-Job.belongsToMany(Skill, { through: 'SkillSetOpt' });
-Skill.belongsToMany(Job, { through: 'SkillSetOpt' });
+Job.hasMany(SkillsOptional);
+SkillsOptional.belongsTo(Job);
+Skill.hasMany(SkillsOptional);
+SkillsOptional.belongsTo(Job);
+Skill.belongsToMany(Job, { through: SkillsRequired, as: "optionalSkills" });
+Job.belongsToMany(Skill, { through: SkillsRequired, as: "optionalSkills" });
 
-Student.belongsToMany(Skill, { through: 'StudentSkill' });
-Skill.belongsToMany(Student, { through: 'StudentSkill' });
+Student.hasMany(StudentSkill);
+StudentSkill.belongsTo(Student);
+Skill.hasMany(StudentSkill);
+StudentSkill.belongsTo(Skill);
+Student.belongsToMany(Skill, { through: StudentSkill, as: "skills" });
+Job.belongsToMany(Skill, { through: SkillsRequired, as: "students" });
 
 async function sync() {
   await sequelize.sync({ force: databaseConfig.reset });
