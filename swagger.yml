@@ -13,7 +13,7 @@ tags:
     description: "Operations about students"
   - name: "company"
     description: "Operations about companies"
-  - name: "General"
+  - name: "general"
     description: "General operations that are about both students and companies"
 paths:
   /student/register:
