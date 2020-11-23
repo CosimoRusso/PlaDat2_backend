@@ -1,6 +1,6 @@
 const r2 = require("r2");
 const { searchJobs } = require("../../api/students/student.controller");
-const { Student, Application, Company, Job, Skill, SkillsRequired, SkillsOptional, StudentSkill } = require('../../models').models;
+const { Student, Application, Company, Job, Skill, SkillsRequired, SkillsOptional, StudentSkill, Matching } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 
@@ -38,6 +38,9 @@ beforeAll(async () => {
   o.skillsRequiredJobTooManySkills.push(await SkillsRequired.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("NodeJS").id }));
   o.skillsRequiredJobTooManySkills.push(await SkillsRequired.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("Sequelize").id }));
 
+  o.jobDiscarded = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Discarded Job"});
+  o.skillsRequiredJobDiscarded = await SkillsRequired.create({ JobId: o.jobDiscarded.id, SkillId: getSkill("C#").id });
+  o.mathingDiscarded = await Matching.create({StudentId: o.student.id, JobId: o.jobDiscarded.id, discarded: true});
 });
 
 /* This looks complicated, but it simply takes all the objects
@@ -71,6 +74,15 @@ test("Student cannot find the job with too many mandatory skills", async functio
   expect(ctx.body.length).toBeGreaterThan(0);
   const jobs = ctx.body;
   expect(jobs.find(j => j.id === jobWithTooManySkills.id)).toBeUndefined();
+});
+
+test("Student cannot find the job he already discarded", async function (){
+  const { student, jobDiscarded } = o;
+  const ctx = { user: student };
+  await searchJobs(ctx, noop);
+  expect(ctx.body.length).toBeGreaterThan(0);
+  const jobs = ctx.body;
+  expect(jobs.find(j => j.id === jobDiscarded.id)).toBeUndefined();
 });
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
