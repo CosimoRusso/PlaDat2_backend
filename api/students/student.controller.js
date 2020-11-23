@@ -1,8 +1,10 @@
 'use strict';
 const { models } = require('../../models');
-const { Student, Job, Company, Application } = models;
+const { Student, Job, Company, Application, Skill } = models;
 const signJWT=require('../../utils/signJWT');
 const { compare } = require("../../utils/password");
+const pgDate = require("../../utils/postgresDate");
+const { Op } = require("sequelize");
 
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
@@ -67,4 +69,21 @@ exports.apply = async ctx => {
   ctx.status = 201;
 };
 
+exports.searchJobs = async ctx => {
+  const skills = await ctx.user.getSkills();
+  const today = pgDate(new Date());
+  let jobs = await Job.findAll({
+    where:
+      { timeLimit: { [Op.gt]: today } },
+    include: [
+      {model: Skill, as: "requiredSkills" }
+    ]
+  });
+  jobs = jobs.filter(j => isProperSubset(j.requiredSkills.map(x => x.id), skills.map(x => x.id)));
+  ctx.body = jobs;
 
+}
+
+function isProperSubset(smallSet, bigSet){
+  return smallSet.every(smallEl => bigSet.includes(smallEl))
+}

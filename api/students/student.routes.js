@@ -9,14 +9,15 @@ module.exports = Router => {
   });
 
   router
+    .get('/', controller.getAll)
+    .post('/', controller.createOne)
+    .get('/findOne/:userId', controller.getOne)
     .post('/login', controller.login)
     .use(authentication)
     .use(studentAuthentication)
     .get('/applications', controller.getApplications)
-    .get('/:userId', controller.getOne)
-    .get('/', controller.getAll)
-    .post('/', controller.createOne)
-    .post('/jobs/apply/:jobId', controller.apply);
+    .post('/jobs/apply/:jobId', controller.apply)
+    .get('/jobs/search', controller.searchJobs);
 
   return router;
 };

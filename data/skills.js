@@ -13,7 +13,7 @@ module.exports = [
   {name: "Latex"},
   {name: "MongoDB"},
   {name: "MySQL"},
-  {name: "NodeJs"},
+  {name: "NodeJS"},
   {name: "Operations"},
   {name: "PHP"},
   {name: "Quantum Computing"},
