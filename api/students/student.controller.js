@@ -81,11 +81,20 @@ exports.searchJobs = async ctx => {
     where: { StudentId: ctx.user.id, discarded: true }
   }).slice(0, -1); // removes ';'
 
+  const alreadyAppliedJobs = sequelize.dialect.queryGenerator.selectQuery("Applications", {
+    attributes: ['JobId'],
+    where: { StudentId: ctx.user.id }
+  }).slice(0, -1); // removes ';'
+
   let jobs = await Job.findAll({
     where:
       {
         timeLimit: { [Op.gt]: today },
-        id: { [Op.notIn]: sequelize.literal('('+alreadyExcludedJobs+')') }
+        id: {
+          [Op.and]: [
+            { [Op.notIn]: sequelize.literal('('+alreadyExcludedJobs+')') },
+            { [Op.notIn]: sequelize.literal('('+alreadyAppliedJobs+')') }
+          ]  },
       },
     include: [
       {model: Skill, as: "requiredSkills" },

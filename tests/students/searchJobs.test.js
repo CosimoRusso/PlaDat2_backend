@@ -41,6 +41,10 @@ beforeAll(async () => {
   o.jobDiscarded = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Discarded Job"});
   o.skillsRequiredJobDiscarded = await SkillsRequired.create({ JobId: o.jobDiscarded.id, SkillId: getSkill("C#").id });
   o.mathingDiscarded = await Matching.create({StudentId: o.student.id, JobId: o.jobDiscarded.id, discarded: true});
+
+  o.jobApplied = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Applied Job"});
+  o.skillsRequiredJobApplied = await SkillsRequired.create({ JobId: o.jobApplied.id, SkillId: getSkill("C#").id });
+  o.jobApplication = await Application.create({StudentId: o.student.id, JobId: o.jobApplied.id, declined: null});
 });
 
 /* This looks complicated, but it simply takes all the objects
@@ -83,6 +87,15 @@ test("Student cannot find the job he already discarded", async function (){
   expect(ctx.body.length).toBeGreaterThan(0);
   const jobs = ctx.body;
   expect(jobs.find(j => j.id === jobDiscarded.id)).toBeUndefined();
+});
+
+test("Student cannot find the job he already applied to", async function (){
+  const { student, jobApplied } = o;
+  const ctx = { user: student };
+  await searchJobs(ctx, noop);
+  expect(ctx.body.length).toBeGreaterThan(0);
+  const jobs = ctx.body;
+  expect(jobs.find(j => j.id === jobApplied.id)).toBeUndefined();
 });
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
