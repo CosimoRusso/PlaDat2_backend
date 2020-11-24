@@ -1,6 +1,6 @@
 const r2 = require("r2");
 const { searchJobs } = require("../../api/students/student.controller");
-const { Student, Application, Company, Job, Skill, SkillsRequired, SkillsOptional, StudentSkill, Matching } = require('../../models').models;
+const { Student, Application, Company, Job, Skill, SkillSetReq, SkillSetOpt, StudentSkill, Matching } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 
@@ -26,24 +26,24 @@ beforeAll(async () => {
   o.company = await Company.create({email: "company@company.com"});
 
   o.job = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Normal Job"});
-  o.skillsRequiredJob1 = await SkillsRequired.create({ JobId: o.job.id, SkillId: getSkill("C#").id });
+  o.skillsRequiredJob1 = await SkillSetReq.create({ JobId: o.job.id, SkillId: getSkill("C#").id });
 
   o.jobExpired = await Job.create({CompanyId: o.company.id, timeLimit: "2010-01-10", name: "Expired Job"});
-  o.skillsRequiredJobExpired = await SkillsRequired.create({ JobId: o.jobExpired.id, SkillId: getSkill("C#").id });
+  o.skillsRequiredJobExpired = await SkillSetReq.create({ JobId: o.jobExpired.id, SkillId: getSkill("C#").id });
 
   o.jobWithTooManySkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Job Very Skilled"});
   o.skillsRequiredJobTooManySkills = [];
-  o.skillsRequiredJobTooManySkills.push(await SkillsRequired.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("C#").id }));
-  o.skillsRequiredJobTooManySkills.push(await SkillsRequired.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("F#").id }));
-  o.skillsRequiredJobTooManySkills.push(await SkillsRequired.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("NodeJS").id }));
-  o.skillsRequiredJobTooManySkills.push(await SkillsRequired.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("Sequelize").id }));
+  o.skillsRequiredJobTooManySkills.push(await SkillSetReq.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("C#").id }));
+  o.skillsRequiredJobTooManySkills.push(await SkillSetReq.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("F#").id }));
+  o.skillsRequiredJobTooManySkills.push(await SkillSetReq.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("NodeJS").id }));
+  o.skillsRequiredJobTooManySkills.push(await SkillSetReq.create({ JobId: o.jobWithTooManySkills.id, SkillId: getSkill("Sequelize").id }));
 
   o.jobDiscarded = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Discarded Job"});
-  o.skillsRequiredJobDiscarded = await SkillsRequired.create({ JobId: o.jobDiscarded.id, SkillId: getSkill("C#").id });
+  o.skillsRequiredJobDiscarded = await SkillSetReq.create({ JobId: o.jobDiscarded.id, SkillId: getSkill("C#").id });
   o.mathingDiscarded = await Matching.create({StudentId: o.student.id, JobId: o.jobDiscarded.id, discarded: true});
 
   o.jobApplied = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Applied Job"});
-  o.skillsRequiredJobApplied = await SkillsRequired.create({ JobId: o.jobApplied.id, SkillId: getSkill("C#").id });
+  o.skillsRequiredJobApplied = await SkillSetReq.create({ JobId: o.jobApplied.id, SkillId: getSkill("C#").id });
   o.jobApplication = await Application.create({StudentId: o.student.id, JobId: o.jobApplied.id, declined: null});
 });
 

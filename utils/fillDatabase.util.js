@@ -9,7 +9,7 @@ const cities = [
   ];
 
 module.exports = async (models) => {
-  const { Application, City, Company, Country, Job, JobCategory, Matching, Skill, Student, SkillsRequired, SkillsOptional, StudentSkill } = models;
+  const { Application, City, Company, Country, Job, JobCategory, Matching, Skill, Student, SkillSetReq, SkillSetOpt, StudentSkill } = models;
   const randomSkill = await Skill.findOne();
   if (randomSkill) return false; // there are already skills in the db. Don't add them
 
@@ -50,19 +50,19 @@ module.exports = async (models) => {
   const apple = await Company.create({name: "Apple", description: "A company that does computers that cost too much", CItyId: vasteras.id, email: "apple@apple.com", password: pwd});
 
   const devJobMicrosoft = await Job.create({name: "Developer", description: "Looking for a developer", CompanyId: microsoft.id});
-  await SkillsRequired.create({JobId: devJobMicrosoft.id, SkillId: getSkill("C#").id});
-  await SkillsOptional.create({JobId: devJobMicrosoft.id, SkillId: getSkill("HTML").id});
+  await SkillSetReq.create({JobId: devJobMicrosoft.id, SkillId: getSkill("C#").id});
+  await SkillSetOpt.create({JobId: devJobMicrosoft.id, SkillId: getSkill("HTML").id});
 
   const devJobApple = await Job.create({name: "Developer", description: "Looking for a developer", CompanyId: apple.id});
-  await SkillsRequired.create({JobId: devJobApple.id, SkillId: getSkill("Swift").id});
-  await SkillsOptional.create({JobId: devJobApple.id, SkillId: getSkill("HTML").id});
+  await SkillSetReq.create({JobId: devJobApple.id, SkillId: getSkill("Swift").id});
+  await SkillSetOpt.create({JobId: devJobApple.id, SkillId: getSkill("HTML").id});
 
   const databaseJobMicrosoft = await Job.create({name: "Database expert", description: "Looking for a student with relational DB passion", CompanyId: microsoft.id});
-  await SkillsRequired.create({JobId: databaseJobMicrosoft.id, SkillId: getSkill("MySQL").id});
-  await SkillsOptional.create({JobId: databaseJobMicrosoft.id, SkillId: getSkill("MongoDB").id});
+  await SkillSetReq.create({JobId: databaseJobMicrosoft.id, SkillId: getSkill("MySQL").id});
+  await SkillSetOpt.create({JobId: databaseJobMicrosoft.id, SkillId: getSkill("MongoDB").id});
   const databaseJobApple = await Job.create({name: "Database expert", description: "Looking for a student with relational DB passion", CompanyId: apple.id});
-  await SkillsRequired.create({JobId: databaseJobApple.id, SkillId: getSkill("MySQL").id});
-  await SkillsOptional.create({JobId: databaseJobApple.id, SkillId: getSkill("Sequelize").id});
+  await SkillSetReq.create({JobId: databaseJobApple.id, SkillId: getSkill("MySQL").id});
+  await SkillSetOpt.create({JobId: databaseJobApple.id, SkillId: getSkill("Sequelize").id});
 
   const leonardoApplication = await Application.create({StudentId: leonardo.id, JobId: devJobMicrosoft.id});
   const leonardoDiscardedMatch = await Matching.create({StudentId: leonardo.id, JobId: devJobApple.id, discarded: true});

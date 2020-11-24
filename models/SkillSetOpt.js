@@ -3,13 +3,13 @@ const { Model, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize().getInstance();
 
-class SkillsRequired extends Model {}
+class SkillSetOpt extends Model {}
 
-SkillsRequired.init({
+SkillSetOpt.init({
 
 }, {
   sequelize,
-  modelName: "SkillsRequired"
+  modelName: "SkillSetOpt"
 });
 
-module.exports = SkillsRequired;
+module.exports = SkillSetOpt;

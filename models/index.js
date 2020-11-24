@@ -24,8 +24,8 @@ let JobCategory = models['JobCategory'];
 let Skill = models['Skill'];
 let Country = models['Country'];
 let City = models['City'];
-let SkillsRequired = models['SkillsRequired'];
-let SkillsOptional = models['SkillsOptional'];
+let SkillSetReq = models['SkillSetReq'];
+let SkillSetOpt = models['SkillSetOpt'];
 let StudentSkill = models['StudentSkill'];
 
 // associations definition
@@ -59,24 +59,12 @@ Job.belongsTo(City);
 City.hasMany(Student);
 Student.belongsTo(City);
 
-Job.hasMany(SkillsRequired);
-SkillsRequired.belongsTo(Job);
-Skill.hasMany(SkillsRequired);
-SkillsRequired.belongsTo(Job);
-Skill.belongsToMany(Job, { through: SkillsRequired, as: "requiredSkills" });
-Job.belongsToMany(Skill, { through: SkillsRequired, as: "requiredSkills" });
+Skill.belongsToMany(Job, { through: SkillSetReq, as: "requiredSkills" });
+Job.belongsToMany(Skill, { through: SkillSetReq, as: "requiredSkills" });
 
-Job.hasMany(SkillsOptional);
-SkillsOptional.belongsTo(Job);
-Skill.hasMany(SkillsOptional);
-SkillsOptional.belongsTo(Job);
-Skill.belongsToMany(Job, { through: SkillsRequired, as: "optionalSkills" });
-Job.belongsToMany(Skill, { through: SkillsRequired, as: "optionalSkills" });
+Skill.belongsToMany(Job, { through: SkillSetOpt, as: "optionalSkills" });
+Job.belongsToMany(Skill, { through: SkillSetOpt, as: "optionalSkills" });
 
-Student.hasMany(StudentSkill);
-StudentSkill.belongsTo(Student);
-Skill.hasMany(StudentSkill);
-StudentSkill.belongsTo(Skill);
 Student.belongsToMany(Skill, { through: StudentSkill, as: "skills" });
 Skill.belongsToMany(Student, { through: StudentSkill, as: "students" });
 
