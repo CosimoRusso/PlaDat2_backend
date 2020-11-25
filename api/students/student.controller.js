@@ -44,13 +44,10 @@ exports.getApplications = async ctx => {
 
 
 exports.login = async ctx => {
-  const {email,password} = ctx.request.body;
-  console.dir("EMAIL: " + email);
-  
+  const {email, password} = ctx.request.body;
+
   const user = await Student.findOne({where: {email:email}});
-  
-  console.dir("HELLO FROM ");
-  console.dir(user);
+
   if( !user ){
     throw { status: 404, message: "Mail not found, user does not exist" };
   }
