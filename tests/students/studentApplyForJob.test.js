@@ -42,12 +42,12 @@ test('Student can actualy appy for the job', async function() {
     const ctx = {params: { jobId: job.id }, user: student};
     await apply(ctx, noop);
 
-    const newApllication = await Application.findOne({where: { JobId: job.id, StudentId: student.id }});
+    const newApplication = await Application.findOne({where: { JobId: job.id, StudentId: student.id }});
     expect(student.id).toBeGreaterThan(0);
-    expect(newApllication.StudentId).toBe(student.id);
-    expect(newApllication.JobId).toBe(job.id);
-    expect(newApllication.id).toBeGreaterThan(0);
-    expect(newApllication.declined).toBe(null);
+    expect(newApplication.StudentId).toBe(student.id);
+    expect(newApplication.JobId).toBe(job.id);
+    expect(newApplication.id).toBeGreaterThan(0);
+    expect(newApplication.declined).toBe(null);
   });
 
   test('Student already applied for the job', async function() {

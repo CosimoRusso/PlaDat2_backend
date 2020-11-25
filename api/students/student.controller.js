@@ -45,11 +45,8 @@ exports.getApplications = async ctx => {
 exports.register = async ctx => {
   const { firstName, lastName, email, password, dateOfBirth, picture, cityId } = ctx.request.body;
   if (!email || !password) throw { status: 400, message: 'email and password fields are required' };
-  console.log("EMAIL " + email);
   const alreadyExists = await Student.findOne({where: {email}});
-  console.dir(alreadyExists);
   if(alreadyExists) throw { status: 400, message: 'email already used' };
-  console.log('CCCCCCCCCCCCCCCCCCCCCCC');
   const hashedPassword = await hash(password);
   const student = await Student.create({ firstName, lastName, email, password: hashedPassword, dateOfBirth, picture, cityId });
 
@@ -85,8 +82,8 @@ exports.apply = async ctx => {
   const application = await Application.findOne({where: { JobId: jobId, StudentId: studentId }});
   if(application) throw { status: 400, message: "This student already applied for this job." };
 
-  await Application.create( {date: new Date().toISOString().slice(0,10), declined: null, StudentId: studentId, JobId: jobId});
-  ctx.body = "Student applied"
+  await Application.create( {date: pgDate(new Date()), declined: null, StudentId: studentId, JobId: jobId});
+  ctx.body = "Student applied";
   ctx.status = 201;
 };
 
