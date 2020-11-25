@@ -85,7 +85,7 @@ exports.apply = async ctx => {
   const application = await Application.findOne({where: { JobId: jobId, StudentId: studentId }});
   if(application) throw { status: 400, message: "This student already applied for this job." };
 
-  await Application.create( {date: null, declined: null, StudentId: studentId, JobId: jobId});
+  await Application.create( {date: new Date().toISOString().slice(0,10), declined: null, StudentId: studentId, JobId: jobId});
   ctx.body = "Student applied"
   ctx.status = 201;
 };
