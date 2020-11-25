@@ -13,5 +13,6 @@ module.exports = Router => {
     .use(companyAuthentication) //from now on, only authenticated companies
     .post('/jobs/:jobId/accept/:studentId', controller.companyAcceptStudent)
     .get('/candidateStudents/:jobId', controller.getCandidatesForJob)
+    .post('/login', controller.login)
   return router;
 };

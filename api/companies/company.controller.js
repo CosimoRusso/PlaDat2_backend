@@ -1,5 +1,5 @@
 'use strict';
-const { Matching, Application, Job, Student } = require("../../models").models;
+const { Matching, Application, Job, Student,Company } = require("../../models").models;
 
 exports.companyAcceptStudent = async ctx => {
   const { jobId, studentId } = ctx.params;
@@ -36,3 +36,21 @@ exports.getCandidatesForJob = async ctx =>{
   ctx.status=200;
   ctx.body = studentsApplied
 }
+
+exports.login = async ctx => {
+  const user = await Company.findOne({where: {email:ctx.request.body.email}})
+  if(user.length<1){
+    throw { status: 401, message: "Mail not found, user does not exist" };
+  }
+  const p = await compare(ctx.request.body.password, user.password);
+  if(!p){
+    const token= signJWT({userType: "company", id:user.id});
+    console.log(Date.now())
+    ctx.body={
+      message:"Succesfully logged in",
+      token:token
+    }
+  }else{
+    throw { status: 401, message: "Auth failed" };
+  }
+};
