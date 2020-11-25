@@ -13,6 +13,8 @@ tags:
     description: "Operations about students"
   - name: "company"
     description: "Operations about companies"
+  - name: "job"
+    description: "Operations about jobs"
   - name: "general"
     description: "General operations that are about both students and companies"
 paths:
@@ -1455,6 +1457,50 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "company"
+  /jobs:
+    get:
+      tags:
+        - "job"
+      summary: "Return the jobs requested by the query"
+      description: "Given a query, returns all the jobs that match the query"
+      parameters:
+        - name: id
+          in: query
+          description: "job id"
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "List of jobs that match the search"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobWithCompany"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Query not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
   /cities/{cityId}:
     get:
       tags:
@@ -1786,8 +1832,36 @@ components:
           remote: true
           salary: 10
           fulltime: false
-          requiredCapabilities: [{id: 1, name: "mysql"}]
-          optionalCapabilities: [{id: 2, name: "NodeJS"}]
+          requiredCapabilities: [1, 2]
+          optionalCapabilities: [3, 4]
+          company:
+            id: 15
+            name: "pippoCompany"
+            description: "Topolinia's best company"
+            profilePicture: "www.my-pictures-api.com/picture42"
+            address: "82, pippo's street, Topolinia"
+            jobs: [
+              {
+                "job": {
+                  "JuniorDeveloper": {
+                    "id": 15,
+                    "title": "JuniorDeveloper",
+                    "description": "Junior Developer position at PippoCompany ",
+                    "requiredCapabilities": {
+                      "id": 12,
+                      "name": "Java",
+                    },
+                    "optionalCapabilities": {
+                      "id": 13,
+                      "name": "C",
+                    }
+                  }
+                }
+              }
+            ]
+            email: "pippo@pippoCompany.com"
+            password: "s3cr3t"
+
     Image:
       type: "string"
       format: "url"
