@@ -2,10 +2,10 @@
 const { models } = require('../../models');
 const { Student, Job, Company, Application, Skill, Matching } = models;
 const signJWT=require('../../utils/signJWT');
-const { compare } = require("../../utils/password");
 const pgDate = require("../../utils/postgresDate");
 const { Op } = require("sequelize");
 const Sequelize = require("../../models/db");
+const { hash, compare } = require('../../utils/password');
 
 const sequelize = new Sequelize().getInstance();
 
@@ -42,23 +42,36 @@ exports.getApplications = async ctx => {
   });
 }
 
+exports.register = async ctx => {
+  const { firstName, lastName, email, password, dateOfBirth, picture, cityId } = ctx.request.body;
+  if (!email || !password) throw { status: 400, message: 'email and password fields are required' };
+  console.log("EMAIL " + email);
+  const alreadyExists = await Student.findOne({where: {email}});
+  console.dir(alreadyExists);
+  if(alreadyExists) throw { status: 400, message: 'email already used' };
+  console.log('CCCCCCCCCCCCCCCCCCCCCCC');
+  const hashedPassword = await hash(password);
+  const student = await Student.create({ firstName, lastName, email, password: hashedPassword, dateOfBirth, picture, cityId });
+
+  if (!student) throw {status: 500, message: 'Unexpected Error'};
+
+  ctx.status = 201;
+}
 
 exports.login = async ctx => {
   const {email, password} = ctx.request.body;
-
   const user = await Student.findOne({where: {email:email}});
-
   if( !user ){
     throw { status: 404, message: "Mail not found, user does not exist" };
   }
   const p = await compare(password, user.password);
-
   if(p){
     const token= signJWT({userType: "student", id:user.id});
     ctx.status = 200;
     ctx.body={
-      message:"Succesfully logged in",
-      token:token
+      message:"Successfully logged in",
+      id: user.id,
+      jwt: token
     }
   }else{
     throw { status: 401, message: "Auth failed" };

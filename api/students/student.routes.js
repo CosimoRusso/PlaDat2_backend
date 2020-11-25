@@ -13,6 +13,7 @@ module.exports = Router => {
     .post('/', controller.createOne)
     .get('/findOne/:userId', controller.getOne)
     .post('/login', controller.login)
+    .post('/register', controller.register)
     .use(authentication)
     .use(studentAuthentication)
     .get('/applications', controller.getApplications)
