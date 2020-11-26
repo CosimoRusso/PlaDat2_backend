@@ -6,6 +6,16 @@ const signJWT=require('../../utils/signJWT');
 // const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
 
+//TODO write tests and documentation
+exports.getOne = async ctx => {
+  let { companyId } = ctx.params;
+  companyId = parseInt(companyId);
+  if(!companyId) throw {status: 400, message: 'Invalid company id'};
+  const company = await Company.findOne({where: {id: companyId}});
+  if (!company) throw {status: 404, message: 'Company not found'};
+  ctx.body = company;
+}
+
 exports.companyAcceptStudent = async ctx => {
   const { jobId, studentId } = ctx.params;
   const company = ctx.user;
