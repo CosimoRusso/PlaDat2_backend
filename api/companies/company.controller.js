@@ -1,5 +1,10 @@
 'use strict';
 const { Matching, Application, Job, Student,Company } = require("../../models").models;
+const signJWT=require('../../utils/signJWT');
+// const pgDate = require("../../utils/postgresDate");
+// const { Op } = require("sequelize");
+// const Sequelize = require("../../models/db");
+const { hash, compare } = require('../../utils/password');
 
 exports.companyAcceptStudent = async ctx => {
   const { jobId, studentId } = ctx.params;
@@ -37,18 +42,22 @@ exports.getCandidatesForJob = async ctx =>{
   ctx.body = studentsApplied
 }
 
+
+
 exports.login = async ctx => {
-  const user = await Company.findOne({where: {email:ctx.request.body.email}})
-  if(user.length<1){
-    throw { status: 401, message: "Mail not found, user does not exist" };
+  const {email, password} = ctx.request.body;
+  const user = await Company.findOne({where: {email:email}});
+  if( !user ){
+    throw { status: 404, message: "Mail not found, user does not exist" };
   }
-  const p = await compare(ctx.request.body.password, user.password);
-  if(!p){
+  const p = await compare(password, user.password);
+  if(p){
     const token= signJWT({userType: "company", id:user.id});
-    console.log(Date.now())
+    ctx.status = 200;
     ctx.body={
-      message:"Succesfully logged in",
-      token:token
+      message:"Successfully logged in",
+      id: user.id,
+      jwt: token
     }
   }else{
     throw { status: 401, message: "Auth failed" };

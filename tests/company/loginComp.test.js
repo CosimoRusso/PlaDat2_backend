@@ -1,6 +1,6 @@
 const r2 = require("r2");
-const { login } = require("../../api/students/student.controller");
-const { Student} = require('../../models').models;
+const { login } = require("../../api/companies/company.controller");
+const { Company} = require('../../models').models;
 const Sequelize = require('../../models/db');
 const password = require("../../utils/password");
 const signJWT = require("../../utils/signJWT");
@@ -16,8 +16,8 @@ const o = {};
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
   const hash=await crypt.hash("plut");
-  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@login.c", password:hash });
-  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@login.c",password:hash });
+  o.company = await Company.create({ name: 'SverigesFtItalienz', description: 'Great team', email: "company@login.c", password:hash });
+  o.companyAPI = await Company.create({ name: 'SverigesFtItalienz', description: 'Great team', email: "companyAPI@login.c",password:hash });
 });
 
 /* This looks complicated, but it simply takes all the objects
@@ -46,10 +46,11 @@ test("The user must enter correct email in order to login", async function (){
     expect(e.message).toBeDefined();
   }
 });
+
 test("The user must enter correct password in order to login", async function (){
-  const { student } = o;
+  const { company } = o;
   
-  const ctx = {request:{body: {email:student.email, password: "plutoks"}}};
+  const ctx = {request:{body: {email:company.email, password: "plutoks"}}};
   try{
     await login(ctx,noop);
   }catch(e){
@@ -58,20 +59,20 @@ test("The user must enter correct password in order to login", async function ()
   }
 });
 
-test('The student is able to login', async function() {
-  const { student } = o;
-  const ctx = {request:{body: {email:student.email, password: "plut"}}};
+test('The company is able to login', async function() {
+  const { company } = o;
+  const ctx = {request:{body: {email:company.email, password: "plut"}}};
   
   await login(ctx,noop);
   expect(ctx.status).toBe(200);
 });
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
-test("The student is able to login - API version", async function (){
-  const { studentAPI } = o;
-  const studentPassword = "plut";
-  const jwt = signJWT({id: studentAPI.id, userType: "student"});
-  const url = `http://localhost:3000/api/v1/student/login/`;
-  const response = await r2.post(url,{json:{email:studentAPI.email, password:studentPassword}}, {headers: {authorization: "Bearer " + jwt}}).response;
+test("The company is able to login - API version", async function (){
+  const { companyAPI } = o;
+  const companyPassword = "plut";
+  const jwt = signJWT({id: companyAPI.id, userType: "company"});
+  const url = `http://localhost:3000/api/v1/company/login/`;
+  const response = await r2.post(url,{json:{email:companyAPI.email, password:companyPassword}}, {headers: {authorization: "Bearer " + jwt}}).response;
   expect(response.status).toBe(200);
 });
