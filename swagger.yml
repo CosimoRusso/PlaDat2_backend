@@ -15,6 +15,8 @@ tags:
     description: "Operations about companies"
   - name: "job"
     description: "Operations about jobs"
+  - name: "skill"
+    description: "Operations about skills"
   - name: "general"
     description: "General operations that are about both students and companies"
 paths:
@@ -1586,19 +1588,63 @@ paths:
   /skills:
     get:
       tags:
-        - "general"
+        - "skill"
       summary: "Return the skills requested by the query"
-      description: "Given a query, returns all the skills that match the input string"
+      description: "Given a query, returns all the skills that match the input string. If no query is provided it returns all the skills"
       parameters:
       - name: skills
         in : query
         description: "Skill query"
-        required: true
+        required: false
         schema: 
             type: string
       responses:
         200:
           description: "List of possible skills related to the start of the word"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Capability"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Query not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+  /skills/findOne:
+    get:
+      tags:
+        - "skill"
+      summary: "Return the skills requested by the query"
+      description: "Given a query, returns all the skills that match the input string"
+      parameters:
+        - name: skillId
+          in: query
+          description: "Skill id"
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Skill with that id"
           content:
             application/json:
               schema:

@@ -1,7 +1,7 @@
 'use strict';
 const { Skill } = require("../../models").models;
 
-//TODO write tests and documentation
+//TODO write tests
 exports.getOne = async ctx => {
   let { skillId } = ctx.params;
   skillId = parseInt(skillId);
