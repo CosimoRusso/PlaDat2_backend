@@ -89,14 +89,14 @@ module.exports = async (models) => {
   await SkillSetOpt.create({JobId: devJobGoogle.id, SkillId: getSkill("Sequelize").id});
 
   const dataEngineerJobGoogle = await Job.create({name: "Data Engineer", description: "Looking for a student with passion for data and willingness to work hard", CompanyId: google.id});
-  await SkillSetReq.create({JobId: devJobGoogle.id, SkillId: getSkill("MySQL").id});
-  await SkillSetReq.create({JobId: devJobGoogle.id, SkillId: getSkill("Go").id});
-  await SkillSetOpt.create({JobId: devJobGoogle.id, SkillId: getSkill("Sequelize").id});
+  await SkillSetReq.create({JobId: dataEngineerJobGoogle.id, SkillId: getSkill("MySQL").id});
+  await SkillSetReq.create({JobId: dataEngineerJobGoogle.id, SkillId: getSkill("Go").id});
+  await SkillSetOpt.create({JobId: dataEngineerJobGoogle.id, SkillId: getSkill("Sequelize").id});
 
   const databaseJobGoogle = await Job.create({name: "Database expert", description: "Looking for a student great with MySQL", CompanyId: google.id});
-  await SkillSetReq.create({JobId: databaseJobMicrosoft.id, SkillId: getSkill("MySQL").id});
-  await SkillSetOpt.create({JobId: databaseJobMicrosoft.id, SkillId: getSkill("MongoDB").id});
-  await SkillSetOpt.create({JobId: databaseJobMicrosoft.id, SkillId: getSkill("NodeJS").id});
+  await SkillSetReq.create({JobId: databaseJobGoogle.id, SkillId: getSkill("MySQL").id});
+  await SkillSetOpt.create({JobId: databaseJobGoogle.id, SkillId: getSkill("MongoDB").id});
+  await SkillSetOpt.create({JobId: databaseJobGoogle.id, SkillId: getSkill("NodeJS").id});
 
   /*
   Job -> requesteskills               -> who can do the job (of course not everyone gets matched for everything)
