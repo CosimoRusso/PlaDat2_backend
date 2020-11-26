@@ -31,7 +31,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/StudentBasicProfile"
+              $ref: "#/components/schemas/StudentWithCredentials"
       responses:
         201:
           description: "Student registered"
@@ -139,7 +139,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"
   /student/{studentId}/profile:
@@ -162,7 +162,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Student"
+                $ref: "#/components/schemas/StudentWithPopulatedCapabilities"
         400:
           description: "Bad Request"
           content:
@@ -214,14 +214,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Student"
+              $ref: "#/components/schemas/StudentWithCredentials"
       responses:
-        200:
-          description: "Shows student profile"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Student"
+        201:
+          description: "Profile update successful"
         400:
           description: "Bad Request"
           content:
@@ -256,7 +252,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"  
   /student/{studentId}/capabilities:
@@ -374,7 +370,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"
     delete:
@@ -401,11 +397,7 @@ paths:
                   type: "integer"
       responses:
         201:
-          description: "Capability added"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Student"
+          description: "Capability removed"
         400:
           description: "Bad Request"
           content:
@@ -440,7 +432,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"
   /student/{studentId}/otherCapabilities:
@@ -558,7 +550,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"
     delete:
@@ -585,11 +577,7 @@ paths:
                   type: "integer"
       responses:
         201:
-          description: "Capability added"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Student"
+          description: "Capability removed"
         400:
           description: "Bad Request"
           content:
@@ -624,7 +612,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"
   /student/jobs/search:
@@ -698,7 +686,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"
   /student/applications:
@@ -729,7 +717,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: [ ]
+        - bearerAuth: [ ]
       x-security-scopes:
         - "student"
   /student/jobs/discard/{jobId}:
@@ -789,7 +777,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"
   /student/jobs/apply/{jobId}:
@@ -849,7 +837,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "student"
   /company/register:
@@ -971,7 +959,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "company"
 
@@ -1089,7 +1077,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "company"
   /company/{companyId}/jobOffers:
@@ -1114,7 +1102,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/PopulatedJob"
+                  $ref: "#/components/schemas/JobWithPopulatedCapabilities"
         400:
           description: "Bad Request"
           content:
@@ -1152,7 +1140,7 @@ paths:
       tags:
         - "company"
       summary: "Add a Job"
-      description: "Adds a job offer on the profile of the company "
+      description: "Adds a job offer on the profile of the company"
       operationId: "addJob"
       parameters:
         - name: "companyId"
@@ -1173,10 +1161,6 @@ paths:
       responses:
         201:
           description: "Job offer added"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Student"
         400:
           description: "Bad Request"
           content:
@@ -1211,7 +1195,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "company"
   /company/jobOffers/{jobId}:
@@ -1274,7 +1258,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "company"
   /company/candidateStudents/{jobId}:
@@ -1299,7 +1283,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/StudentFullProfile"
+                  $ref: "#/components/schemas/StudentWithPopulatedCapabilities"
         400:
           description: "Bad Request"
           content:
@@ -1334,7 +1318,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "company"
   /company/jobs/{jobId}/discard/{studentId}:
@@ -1394,7 +1378,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "company"  
   /company/jobs/{jobId}/accept/{studentId}:
@@ -1454,7 +1438,7 @@ paths:
                 example:
                   msg: "Internal Server error."
       security:
-        - Bearer: []
+        - bearerAuth: []
       x-security-scopes:
         - "company"
   /jobs:
@@ -1610,6 +1594,9 @@ components:
           format: "email"
         password:
           type: "string"
+      example:
+        email: 'a@b.c'
+        password: 's3cr3t'
     StudentBasicProfile:
       allOf:
         - type: "object"
@@ -1628,13 +1615,23 @@ components:
               type: "string"
               format: "email"
       example:
-        pippo:
-          firstName: "Pippo"
-          lastName: "Poppi"
-          profilePicture: "www.my-pictures-api.com/picture45"
-          birthDate: "15-10-1997"
-          email: "pippo@poppi.com"
-    StudentFullProfile:
+        firstName: "Pippo"
+        lastName: "Poppi"
+        profilePicture: "www.my-pictures-api.com/picture45"
+        birthDate: "15-10-1997"
+        email: "pippo@poppi.com"
+    StudentWithCredentials:
+      allOf:
+        - $ref: "#/components/schemas/StudentBasicProfile"
+        - $ref: "#/components/schemas/Credentials"
+      example:
+        firstName: "a"
+        profilePicture: "www.my-pictures-api.com/picture45"
+        lastName: "b"
+        birthDate: "15-10-1997"
+        email: "a@b.c"
+        password: 's3cr3t'
+    StudentWithCapabilities:
       allOf:
         - $ref: "#/components/schemas/StudentBasicProfile"
         - type: "object"
@@ -1648,15 +1645,36 @@ components:
               items:
                 type: "integer"
       example:
-        pippo:
-          firstName: "Pippo"
-          lastName: "Poppi"
-          profilePicture: "www.my-pictures-api.com/picture45"
-          birthDate: "15-10-1997"
-          email: "pippo@poppi.com"
-          password: "s3cr3t"
-          capabilities: [2,4,6]
-          otherCapabilities: [1,2,3,5]
+        firstName: "Pippo"
+        lastName: "Poppi"
+        profilePicture: "www.my-pictures-api.com/picture45"
+        birthDate: "15-10-1997"
+        email: "pippo@poppi.com"
+        password: "s3cr3t"
+        capabilities: [{id: 2, name: 'C#'},{id: 3, name: 'NodeJS'}]
+        otherCapabilities: [{id: 2, name: 'Angular'},{id: 3, name: 'Bug fixing'}]
+    StudentWithPopulatedCapabilities:
+      allOf:
+        - $ref: "#/components/schemas/StudentBasicProfile"
+        - type: "object"
+          properties:
+            capabilities:
+              type: "array"
+              items:
+                - $ref: '#/components/schemas/Capability'
+            otherCapabilities:
+              type: "array"
+              items:
+                - $ref: '#/components/schemas/Capability'
+      example:
+        firstName: "Pippo"
+        lastName: "Poppi"
+        profilePicture: "www.my-pictures-api.com/picture45"
+        birthDate: "15-10-1997"
+        email: "pippo@poppi.com"
+        password: "s3cr3t"
+        capabilities: [ 2,4,6 ]
+        otherCapabilities: [ 1,2,3,5 ]
     Student:
       allOf:
         - $ref: "#/components/schemas/StudentFullProfile"
@@ -1676,11 +1694,10 @@ components:
             address:
               type: "string"
       example:
-        pippoCompany:
-          name: "pippoCompany"
-          description: "Topolinia's best company"
-          profilePicture: "www.my-pictures-api.com/picture42"
-          address: "82, pippo's street, Topolinia"
+        name: "pippoCompany"
+        description: "Topolinia's best company"
+        profilePicture: "www.my-pictures-api.com/picture42"
+        address: "82, pippo's street, Topolinia"
     ApplicationBasic:
       allOf:
         - type: "object"
@@ -1697,12 +1714,11 @@ components:
             jobId:
               type: "integer"
       example:
-        application:
-          id: 1
-          date: "2020-11-10"
-          declined: false
-          studentId: 2
-          jobId: 1
+        id: 1
+        date: "2020-11-10"
+        declined: false
+        studentId: 2
+        jobId: 1
     ApplicationWithCompany:
       allOf:
         - $ref: "#/components/schemas/ApplicationBasic"
@@ -1728,33 +1744,32 @@ components:
         - $ref: "#/components/schemas/CompanyFullProfile"
         - $ref: "#/components/schemas/Credentials"
       example:
-        pippoCompany:
-          id: 15
-          name: "pippoCompany"
-          description: "Topolinia's best company"
-          profilePicture: "www.my-pictures-api.com/picture42"
-          address: "82, pippo's street, Topolinia"
-          jobs: [
-            {
-            "job": {
-              "JuniorDeveloper": {
-                "id": 15,
-                "title": "JuniorDeveloper",
-                "description": "Junior Developer position at PippoCompany ",
-                "requiredCapabilities": {
-                  "id": 12,
-                  "name": "Java",
-                },
-                "optionalCapabilities": {
-                  "id": 13,
-                  "name": "C",
-                }
+        id: 15
+        name: "pippoCompany"
+        description: "Topolinia's best company"
+        profilePicture: "www.my-pictures-api.com/picture42"
+        address: "82, pippo's street, Topolinia"
+        jobs: [
+          {
+          "job": {
+            "JuniorDeveloper": {
+              "id": 15,
+              "title": "JuniorDeveloper",
+              "description": "Junior Developer position at PippoCompany ",
+              "requiredCapabilities": {
+                "id": 12,
+                "name": "Java",
+              },
+              "optionalCapabilities": {
+                "id": 13,
+                "name": "C",
               }
             }
           }
-          ]
-          email: "pippo@pippoCompany.com"
-          password: "s3cr3t"
+        }
+        ]
+        email: "pippo@pippoCompany.com"
+        password: "s3cr3t"
 
     Capability:
       type: "object"
@@ -1793,17 +1808,16 @@ components:
           items:
             type: "integer"
       example:
-        JuniorDeveloper:
-          id: 15
-          title: "JuniorDeveloper"
-          description: "Junior Developer position at PippoCompany "
-          cityId: 1
-          remote: true
-          salary: 10
-          fulltime: false
-          requiredCapabilities: [1,2,3]
-          optionalCapabilities: [4,5,6]
-    PopulatedJob:
+        id: 15
+        title: "JuniorDeveloper"
+        description: "Junior Developer position at PippoCompany "
+        cityId: 1
+        remote: true
+        salary: 10
+        fulltime: false
+        requiredCapabilities: [1,2,3]
+        optionalCapabilities: [4,5,6]
+    JobWithPopulatedCapabilities:
       allOf:
         - $ref: "#/components/schemas/Job"
         - type: "object"
@@ -1824,43 +1838,42 @@ components:
             company:
               $ref: "#/components/schemas/Company"
       example:
-        JuniorDeveloper:
+        id: 15
+        title: "JuniorDeveloper"
+        description: "Junior Developer position at PippoCompany "
+        cityId: 1
+        remote: true
+        salary: 10
+        fulltime: false
+        requiredCapabilities: [1, 2]
+        optionalCapabilities: [3, 4]
+        company:
           id: 15
-          title: "JuniorDeveloper"
-          description: "Junior Developer position at PippoCompany "
-          cityId: 1
-          remote: true
-          salary: 10
-          fulltime: false
-          requiredCapabilities: [1, 2]
-          optionalCapabilities: [3, 4]
-          company:
-            id: 15
-            name: "pippoCompany"
-            description: "Topolinia's best company"
-            profilePicture: "www.my-pictures-api.com/picture42"
-            address: "82, pippo's street, Topolinia"
-            jobs: [
-              {
-                "job": {
-                  "JuniorDeveloper": {
-                    "id": 15,
-                    "title": "JuniorDeveloper",
-                    "description": "Junior Developer position at PippoCompany ",
-                    "requiredCapabilities": {
-                      "id": 12,
-                      "name": "Java",
-                    },
-                    "optionalCapabilities": {
-                      "id": 13,
-                      "name": "C",
-                    }
+          name: "pippoCompany"
+          description: "Topolinia's best company"
+          profilePicture: "www.my-pictures-api.com/picture42"
+          address: "82, pippo's street, Topolinia"
+          jobs: [
+            {
+              "job": {
+                "JuniorDeveloper": {
+                  "id": 15,
+                  "title": "JuniorDeveloper",
+                  "description": "Junior Developer position at PippoCompany ",
+                  "requiredCapabilities": {
+                    "id": 12,
+                    "name": "Java",
+                  },
+                  "optionalCapabilities": {
+                    "id": 13,
+                    "name": "C",
                   }
                 }
               }
-            ]
-            email: "pippo@pippoCompany.com"
-            password: "s3cr3t"
+            }
+          ]
+          email: "pippo@pippoCompany.com"
+          password: "s3cr3t"
 
     Image:
       type: "string"
@@ -1879,15 +1892,15 @@ components:
         longitude:
           type: "number"
       example:
-        Piacenza:
-          id: 1
-          name: "Piacenza"
-          state: "Italy"
-          latitude: 45.05
-          longitude: 9.7
+        id: 1
+        name: "Piacenza"
+        state: "Italy"
+        latitude: 45.05
+        longitude: 9.7
 
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
   

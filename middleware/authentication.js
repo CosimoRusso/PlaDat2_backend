@@ -4,6 +4,7 @@ const { Student, Company } = require('../models').models;
 
 module.exports = {
   authentication: async (ctx, next) => {
+    if (!ctx.header.authorization) throw { status: 401, message: 'No authorization found' };
     const token = ctx.header.authorization.replace('Bearer ', '');
     const jwtObj = jwt.verify(token, jwtSecret);
     const model = jwtObj.userType === 'student' ? Student : Company;
