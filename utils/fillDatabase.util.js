@@ -30,7 +30,7 @@ module.exports = async (models) => {
     }
   }));
 
-  if (env !== "PRODUCTION") return false; // if in local just add skills, countries and cities
+  if (env !== "production") return false; // if in local just add skills, countries and cities
 
   const pwd = await hash("s3cr3t");
   const leonardo = await Student.create({firstName: "Leonardo", lastName: "Da Vinci", email:"leonardo@davinci.com", password: pwd, dateOfBirth: "1997-04-15"});
