@@ -36,8 +36,6 @@ afterAll(async () => {
 
 // unit tests - here you can include directly the middleware so you skip authorization!
 test("The user must enter correct email in order to login", async function (){
-    
-  
   const ctx = {request:{body: { email: "non@gmail.com", password: "plut" }}};
   try{
     await login(ctx,noop);
@@ -49,7 +47,6 @@ test("The user must enter correct email in order to login", async function (){
 
 test("The user must enter correct password in order to login", async function (){
   const { company } = o;
-  
   const ctx = {request:{body: {email:company.email, password: "plutoks"}}};
   try{
     await login(ctx,noop);
@@ -65,6 +62,8 @@ test('The company is able to login', async function() {
   
   await login(ctx,noop);
   expect(ctx.status).toBe(200);
+  expect(ctx.body.jwt).toBeDefined();
+  expect(ctx.body.id).toBe(company.id);
 });
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test

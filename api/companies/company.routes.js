@@ -9,10 +9,10 @@ module.exports = Router => {
   });
 
   router
+    .post('/login', controller.login)
     .use(authentication) //from now on, only authenticated requests!
     .use(companyAuthentication) //from now on, only authenticated companies
     .post('/jobs/:jobId/accept/:studentId', controller.companyAcceptStudent)
     .get('/candidateStudents/:jobId', controller.getCandidatesForJob)
-    .post('/login', controller.login)
   return router;
 };
