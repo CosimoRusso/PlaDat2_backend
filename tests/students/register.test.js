@@ -2,7 +2,6 @@ const r2 = require("r2");
 const { register } = require("../../api/students/student.controller");
 const { Student } = require('../../models').models;
 const Sequelize = require('../../models/db');
-const signJWT = require("../../utils/signJWT");
 const { hash, compare } =require("../../utils/password");
 
 
@@ -79,7 +78,6 @@ test("The student is able to register - API version", async function (){
   const url = `http://localhost:3000/api/v1/student/register/`;
   const response = await r2.post(url, {json:{email, password:'plut', firstName: 'a', lastName: 'b'}}).response;
   expect(response.status).toBe(201);
-  console.log(response.message);
   o.studentAPI = await Student.findOne({ where: {email}});
   expect(o.studentAPI).toBeDefined();
   expect(o.studentAPI.email).toBe(email);
