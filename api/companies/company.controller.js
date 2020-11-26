@@ -3,7 +3,6 @@ const { Application, Job, Student,Company } = require("../../models").models;
 const signJWT=require('../../utils/signJWT');
 const { compare } = require('../../utils/password');
 
-//TODO write tests and documentation
 exports.getOne = async ctx => {
   let { companyId } = ctx.params;
   companyId = parseInt(companyId);

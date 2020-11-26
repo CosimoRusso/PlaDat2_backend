@@ -840,6 +840,61 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "student"
+  /company/findOne:
+    get:
+      tags:
+        - 'company'
+      summary: 'Gets basic info of a company given an id'
+      description: 'Returns all the basic informations of a company, that is, the infos that are stored inside the companies table without any join query'
+      operationId: 'findOneCompany'
+      parameters:
+        - name: "companyId"
+          in: "path"
+          description: "id of the company"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Shows the company's basic information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyWithCredentials"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company id not valid"
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company profile not Found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+
   /company/register:
     post:
       tags:
@@ -1693,11 +1748,25 @@ components:
               format: "url"
             address:
               type: "string"
+            email:
+              type: 'string'
       example:
         name: "pippoCompany"
         description: "Topolinia's best company"
         profilePicture: "www.my-pictures-api.com/picture42"
         address: "82, pippo's street, Topolinia"
+        email: 'company@pippo.com'
+    CompanyWithCredentials:
+      allOf:
+        - $ref: '#/components/schemas/CompanyBasicProfile'
+        - $ref: '#/components/schemas/Credentials'
+      example:
+        name: "pippoCompany"
+        description: "Topolinia's best company"
+        profilePicture: "www.my-pictures-api.com/picture42"
+        address: "82, pippo's street, Topolinia"
+        email: 'company@pippo.com'
+        password: 's3cr3t'
     ApplicationBasic:
       allOf:
         - type: "object"
