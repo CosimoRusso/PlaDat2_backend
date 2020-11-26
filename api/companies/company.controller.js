@@ -1,10 +1,7 @@
 'use strict';
-const { Matching, Application, Job, Student,Company } = require("../../models").models;
+const { Application, Job, Student,Company } = require("../../models").models;
 const signJWT=require('../../utils/signJWT');
-// const pgDate = require("../../utils/postgresDate");
-// const { Op } = require("sequelize");
-// const Sequelize = require("../../models/db");
-const { hash, compare } = require('../../utils/password');
+const { compare } = require('../../utils/password');
 
 //TODO write tests and documentation
 exports.getOne = async ctx => {
