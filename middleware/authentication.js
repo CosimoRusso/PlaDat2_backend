@@ -9,6 +9,7 @@ module.exports = {
     const jwtObj = jwt.verify(token, jwtSecret);
     const model = jwtObj.userType === 'student' ? Student : Company;
     ctx.user = await model.findByPk(jwtObj.id);
+    if (!ctx.user) throw { status: 401, message: 'No user found with the given jwt' }
     ctx.userType = jwtObj.userType;
     await next();
   },
