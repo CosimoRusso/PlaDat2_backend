@@ -2,7 +2,6 @@ const { hash } = require("./password");
 const countrieslist = require("../data/countries.json");
 let skills = require("../data/skills");
 const { env } = require("../config");
-const {date} = require("./postgresDate");
 const cities = [
     {name: "Milan", country: "IT", lat: "45.46427", lng: "9.18951"},
     {name: "Västerås", country: "SE", lat: "59.61617", lng: "16.55276"},
