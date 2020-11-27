@@ -5,7 +5,7 @@ servers:
   - url: "https://pladat2.herokuapp.com/"
     description: "production environment"
 info:
-  description: "This is the API reference of PlaDat2."
+  description: "This is the API reference of PlaDat2. Courtesy of our marvelous backend team"
   version: "1.0"
   title: "PlaDat API reference"
 tags:
