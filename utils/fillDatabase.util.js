@@ -96,6 +96,9 @@ const OscarBonham = await Student.create({firstName: "Oscar", lastName: "Bonham"
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("IBM\ Watson").id });
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Sequelize").id });
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Docker").id });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Wordpress").id });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Bootstrap").id });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("MySQL").id });
 
 const WillowPlant = await Student.create({firstName: "Willow", lastName: "Plant", email: "Willow@Plant.com", password: pwd, dateOfBirth: "2001-07-02"});
   await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("Latex").id });
