@@ -1,12 +1,18 @@
 'use strict';
-const { Job, Company } = require("../../models").models;
+const { Job, Company, Skill} = require("../../models").models;
 
 //TODO write tests
 exports.getOne = async ctx => {
   let { jobId } = ctx.params;
   jobId = parseInt(jobId);
   if (!jobId) throw {status: 400, message: 'Invalid job id'};
-  const job = await Job.findOne({where: {id: jobId}, include: [{model: Company}]});
+  const job = await Job.findOne({
+    where: {id: jobId},
+    include: [
+      {model: Company},
+      {model: Skill, as: 'requiredSkills'},
+      {model: Skill, as: 'optionalSkills'},
+    ]});
   if (!job) throw {status: 404, message: 'Job not found'};
   ctx.body = job;
 }

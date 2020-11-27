@@ -1502,13 +1502,50 @@ paths:
     get:
       tags:
         - "job"
-      summary: "Return the jobs requested by the query"
-      description: "Given a query, returns all the jobs that match the query"
+      summary: "Returns all the jobs"
+      description: "In the future this might have a query"
+      responses:
+        200:
+          description: "List of jobs that match the search"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobWithCompany"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Query not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+  /jobs/findOne/{jobId}:
+    get:
+      tags:
+        - "job"
+      summary: "Get a job by id"
+      description: "Returns data about the job with the given id"
       parameters:
         - name: id
-          in: query
+          in: path
           description: "job id"
-          required: false
+          required: true
           schema:
             type: integer
       responses:
