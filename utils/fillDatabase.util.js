@@ -50,11 +50,9 @@ module.exports = async (models) => {
   await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("ReactJS").id });
   await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("Angular").id });
   await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("ExpressJS").id });
-  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("Angular").id });
-  
+
 const GeorgeJones = await Student.create({firstName: "George", lastName: "Jones", email: "George@Jones.com", password: pwd, dateOfBirth: "1998-09-03"});
   await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Swift").id });
-  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Latex").id });
   await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Latex").id });
   await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("F#").id });
   await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("PHP").id });
@@ -65,7 +63,6 @@ const TheoPage = await Student.create({firstName: "Theo", lastName: "Page", emai
   await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Swift").id });
   await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("X++").id });
   await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("C#").id });
-  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Swift").id });
   await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Bootstrap").id });
   await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Javascript").id });
   await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("NodeJS").id });
@@ -83,7 +80,6 @@ const EmilyBonham = await Student.create({firstName: "Emily", lastName: "Bonham"
   await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Go").id });
   await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("F#").id });
   await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Latex").id });
-  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("F#").id });
   await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Bootstrap").id });
   await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Yii").id });
   await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("PHP").id });
@@ -92,8 +88,6 @@ const RosiePlant = await Student.create({firstName: "Rosie", lastName: "Plant", 
   await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Swift").id });
   await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Latex").id });
   await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Koa").id });
-  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Swift").id });
-  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Bootstrap").id });
   await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Bootstrap").id });
   await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Yii").id });
   
@@ -101,11 +95,9 @@ const OscarBonham = await Student.create({firstName: "Oscar", lastName: "Bonham"
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("C#").id });
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Koa").id });
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("IBM\ Watson").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("IBM\ Watson").id });
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Sequelize").id });
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Docker").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Sequelize").id });
-  
+
 const WillowPlant = await Student.create({firstName: "Willow", lastName: "Plant", email: "Willow@Plant.com", password: pwd, dateOfBirth: "2001-07-02"});
   await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("Latex").id });
   await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("TypeScript").id });
@@ -113,12 +105,10 @@ const WillowPlant = await Student.create({firstName: "Willow", lastName: "Plant"
   await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("IBM\ Watson").id });
   await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("PHP").id });
   await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("ExpressJS").id });
-  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("PHP").id });
-  
+
 const RosiePage = await Student.create({firstName: "Rosie", lastName: "Page", email: "Rosie@Page.com", password: pwd, dateOfBirth: "1999-08-08"});
   await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("UnderscoreJS").id });
   await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("Latex").id });
-  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("UnderscoreJS").id });
   await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("Swift").id });
   await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("ExpressJS").id });
   await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("NodeJS").id });
@@ -127,7 +117,6 @@ const RosiePage = await Student.create({firstName: "Rosie", lastName: "Page", em
 const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", email: "Jacob@Jones.com", password: pwd, dateOfBirth: "2000-03-13"});
   await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("Zebra").id });
   await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("UnderscoreJS").id });
-  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("Zebra").id });
   await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("IBM\ Watson").id });
   await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("Docker").id });
   await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("MongoDB").id });
@@ -141,49 +130,47 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
   const ibm = await Company.create({name: "IBM", description: "A company that is in this field since before the field was born", CItyId: milan.id, email: "ibm@ibm.com", password: pwd});
   
 //BUILD JOBS
-  const DeveloperJobMicrosoft = await Job.create({name: "DeveloperJobMicrosoft", description: "Developer job at Microsoft", CompanyId: microsoft.id, timeLimit: date("2022-05-01")});
+  const DeveloperJobMicrosoft = await Job.create({name: "DeveloperJobMicrosoft", description: "Developer job at Microsoft", CompanyId: microsoft.id, timeLimit: new Date("2022-05-01")});
   await SkillSetReq.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("Yii").id});
   await SkillSetOpt.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("UnderscoreJS").id});
   await SkillSetOpt.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("HTML").id});
-  await SkillSetOpt.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("UnderscoreJS").id});
-  
-  const DatabaseJobMicrosoft = await Job.create({name: "DatabaseJobMicrosoft", description: "Database job at Microsoft", CompanyId: microsoft.id, timeLimit: date("2022-02-16")});
+
+  const DatabaseJobMicrosoft = await Job.create({name: "DatabaseJobMicrosoft", description: "Database job at Microsoft", CompanyId: microsoft.id, timeLimit: new Date("2022-02-16")});
   await SkillSetReq.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("Docker").id});
-  await SkillSetOpt.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("Zebra").id});
   await SkillSetOpt.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("Zebra").id});
   await SkillSetOpt.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("IBM\ Watson").id});
   
-  const DeveloperJobApple = await Job.create({name: "DeveloperJobApple", description: "Developer job at Apple", CompanyId: apple.id, timeLimit: date("2022-07-10")});
+  const DeveloperJobApple = await Job.create({name: "DeveloperJobApple", description: "Developer job at Apple", CompanyId: apple.id, timeLimit: new Date("2022-07-10")});
   await SkillSetReq.create({JobId: DeveloperJobApple.id, SkillId: getSkill("Javascript").id});
   await SkillSetOpt.create({JobId: DeveloperJobApple.id, SkillId: getSkill("ReactJS").id});
   await SkillSetOpt.create({JobId: DeveloperJobApple.id, SkillId: getSkill("UnderscoreJS").id});
   await SkillSetOpt.create({JobId: DeveloperJobApple.id, SkillId: getSkill("Swift").id});
   
-  const DatabaseJobApple = await Job.create({name: "DatabaseJobApple", description: "Database job at Apple", CompanyId: apple.id, timeLimit: date("2022-07-27")});
+  const DatabaseJobApple = await Job.create({name: "DatabaseJobApple", description: "Database job at Apple", CompanyId: apple.id, timeLimit: new Date("2022-07-27")});
   await SkillSetReq.create({JobId: DatabaseJobApple.id, SkillId: getSkill("Wordpress").id});
   await SkillSetOpt.create({JobId: DatabaseJobApple.id, SkillId: getSkill("F#").id});
   await SkillSetOpt.create({JobId: DatabaseJobApple.id, SkillId: getSkill("Go").id});
   await SkillSetOpt.create({JobId: DatabaseJobApple.id, SkillId: getSkill("X++").id});
   
-  const DeveloperJobGoogle = await Job.create({name: "DeveloperJobGoogle", description: "Developer job at Google", CompanyId: google.id, timeLimit: date("2022-11-27")});
+  const DeveloperJobGoogle = await Job.create({name: "DeveloperJobGoogle", description: "Developer job at Google", CompanyId: google.id, timeLimit: new Date("2022-11-27")});
   await SkillSetReq.create({JobId: DeveloperJobGoogle.id, SkillId: getSkill("Javascript").id});
   await SkillSetOpt.create({JobId: DeveloperJobGoogle.id, SkillId: getSkill("HTML").id});
   await SkillSetOpt.create({JobId: DeveloperJobGoogle.id, SkillId: getSkill("UnderscoreJS").id});
   await SkillSetOpt.create({JobId: DeveloperJobGoogle.id, SkillId: getSkill("Zebra").id});
   
-  const DatabaseJobGoogle = await Job.create({name: "DatabaseJobGoogle", description: "Database job at Google", CompanyId: google.id, timeLimit: date("2022-08-06")});
+  const DatabaseJobGoogle = await Job.create({name: "DatabaseJobGoogle", description: "Database job at Google", CompanyId: google.id, timeLimit: new Date("2022-08-06")});
   await SkillSetReq.create({JobId: DatabaseJobGoogle.id, SkillId: getSkill("MySQL").id});
   await SkillSetOpt.create({JobId: DatabaseJobGoogle.id, SkillId: getSkill("X++").id});
   await SkillSetOpt.create({JobId: DatabaseJobGoogle.id, SkillId: getSkill("Koa").id});
   await SkillSetOpt.create({JobId: DatabaseJobGoogle.id, SkillId: getSkill("Zebra").id});
   
-  const DeveloperJobIBM = await Job.create({name: "DeveloperJobIBM", description: "Developer job at IBM", CompanyId: ibm.id, timeLimit: date("2022-07-21")});
+  const DeveloperJobIBM = await Job.create({name: "DeveloperJobIBM", description: "Developer job at IBM", CompanyId: ibm.id, timeLimit: new Date("2022-07-21")});
   await SkillSetReq.create({JobId: DeveloperJobIBM.id, SkillId: getSkill("Bootstrap").id});
   await SkillSetOpt.create({JobId: DeveloperJobIBM.id, SkillId: getSkill("C#").id});
   await SkillSetOpt.create({JobId: DeveloperJobIBM.id, SkillId: getSkill("IBM\ Watson").id});
   await SkillSetOpt.create({JobId: DeveloperJobIBM.id, SkillId: getSkill("Go").id});
   
-  const DatabaseJobIBM = await Job.create({name: "DatabaseJobIBM", description: "Database job at IBM", CompanyId: ibm.id, timeLimit: date("2022-08-06")});
+  const DatabaseJobIBM = await Job.create({name: "DatabaseJobIBM", description: "Database job at IBM", CompanyId: ibm.id, timeLimit: new Date("2022-08-06")});
   await SkillSetReq.create({JobId: DatabaseJobIBM.id, SkillId: getSkill("Wordpress").id});
   await SkillSetOpt.create({JobId: DatabaseJobIBM.id, SkillId: getSkill("Zebra").id});
   await SkillSetOpt.create({JobId: DatabaseJobIBM.id, SkillId: getSkill("Latex").id});
