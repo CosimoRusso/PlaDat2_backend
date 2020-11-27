@@ -23,7 +23,7 @@ beforeAll(async () => {
   o.studentAPISkill = [];
   o.studentAPISkill.push(StudentSkill.create({ StudentId: o.studentAPI.id, SkillId: getSkill("C#").id }));
 
-  o.company = await Company.create({email: "company@company.com"});
+  o.company = await Company.create({email: "company@searchJob.com"});
 
   o.job = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Normal Job"});
   o.skillsRequiredJob1 = await SkillSetReq.create({ JobId: o.job.id, SkillId: getSkill("C#").id });
