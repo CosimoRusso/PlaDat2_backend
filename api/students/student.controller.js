@@ -116,10 +116,23 @@ exports.searchJobs = async ctx => {
     ]
   });
   jobs = jobs.filter(j => isSubset(j.requiredSkills.map(x => x.id), skills.map(x => x.id)));
+
+  jobs = jobs.sort(function(j1, j2) { return countMatchingSkills(j1.requiredSkills, skills) - countMatchingSkills(j2.requiredSkills, skills) });
+
   ctx.body = jobs;
 
 }
 
 function isSubset(smallSet, bigSet){
   return smallSet.every(smallEl => bigSet.includes(smallEl))
+}
+
+function countMatchingSkills(requiredSkills, ownedSkills) {
+  let count = 0;
+  ownedSkills.forEach(owned => { 
+    if(requiredSkills.map(x => x.id).includes(owned.id)) {
+      count++;
+    }
+  });
+  return count;
 }
