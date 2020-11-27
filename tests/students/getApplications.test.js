@@ -12,11 +12,11 @@ const o = {};
 
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
-  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@lol.c" });
-  o.studentNotApplied = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentNotApplied@lol.c" });
-  o.student1 = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student1@lol.c" });
-  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@lol.c" });
-  o.company = await Company.create({email: "company@company.com"});
+  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@applicationTest.c" });
+  o.studentNotApplied = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentNotApplied@applicationTest.c" });
+  o.student1 = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student1@applicationTest.c" });
+  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@applicationTest.c" });
+  o.company = await Company.create({email: "company@applicationTest.com"});
   o.job = await Job.create({CompanyId: o.company.id});
   o.jobWithAppDeclined = await Job.create({CompanyId: o.company.id});
   o.jobWithAppAccepted = await Job.create({CompanyId: o.company.id});
