@@ -38,55 +38,55 @@ afterAll(async () => {
 
 // unit tests
 test('Student can actualy appy for the job', async function() {
-    const { student, job } = o;
-    const ctx = {params: { jobId: job.id }, user: student};
-    await apply(ctx, noop);
+  const { student, job } = o;
+  const ctx = {params: { jobId: job.id }, user: student};
+  await apply(ctx, noop);
 
-    const newApplication = await Application.findOne({where: { JobId: job.id, StudentId: student.id }});
-    expect(student.id).toBeGreaterThan(0);
-    expect(newApplication.StudentId).toBe(student.id);
-    expect(newApplication.JobId).toBe(job.id);
-    expect(newApplication.id).toBeGreaterThan(0);
-    expect(newApplication.declined).toBe(null);
-  });
+  const newApplication = await Application.findOne({where: { JobId: job.id, StudentId: student.id }});
+  expect(student.id).toBeGreaterThan(0);
+  expect(newApplication.StudentId).toBe(student.id);
+  expect(newApplication.JobId).toBe(job.id);
+  expect(newApplication.id).toBeGreaterThan(0);
+  expect(newApplication.declined).toBe(null);
+});
 
-  test('Student already applied for the job', async function() {
-    const { studentAlreadyApplied, job } = o;
-    const ctx = {params: { jobId: job.id }, user: studentAlreadyApplied};
-    try{
-        await apply(ctx, noop);
-    }catch(e){
-        expect(e.status).toBe(400);
-        expect(e.message).toBeDefined();
-    }
-  });
-
-  //API tests
-  test("Student can actualy appy for the job - API version", async function (){
-    const { studentAPI, job } = o;
-    const jobId = job.id;
-    const jwt = signJWT({id: studentAPI.id, userType: "student"});
-    const url = `http://localhost:3000/api/v1/student/jobs/apply/${jobId}`;
-    const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    
-    const newApllication = await Application.findOne({where: { JobId: job.id, StudentId: studentAPI.id }});
-    expect(studentAPI.id).toBeGreaterThan(0);
-    expect(newApllication.StudentId).toBe(studentAPI.id);
-    expect(newApllication.JobId).toBe(job.id);
-    expect(newApllication.id).toBeGreaterThan(0);
-    expect(newApllication.declined).toBe(null);
-    expect(response.status).toBe(201);
-  });
-
-  test("Student already applied for the job - API version", async function (){
-    const { studentAlreadyAppliedAPI, job } = o;
-    const jobId = job.id;
-    const jwt = signJWT({id: studentAlreadyAppliedAPI.id, userType: "student"});
-    const url = `http://localhost:3000/api/v1/student/jobs/apply/${jobId}`;
-    try{
-      const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    }catch(e){
+test('Student already applied for the job', async function() {
+  const { studentAlreadyApplied, job } = o;
+  const ctx = {params: { jobId: job.id }, user: studentAlreadyApplied};
+  try{
+      await apply(ctx, noop);
+  }catch(e){
       expect(e.status).toBe(400);
       expect(e.message).toBeDefined();
-    }
-  });
+  }
+});
+
+//API tests
+test("Student can actualy appy for the job - API version", async function (){
+  const { studentAPI, job } = o;
+  const jobId = job.id;
+  const jwt = signJWT({id: studentAPI.id, userType: "student"});
+  const url = `http://localhost:3000/api/v1/student/jobs/apply/${jobId}`;
+  const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
+
+  const newApllication = await Application.findOne({where: { JobId: job.id, StudentId: studentAPI.id }});
+  expect(studentAPI.id).toBeGreaterThan(0);
+  expect(newApllication.StudentId).toBe(studentAPI.id);
+  expect(newApllication.JobId).toBe(job.id);
+  expect(newApllication.id).toBeGreaterThan(0);
+  expect(newApllication.declined).toBe(null);
+  expect(response.status).toBe(201);
+});
+
+test("Student already applied for the job - API version", async function (){
+  const { studentAlreadyAppliedAPI, job } = o;
+  const jobId = job.id;
+  const jwt = signJWT({id: studentAlreadyAppliedAPI.id, userType: "student"});
+  const url = `http://localhost:3000/api/v1/student/jobs/apply/${jobId}`;
+  try{
+    const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
+  }catch(e){
+    expect(e.status).toBe(400);
+    expect(e.message).toBeDefined();
+  }
+});
