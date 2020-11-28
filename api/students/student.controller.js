@@ -117,7 +117,7 @@ exports.searchJobs = async ctx => {
   });
   jobs = jobs.filter(j => isSubset(j.requiredSkills.map(x => x.id), skills.map(x => x.id)));
 
-  jobs = jobs.sort(function(j1, j2) { return countMatchingSkills(j1.requiredSkills, skills) - countMatchingSkills(j2.requiredSkills, skills) });
+  jobs = jobs.sort(function(j1, j2) { return countMatchingSkills(j2.requiredSkills, skills) - countMatchingSkills(j1.requiredSkills, skills) });
 
   ctx.body = jobs;
 
