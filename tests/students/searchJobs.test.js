@@ -23,6 +23,11 @@ beforeAll(async () => {
   o.studentAPISkill = [];
   o.studentAPISkill.push(StudentSkill.create({ StudentId: o.studentAPI.id, SkillId: getSkill("C#").id }));
 
+  o.verySkilledStudent = await Student.create({ firstName: 'Rino', lastName: 'Pape', email: "paperino@house.com" });
+  o.verySkilledStudentSkill = [];
+  o.verySkilledStudentSkill.push(StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("C#").id }));
+  o.verySkilledStudentSkill.push(StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("NodeJS").id }));
+
   o.company = await Company.create({email: "company@company.com"});
 
   o.job = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Normal Job"});
@@ -30,6 +35,11 @@ beforeAll(async () => {
 
   o.jobExpired = await Job.create({CompanyId: o.company.id, timeLimit: "2010-01-10", name: "Expired Job"});
   o.skillsRequiredJobExpired = await SkillSetReq.create({ JobId: o.jobExpired.id, SkillId: getSkill("C#").id });
+
+  o.jobWithMoreReqSkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Hard Job"});
+  o.skillsRequiredJobMoreReqSkills = [];
+  o.skillsRequiredJobMoreReqSkills.push(await SkillSetReq.create({ JobId: o.jobWithMoreReqSkills.id, SkillId: getSkill("C#").id }));
+  o.skillsRequiredJobMoreReqSkills.push(await SkillSetReq.create({ JobId: o.jobWithMoreReqSkills.id, SkillId: getSkill("NodeJS").id }));
 
   o.jobWithTooManySkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Job Very Skilled"});
   o.skillsRequiredJobTooManySkills = [];
@@ -45,6 +55,7 @@ beforeAll(async () => {
   o.jobApplied = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Applied Job"});
   o.skillsRequiredJobApplied = await SkillSetReq.create({ JobId: o.jobApplied.id, SkillId: getSkill("C#").id });
   o.jobApplication = await Application.create({StudentId: o.student.id, JobId: o.jobApplied.id, declined: null});
+
 });
 
 /* This looks complicated, but it simply takes all the objects
@@ -100,11 +111,16 @@ test("Student cannot find the job he already applied to", async function (){
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
 test("The student can find some jobs - API version", async function (){
-  const { studentAPI, job, company, applicationAPI } = o;
+  const { studentAPI, verySkilledStudent, job, jobWithMoreReqSkills, company, applicationAPI } = o;
   const studentId = studentAPI.id;
   const jwt = signJWT({id: studentId, userType: "student"});
   const url = `http://localhost:3000/api/v1/student/jobs/search`;
   const jobs = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).json;
   expect(jobs.length).toBeGreaterThan(0);
   expect(jobs.find(j => j.id === job.id)).toBeDefined();
+
+  // verify that the jobs are ordered by deacreasing matching skills
+  const anotherJwt = signJWT({id: verySkilledStudent.id, userType: "student"});
+  const orderedJobs = await r2.get(url, {headers: {authorization: "Bearer " + anotherJwt}}).json;
+  expect(orderedJobs[0].id).toEqual(jobWithMoreReqSkills.id);
 });
