@@ -2,7 +2,7 @@ openapi: "3.0.0"
 servers:
   - url: "http://localhost:3000/api/v1"
     description: "for local development"
-  - url: "https://pladat2.herokuapp.com/"
+  - url: "https://pladat2.herokuapp.com/api/v1"
     description: "production environment"
 info:
   description: "This is the API reference of PlaDat2. Courtesy of our marvelous backend team"
@@ -1733,7 +1733,7 @@ components:
         password:
           type: "string"
       example:
-        email: 'a@b.c'
+        email: 'Oscar@Bonham.com'
         password: 's3cr3t'
     StudentBasicProfile:
       allOf:

@@ -11,7 +11,7 @@ const sequelize = new Sequelize().getInstance();
 
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
-  const student = await Student.findByPk(userId);
+  const student = await Student.findByPk(userId, {include: [{model: Skill, as: 'skills'}]});
   ctx.assert(student, 404, "The requested user doesn't exist");
   ctx.status = 200;
   ctx.body = student;
