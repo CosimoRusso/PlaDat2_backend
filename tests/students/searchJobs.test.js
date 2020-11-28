@@ -24,12 +24,10 @@ beforeAll(async () => {
   o.studentAPISkill.push(StudentSkill.create({ StudentId: o.studentAPI.id, SkillId: getSkill("C#").id }));
 
   o.company = await Company.create({email: "company@searchJob.com"});
-  o.verySkilledStudent = await Student.create({ firstName: 'Rino', lastName: 'Pape', email: "paperino@house.com" });
+  o.verySkilledStudent = await Student.create({ firstName: 'Rino', lastName: 'Pape', email: "paperino@searchJob.com" });
   o.verySkilledStudentSkill = [];
   o.verySkilledStudentSkill.push(StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("C#").id }));
   o.verySkilledStudentSkill.push(StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("NodeJS").id }));
-
-  o.company = await Company.create({email: "company@company.com"});
 
   o.job = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Normal Job"});
   o.skillsRequiredJob1 = await SkillSetReq.create({ JobId: o.job.id, SkillId: getSkill("C#").id });
