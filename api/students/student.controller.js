@@ -83,7 +83,7 @@ exports.apply = async ctx => {
   if(application) throw { status: 400, message: "This student already applied for this job." };
 
   await Application.create( {date: pgDate(new Date()), declined: null, StudentId: studentId, JobId: jobId});
-  ctx.body = "Student applied";
+  ctx.body = { message: 'Student applied' };
   ctx.status = 201;
 };
 
