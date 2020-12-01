@@ -1733,7 +1733,7 @@ components:
         password:
           type: "string"
       example:
-        email: 'Oscar@Bonham.com'
+        email: 'google@gmail.com'
         password: 's3cr3t'
     StudentBasicProfile:
       allOf:
