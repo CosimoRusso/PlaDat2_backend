@@ -44,6 +44,9 @@ Application.belongsTo(Job);
 Company.hasMany(Job);
 Job.belongsTo(Company);
 
+Company.hasOne(City);
+City.belongsTo(Company);
+
 JobCategory.hasMany(Job);
 Job.belongsTo(JobCategory);
 

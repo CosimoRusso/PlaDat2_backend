@@ -12,9 +12,6 @@ Company.init({
   description: {
     type: DataTypes.STRING
   },
-  city: {
-    type: DataTypes.STRING
-  },
   email: {
     type: DataTypes.STRING,
     unique: true

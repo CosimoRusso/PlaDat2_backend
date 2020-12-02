@@ -1,5 +1,5 @@
 'use strict';
-const { Application, Job, Student,Company } = require("../../models").models;
+const { Application, Job, Student,Company, City, Country } = require("../../models").models;
 const signJWT=require('../../utils/signJWT');
 const { compare } = require('../../utils/password');
 
@@ -7,9 +7,19 @@ exports.getOne = async ctx => {
   let { companyId } = ctx.params;
   companyId = parseInt(companyId);
   if(!companyId) throw {status: 400, message: 'Invalid company id'};
-  const company = await Company.findOne({where: {id: companyId}});
+  const company = await Company.findOne({
+    where: {id: companyId},
+    include: [
+      { model: City },
+      { model: Country},
+      { model: Job} ]
+  });
   if (!company) throw {status: 404, message: 'Company not found'};
   ctx.body = company;
+}
+
+exports.getAll = async ctx => {
+  ctx.body = await Company.findAll();
 }
 
 exports.companyAcceptStudent = async ctx => {
