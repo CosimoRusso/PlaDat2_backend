@@ -3,6 +3,7 @@ const { discard } = require("../../api/students/student.controller");
 const { Student, Matching, Company, Job } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
+const cleanDatabase = require('../../utils/cleanDatabase.util');
 
 const noop = () => {};
 const sequelize = new Sequelize().getInstance();
@@ -22,19 +23,7 @@ beforeAll(async () => {
   o.mathingNotDiscarded = await Matching.create({JobId: o.jobInMatchingButNotDiscarded.id, StudentId: o.student.id, discarded: false});
 });
 
-/* This looks complicated, but it simply takes all the objects
- that there are inside 'o' (our database objects) and deletes them.
- It then closes the connection to the database. IMPORTANT! OTHERWISE
- TEST FAIL
-*/
-afterAll(async () => {
-  let promises = [];
-  for (let key of Object.keys(o)){
-    promises.push(o[key].destroy);
-  }
-  await Promise.all(promises);
-  await sequelize.close();
-});
+afterAll(cleanDatabase.bind(null, o, sequelize));
 
 // unit tests
 test('Student can discard the job', async function() {

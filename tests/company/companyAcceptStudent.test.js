@@ -3,6 +3,7 @@ const { companyAcceptStudent } = require("../../api/companies/company.controller
 const { Student, Application, Company, Job } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
+const cleanDatabase = require('../../utils/cleanDatabase.util');
 
 const noop = () => {};
 const sequelize = new Sequelize().getInstance();
@@ -21,19 +22,7 @@ beforeAll(async () => {
   o.applicationAPI = await Application.create({StudentId: o.studentAPI.id, JobId: o.job.id});
 });
 
-/* This looks complicated, but it simply takes all the objects
- that there are inside 'o' (our database objects) and deletes them.
- It then closes the connection to the database. IMPORTANT! OTHERWISE
- TEST FAIL
-*/
-afterAll(async () => {
-  let promises = [];
-  for (let key of Object.keys(o)){
-    promises.push(o[key].destroy);
-  }
-  await Promise.all(promises);
-  await sequelize.close();
-});
+afterAll(cleanDatabase.bind(null, o, sequelize));
 
 // unit tests - here you can include directly the middleware so you skip authorization!
 test("The company cannot accept a student that did not apply", async function (){

@@ -3,6 +3,7 @@ const { searchJobs } = require("../../api/students/student.controller");
 const { Student, Application, Company, Job, Skill, SkillSetReq, SkillSetOpt, StudentSkill, Matching } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
+const cleanDatabase = require('../../utils/cleanDatabase.util');
 
 const noop = () => {};
 const sequelize = new Sequelize().getInstance();
@@ -17,17 +18,17 @@ beforeAll(async () => {
 
   o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@searchJob.com" });
   o.studentSkill = [];
-  o.studentSkill.push(StudentSkill.create({ StudentId: o.student.id, SkillId: getSkill("C#").id }));
+  o.studentSkill.push(await StudentSkill.create({ StudentId: o.student.id, SkillId: getSkill("C#").id }));
 
   o.studentAPI = await Student.create({ firstName: 'PippoAPI', lastName: 'Pluto', email: "studentAPI@searchJob.com" });
   o.studentAPISkill = [];
-  o.studentAPISkill.push(StudentSkill.create({ StudentId: o.studentAPI.id, SkillId: getSkill("C#").id }));
+  o.studentAPISkill.push(await StudentSkill.create({ StudentId: o.studentAPI.id, SkillId: getSkill("C#").id }));
 
   o.company = await Company.create({email: "company@searchJob.com"});
   o.verySkilledStudent = await Student.create({ firstName: 'Rino', lastName: 'Pape', email: "paperino@searchJob.com" });
   o.verySkilledStudentSkill = [];
-  o.verySkilledStudentSkill.push(StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("C#").id }));
-  o.verySkilledStudentSkill.push(StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("NodeJS").id }));
+  o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("C#").id }));
+  o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("NodeJS").id }));
 
   o.job = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Normal Job"});
   o.skillsRequiredJob1 = await SkillSetReq.create({ JobId: o.job.id, SkillId: getSkill("C#").id });
@@ -56,19 +57,7 @@ beforeAll(async () => {
   o.jobApplication = await Application.create({StudentId: o.student.id, JobId: o.jobApplied.id, declined: null});
 });
 
-/* This looks complicated, but it simply takes all the objects
- that there are inside 'o' (our database objects) and deletes them.
- It then closes the connection to the database. IMPORTANT! OTHERWISE
- TEST FAIL
-*/
-afterAll(async () => {
-  let promises = [];
-  for (let key of Object.keys(o)){
-    promises.push(o[key].destroy);
-  }
-  await Promise.all(promises);
-  await sequelize.close();
-});
+afterAll(cleanDatabase.bind(null, o, sequelize));
 
 // unit tests - here you can include directly the middleware so you skip authorization!
 test("Student cannot find the expired job", async function (){

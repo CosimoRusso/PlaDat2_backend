@@ -2,6 +2,7 @@ const r2 = require("r2");
 const { getOne } = require("../../api/companies/company.controller");
 const { Student, Application, Company, Job } = require('../../models').models;
 const Sequelize = require('../../models/db');
+const cleanDatabase = require('../../utils/cleanDatabase.util');
 
 const noop = () => {};
 const sequelize = new Sequelize().getInstance();
@@ -14,19 +15,7 @@ beforeAll(async () => {
   o.company = await Company.create({email: "companyCreateTest@company.com", name: 'Company beautiful'});
 });
 
-/* This looks complicated, but it simply takes all the objects
- that there are inside 'o' (our database objects) and deletes them.
- It then closes the connection to the database. IMPORTANT! OTHERWISE
- TEST FAIL
-*/
-afterAll(async () => {
-  let promises = [];
-  for (let key of Object.keys(o)){
-    promises.push(o[key].destroy);
-  }
-  await Promise.all(promises);
-  await sequelize.close();
-});
+afterAll(cleanDatabase.bind(null, o, sequelize));
 
 // unit tests - here you can include directly the middleware so you skip authorization!
 test("The company exists", async function (){

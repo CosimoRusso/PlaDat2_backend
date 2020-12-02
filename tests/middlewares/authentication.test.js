@@ -2,6 +2,7 @@ const signJWT = require('../../utils/signJWT');
 const { authentication, studentAuthentication, companyAuthentication } = require('../../middleware/authentication');
 const { Student, Company } = require('../../models').models;
 const Sequelize = require('../../models/db');
+const cleanDatabase = require('../../utils/cleanDatabase.util');
 
 const noop = () => {};
 const sequelize = new Sequelize().getInstance();
@@ -12,14 +13,7 @@ beforeAll(async () => {
   o.company = await Company.create({email: 'company@testAuth.it', name: 'super company'});
 });
 
-afterAll(async () => {
-  let promises = [];
-  for (let key of Object.keys(o)){
-    promises.push(o[key].destroy);
-  }
-  await Promise.all(promises);
-  await sequelize.close();
-});
+afterAll(cleanDatabase.bind(null, o, sequelize));
 
 // unit tests
 test('student authentication works', async function() {
