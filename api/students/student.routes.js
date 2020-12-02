@@ -18,6 +18,7 @@ module.exports = Router => {
     .use(studentAuthentication)
     .get('/applications', controller.getApplications)
     .post('/jobs/apply/:jobId', controller.apply)
+    .post('/jobs/discard/:jobId', controller.discard)
     .get('/jobs/search', controller.searchJobs);
 
   return router;

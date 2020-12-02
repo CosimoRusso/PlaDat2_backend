@@ -87,6 +87,24 @@ exports.apply = async ctx => {
   ctx.status = 201;
 };
 
+exports.discard = async ctx => {
+  const jobId = parseInt(ctx.params.jobId);
+  const studentId = ctx.user.id;
+
+  if(!jobId) throw { status: 400, message: 'Bad format for job id' }
+  const job = await Job.findOne({where: {id: jobId}});
+  if (!job) throw { status: 400, message: 'Job with given id not found' }
+  let matching = await Matching.findOne({where: { StudentId: studentId, JobId: jobId }});
+  if (matching) {
+    await matching.update({discarded: true});
+  }else{
+    matching = await Matching.create({discarded: true, StudentId: studentId, JobId: jobId});
+  }
+  if (!matching || !matching.discarded) throw { status: 400, message: 'Unexpected error while discarding job' }
+  ctx.body = { message: 'Job discarded' };
+  ctx.status = 201;
+};
+
 exports.searchJobs = async ctx => {
   const skills = await ctx.user.getSkills();
   const today = pgDate(new Date());
