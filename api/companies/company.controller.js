@@ -1,7 +1,7 @@
 'use strict';
 const { Application, Job, Student,Company, City, Country } = require("../../models").models;
 const signJWT=require('../../utils/signJWT');
-const { compare } = require('../../utils/password');
+const { hash, compare } = require('../../utils/password');
 
 exports.getOne = async ctx => {
   let { companyId } = ctx.params;
@@ -79,3 +79,32 @@ exports.login = async ctx => {
     throw { status: 401, message: "Auth failed" };
   }
 };
+
+exports.update = async ctx => {
+  const { name, description, email, password, picture } = ctx.request.body;
+  const company = ctx.user;
+
+  if(email !== undefined){
+    const alreadyExists = await Company.findOne({where: { email: email }});
+    if(!alreadyExists){
+      await company.update({email: email})
+    } else throw { status: 400, message: "This email is already taken." };
+  }
+
+  if(name){
+    await company.update({name: name});
+  }
+  if(description){
+    await company.update({description: description});
+  }
+  if(password){
+    const hashedPassword = await hash(password);
+    await company.update({password: hashedPassword});
+  }
+  if(picture){
+    await company.update({picture: picture});
+  }
+
+  ctx.status = 200;
+  ctx.body = { message: 'Profile edited' };
+}
