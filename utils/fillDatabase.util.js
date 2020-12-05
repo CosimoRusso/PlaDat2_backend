@@ -43,86 +43,86 @@ module.exports = async (models) => {
 
   const pwd = await hash("s3cr3t");
   const LilyPage = await Student.create({firstName: "Lily", lastName: "Page", email: "Lily@Page.com", password: pwd, dateOfBirth: "1999-11-19"});
-  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("C#").id });
-  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("X++").id });
-  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("Zebra").id });
-  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("ReactJS").id });
-  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("Angular").id });
-  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("ExpressJS").id });
+  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("C#").id, rating: 4});
+  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("X++").id , rating: 2});
+  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("Zebra").id, rating: 3 });
+  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("ReactJS").id, rating: 5 });
+  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("Angular").id, rating: 1 });
+  await StudentSkill.create({ StudentId: LilyPage.id, SkillId: getSkill("ExpressJS").id, rating: 4 });
 
 const GeorgeJones = await Student.create({firstName: "George", lastName: "Jones", email: "George@Jones.com", password: pwd, dateOfBirth: "1998-09-03"});
-  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Swift").id });
-  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Latex").id });
-  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("F#").id });
-  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("PHP").id });
-  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Javascript").id });
-  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Yii").id });
+  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Swift").id, rating: 2 });
+  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Latex").id, rating: 3 });
+  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("F#").id , rating: 4});
+  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("PHP").id, rating: 5 });
+  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Javascript").id, rating: 4 });
+  await StudentSkill.create({ StudentId: GeorgeJones.id, SkillId: getSkill("Yii").id, rating: 3 });
   
 const TheoPage = await Student.create({firstName: "Theo", lastName: "Page", email: "Theo@Page.com", password: pwd, dateOfBirth: "1999-05-14"});
-  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Swift").id });
-  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("X++").id });
-  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("C#").id });
-  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Bootstrap").id });
-  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Javascript").id });
-  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("NodeJS").id });
+  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Swift").id, rating: 4 });
+  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("X++").id, rating: 5 });
+  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("C#").id, rating: 1 });
+  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Bootstrap").id, rating: 3 });
+  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("Javascript").id, rating: 4 });
+  await StudentSkill.create({ StudentId: TheoPage.id, SkillId: getSkill("NodeJS").id, rating: 1 });
   
 const EmilyJones = await Student.create({firstName: "Emily", lastName: "Jones", email: "Emily@Jones.com", password: pwd, dateOfBirth: "2000-10-09"});
-  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("HTML").id });
-  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("Swift").id });
-  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("Go").id });
-  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("X++").id });
-  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("Yii").id });
-  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("Angular").id });
-  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("ExpressJS").id });
+  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("HTML").id, rating: 2 });
+  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("Swift").id, rating: 4 });
+  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("Go").id, rating: 5 });
+  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("X++").id, rating: 2 });
+  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("Yii").id, rating: 4 });
+  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("Angular").id, rating: 4 });
+  await StudentSkill.create({ StudentId: EmilyJones.id, SkillId: getSkill("ExpressJS").id, rating: 3 });
   
 const EmilyBonham = await Student.create({firstName: "Emily", lastName: "Bonham", email: "Emily@Bonham.com", password: pwd, dateOfBirth: "2001-02-23"});
-  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Go").id });
-  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("F#").id });
-  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Latex").id });
-  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Bootstrap").id });
-  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Yii").id });
-  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("PHP").id });
+  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Go").id, rating: 4 });
+  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("F#").id , rating: 3});
+  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Latex").id , rating: 2});
+  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Bootstrap").id, rating: 4 });
+  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("Yii").id , rating: 4});
+  await StudentSkill.create({ StudentId: EmilyBonham.id, SkillId: getSkill("PHP").id, rating: 3 });
   
 const RosiePlant = await Student.create({firstName: "Rosie", lastName: "Plant", email: "Rosie@Plant.com", password: pwd, dateOfBirth: "2000-05-07"});
-  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Swift").id });
-  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Latex").id });
-  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Koa").id });
-  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Bootstrap").id });
-  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Yii").id });
+  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Swift").id, rating: 4 });
+  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Latex").id , rating: 2});
+  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Koa").id, rating: 4 });
+  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Bootstrap").id, rating: 3 });
+  await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Yii").id, rating: 4 });
   
 const OscarBonham = await Student.create({firstName: "Oscar", lastName: "Bonham", email: "Oscar@Bonham.com", password: pwd, dateOfBirth: "1999-12-27"});
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("C#").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Koa").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("IBM\ Watson").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Sequelize").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Docker").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Wordpress").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Bootstrap").id });
-  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("MySQL").id });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("C#").id, rating: 4 });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Koa").id, rating: 1 });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("IBM\ Watson").id, rating: 3 });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Sequelize").id, rating: 4 });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Docker").id, rating: 5 });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Wordpress").id, rating: 4 });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Bootstrap").id, rating: 4 });
+  await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("MySQL").id, rating: 3 });
 
 const WillowPlant = await Student.create({firstName: "Willow", lastName: "Plant", email: "Willow@Plant.com", password: pwd, dateOfBirth: "2001-07-02"});
-  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("Latex").id });
-  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("TypeScript").id });
-  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("UnderscoreJS").id });
-  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("IBM\ Watson").id });
-  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("PHP").id });
-  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("ExpressJS").id });
+  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("Latex").id, rating: 3 });
+  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("TypeScript").id, rating: 4 });
+  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("UnderscoreJS").id, rating: 3 });
+  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("IBM\ Watson").id, rating: 2 });
+  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("PHP").id , rating: 1});
+  await StudentSkill.create({ StudentId: WillowPlant.id, SkillId: getSkill("ExpressJS").id, rating: 4 });
 
 const RosiePage = await Student.create({firstName: "Rosie", lastName: "Page", email: "Rosie@Page.com", password: pwd, dateOfBirth: "1999-08-08"});
-  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("UnderscoreJS").id });
-  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("Latex").id });
-  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("Swift").id });
-  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("ExpressJS").id });
-  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("NodeJS").id });
-  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("PHP").id });
+  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("UnderscoreJS").id, rating: 5 });
+  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("Latex").id, rating: 2 });
+  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("Swift").id, rating: 4 });
+  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("ExpressJS").id, rating: 4 });
+  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("NodeJS").id, rating: 3 });
+  await StudentSkill.create({ StudentId: RosiePage.id, SkillId: getSkill("PHP").id, rating: 4 });
   
 const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", email: "Jacob@Jones.com", password: pwd, dateOfBirth: "2000-03-13"});
-  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("Zebra").id });
-  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("UnderscoreJS").id });
-  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("IBM\ Watson").id });
-  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("Docker").id });
-  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("MongoDB").id });
-  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("MySQL").id });
+  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("Zebra").id, rating: 1 });
+  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("UnderscoreJS").id, rating: 4 });
+  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("IBM\ Watson").id, rating: 5 });
+  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("Docker").id, rating: 3 });
+  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("MongoDB").id, rating: 4 });
+  await StudentSkill.create({ StudentId: JacobJones.id, SkillId: getSkill("MySQL").id, rating: 5 });
   
 
 //BUILD BUSINESSES
