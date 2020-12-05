@@ -16,9 +16,9 @@ const o = {};
 beforeAll(async () => {
     const hashed = await hash("oldPassword");
     o.company = await Company.create({email: "company@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
-    o.company2 = await Company.create({email: "company@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
-    o.company3 = await Company.create({email: "company@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
-    o.company4 = await Company.create({email: "company@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
+    o.company2 = await Company.create({email: "company2@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
+    o.company3 = await Company.create({email: "company3@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
+    o.company4 = await Company.create({email: "company4@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
     o.apiCompany1 = await Company.create({email: "apicompany1@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
     o.apiCompany2 = await Company.create({email: "apicompany2@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
 });
@@ -50,7 +50,7 @@ test('Company can change all the information', async function() {
     expect(company2.id).toBeGreaterThan(0);
     expect(company2.name).toBe('newName');
     expect(company2.description).toBe('Old description');
-    expect(company2.email).toBe('company@old.com');
+    expect(company2.email).toBe('company2@old.com');
     expect(company2.picture).toBe('oldPic.png');
     const comparePassword = await compare('oldPassword', company2.password);
     expect(comparePassword).toBe(true);
@@ -58,14 +58,14 @@ test('Company can change all the information', async function() {
 
   test('Company can change only the email', async function() {
     const { company3 } = o;
-    const ctx = {request: { body: {email: 'company@newest.com' } }, user: company3};
+    const ctx = {request: { body: {email: 'company3@newest.com' } }, user: company3};
     await update(ctx, noop);
     await company3.reload();
 
     expect(company3.id).toBeGreaterThan(0);
     expect(company3.name).toBe('oldName');
     expect(company3.description).toBe('Old description');
-    expect(company3.email).toBe('company@newest.com');
+    expect(company3.email).toBe('company3@newest.com');
     expect(company3.picture).toBe('oldPic.png');
     const comparePassword = await compare('oldPassword', company3.password);
     expect(comparePassword).toBe(true);
@@ -73,7 +73,7 @@ test('Company can change all the information', async function() {
 
   test('Company can not change to an already used email', async function() {
     const { company3 } = o;
-    const ctx = {request: { body: {email: 'company@new.com' } }, user: company3};
+    const ctx = {request: { body: {email: 'company3@new.com' } }, user: company3};
     try{
         await update(ctx, noop);
     }catch(e){
@@ -91,7 +91,7 @@ test('Company can change all the information', async function() {
     expect(company4.id).toBeGreaterThan(0);
     expect(company4.name).toBe('oldName');
     expect(company4.description).toBe('Old description');
-    expect(company4.email).toBe('company@old.com');
+    expect(company4.email).toBe('company4@old.com');
     expect(company4.picture).toBe('oldPic.png');
     const comparePassword = await compare('newPassword', company4.password);
     expect(comparePassword).toBe(true);
