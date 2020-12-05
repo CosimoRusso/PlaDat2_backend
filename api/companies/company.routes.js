@@ -10,6 +10,7 @@ module.exports = Router => {
 
   router
     .post('/login', controller.login)
+    .post('/register', controller.register)
     .get('/findOne/:companyId', controller.getOne)
     .get('/', controller.getAll)
     .use(authentication) //from now on, only authenticated requests!

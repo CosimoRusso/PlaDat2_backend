@@ -44,9 +44,9 @@ exports.getApplications = async ctx => {
 
 exports.register = async ctx => {
   const { firstName, lastName, email, password, dateOfBirth, picture, cityId } = ctx.request.body;
-  if (!email || !password) throw { status: 400, message: 'email and password fields are required' };
+  if (!email || !password) throw { status: 400, message: 'Email and password are required fields' };
   const alreadyExists = await Student.findOne({where: {email}});
-  if(alreadyExists) throw { status: 400, message: 'email already used' };
+  if(alreadyExists) throw { status: 400, message: 'Email already used' };
   const hashedPassword = await hash(password);
   const student = await Student.create({ firstName, lastName, email, password: hashedPassword, dateOfBirth, picture, cityId });
 

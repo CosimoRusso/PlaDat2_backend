@@ -1,7 +1,7 @@
 'use strict';
 const { Application, Job, Student,Company, City, Country } = require("../../models").models;
 const signJWT=require('../../utils/signJWT');
-const { compare } = require('../../utils/password');
+const { hash, compare } = require('../../utils/password');
 
 exports.getOne = async ctx => {
   let { companyId } = ctx.params;
@@ -58,7 +58,21 @@ exports.getCandidatesForJob = async ctx =>{
   ctx.body = studentsApplied
 }
 
+exports.register = async ctx => {
+  const { name, description, picture, email, password, cityId } = ctx.request.body;
 
+  if(!email || !password) throw { status: 400, message: 'Email and password are required fields' };
+
+  const alreadyExists = await Company.findOne({where: {email}});
+  if(alreadyExists) throw { status: 400, message: 'Email already used' };
+
+  const hashedPassword = await hash(password);
+  const company = await Company.create({ name, description, email, password: hashedPassword, picture, cityId });
+
+  if(!company) throw { status: 500, message: 'Unexpected Error' };
+
+  ctx.status = 201;
+}
 
 exports.login = async ctx => {
   const {email, password} = ctx.request.body;
