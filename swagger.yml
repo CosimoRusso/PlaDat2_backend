@@ -279,7 +279,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Capability"
+                  $ref: "#/components/schemas/CapabilityWithStarts"
         400:
           description: "Bad Request"
           content:
@@ -1799,11 +1799,11 @@ components:
             capabilities:
               type: array
               items:
-                $ref: '#/components/schemas/Capability'
+                $ref: '#/components/schemas/CapabilityWithStarts'
             otherCapabilities:
               type: array
               items:
-                $ref: '#/components/schemas/Capability'
+                $ref: '#/components/schemas/CapabilityWithStarts'
       example:
         firstName: "Pippo"
         lastName: "Poppi"
@@ -1934,6 +1934,17 @@ components:
         id: 12
         name: "Java"
 
+    CapabilityWithStarts:
+      allOf:
+      - $ref: "#/components/schemas/Capability"
+      - type: "object"
+        properties:
+          abilityValue:
+            type: "integer"
+      example:
+        id: 12
+        name: "Java"
+        abilityValue: 4
     Job:
       type: "object"
       properties:
