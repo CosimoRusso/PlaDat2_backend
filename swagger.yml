@@ -331,7 +331,7 @@ paths:
         content:
           application/json:
             schema:
-              type: "object"
+              type: "object" 
               properties:
                 id:
                   type: "integer"
@@ -459,7 +459,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Capability"
+                  $ref: "#/components/schemas/CapabilityWithStarts"
         400:
           description: "Bad Request"
           content:
@@ -1939,12 +1939,12 @@ components:
       - $ref: "#/components/schemas/Capability"
       - type: "object"
         properties:
-          abilityValue:
+          skillValue:
             type: "integer"
       example:
         id: 12
         name: "Java"
-        abilityValue: 4
+        skillValue: 4
     Job:
       type: "object"
       properties:
