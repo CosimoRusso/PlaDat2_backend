@@ -107,6 +107,8 @@ exports.discard = async ctx => {
 
 exports.searchJobs = async ctx => {
   const skills = await ctx.user.getSkills();
+  
+
   const today = pgDate(new Date());
 
   const alreadyExcludedJobs = sequelize.dialect.queryGenerator.selectQuery("Matchings", {
@@ -130,15 +132,16 @@ exports.searchJobs = async ctx => {
           ]  },
       },
     include: [
+      {model: StudentSkill, where: {rating: {[Op.gt]: 2}}},
       {model: Skill, as: "requiredSkills" },
+      {model: Skill, as: "optionalSkills"},
     ]
   });
-  jobs = jobs.filter(j => isSubset(j.requiredSkills.map(x => x.id), skills.map(x => x.id)));
-
-  jobs = jobs.sort(function(j1, j2) { return countMatchingSkills(j2.requiredSkills, skills) - countMatchingSkills(j1.requiredSkills, skills) });
-
+//  jobs = jobs.filter(j => isSubset(j.requiredSkills.map(x => x.id), skills.map(x => x.id)));
+//  jobs = jobs.sort(function(j1, j2) { return countMatchingSkills(j2.requiredSkills, skills) - countMatchingSkills(j1.requiredSkills, skills) });
+  const alpha = 0.6
+  jobs = jobs.sort(function(j1, j2) {return calculateScore()} )
   ctx.body = jobs;
-
 }
 
 function isSubset(smallSet, bigSet){

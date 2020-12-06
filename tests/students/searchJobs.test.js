@@ -4,6 +4,7 @@ const { Student, Application, Company, Job, Skill, SkillSetReq, SkillSetOpt, Stu
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 const cleanDatabase = require('../../utils/cleanDatabase.util');
+const assert = require('assert').strict;
 
 const noop = () => {};
 const sequelize = new Sequelize().getInstance();
@@ -18,15 +19,18 @@ beforeAll(async () => {
 
   o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@searchJob.com" });
   o.studentSkill = [];
+  assert(o.student.id > 0);
   o.studentSkill.push(await StudentSkill.create({ StudentId: o.student.id, SkillId: getSkill("C#").id }));
 
   o.studentAPI = await Student.create({ firstName: 'PippoAPI', lastName: 'Pluto', email: "studentAPI@searchJob.com" });
   o.studentAPISkill = [];
+  assert(o.studentAPI.id > 0);
   o.studentAPISkill.push(await StudentSkill.create({ StudentId: o.studentAPI.id, SkillId: getSkill("C#").id }));
 
   o.company = await Company.create({email: "company@searchJob.com"});
   o.verySkilledStudent = await Student.create({ firstName: 'Rino', lastName: 'Pape', email: "paperino@searchJob.com" });
   o.verySkilledStudentSkill = [];
+  assert(o.verySkilledStudent.id > 0);
   o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("C#").id }));
   o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("NodeJS").id }));
 

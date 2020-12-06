@@ -68,6 +68,8 @@ Job.belongsToMany(Skill, { through: SkillSetReq, as: "requiredSkills" });
 Skill.belongsToMany(Job, { through: SkillSetOpt, as: "optionalSkills" });
 Job.belongsToMany(Skill, { through: SkillSetOpt, as: "optionalSkills" });
 
+Student.hasMany(StudentSkill);
+StudentSkill.belongsTo(Student);
 Student.belongsToMany(Skill, { through: StudentSkill, as: "skills" });
 Skill.belongsToMany(Student, { through: StudentSkill, as: "students" });
 
