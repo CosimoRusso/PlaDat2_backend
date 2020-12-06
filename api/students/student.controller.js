@@ -154,3 +154,35 @@ function countMatchingSkills(requiredSkills, ownedSkills) {
   });
   return count;
 }
+
+exports.update = async ctx => {
+  const { firstName, lastName, email, password, dateOfBirth, picture } = ctx.request.body;
+  const student = ctx.user;
+
+  if(email){
+    const alreadyExists = await Student.findOne({where: { email: email }});
+    if(!alreadyExists){
+      await student.update({email: email})
+    } else throw { status: 400, message: "This email is already taken." };
+  }
+
+  if(firstName){
+    await student.update({firstName: firstName});
+  }
+  if(lastName){
+    await student.update({lastName: lastName});
+  }
+  if(password){
+    const hashedPassword = await hash(password);
+    await student.update({password: hashedPassword});
+  }
+  if(dateOfBirth){
+    await student.update({dateOfBirth: dateOfBirth});
+  }
+  if(picture){
+    await student.update({picture: picture});
+  }
+
+  ctx.status = 200;
+  ctx.body = { message: 'Profile edited' };
+}
