@@ -17,6 +17,14 @@ exports.getOne = async ctx => {
   ctx.body = student;
 };
 
+exports.getOneByEmail = async ctx => {
+  const { email } = ctx.params;
+  const student = await Student.findOne({where: { email }});
+  ctx.assert(student, 404, "The requested user doesn't exist");
+  ctx.status = 200;
+  ctx.body = student;
+};
+
 exports.getAll = async ctx => {
   ctx.status = 200;
   ctx.body = await Student.findAll();
@@ -43,12 +51,12 @@ exports.getApplications = async ctx => {
 }
 
 exports.register = async ctx => {
-  const { firstName, lastName, email, password, dateOfBirth, picture, cityId } = ctx.request.body;
+  const { firstName, lastName, email, password, dateOfBirth, picture, CityId } = ctx.request.body;
   if (!email || !password) throw { status: 400, message: 'Email and password are required fields' };
   const alreadyExists = await Student.findOne({where: {email}});
   if(alreadyExists) throw { status: 400, message: 'Email already used' };
   const hashedPassword = await hash(password);
-  const student = await Student.create({ firstName, lastName, email, password: hashedPassword, dateOfBirth, picture, cityId });
+  const student = await Student.create({ firstName, lastName, email, password: hashedPassword, dateOfBirth, picture, CityId });
 
   if (!student) throw {status: 500, message: 'Unexpected Error'};
 

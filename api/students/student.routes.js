@@ -12,6 +12,7 @@ module.exports = Router => {
     .get('/', controller.getAll)
     .post('/', controller.createOne)
     .get('/findOne/:userId', controller.getOne)
+    .get('/findByEmail/:email', controller.getOneByEmail)
     .post('/login', controller.login)
     .post('/register', controller.register)
     .use(authentication)
