@@ -79,6 +79,7 @@ test("Student can change all the information - API version", async function (){
     const response = await r2.post(url, {json:{email: "apistudent1@new.com", firstName: "newName", dateOfBirth:'1998-12-19', lastName: "newLastname", password: 'newPassword', picture: "newPic.png"}, headers: {authorization: "Bearer " + jwt}}).response;
     apiStudent1.reload();
 
+    expect(response.status).toBe(200);
     expect(apiStudent1.id).toBeGreaterThan(0);
     expect(apiStudent1.email).toBe("apistudent1@new.com");
     expect(apiStudent1.firstName).toBe("newName");
