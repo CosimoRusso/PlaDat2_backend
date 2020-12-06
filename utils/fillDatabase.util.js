@@ -22,7 +22,6 @@ module.exports = async (models) => {
   const countries = await Country.findAll();
   await City.bulkCreate(cities.map(city => {
     let countryId = countries.find(country => country.code === city.country).id;
-    countryId = countryId.id;
     return {
       name: city.name,
       CountryId: countryId,

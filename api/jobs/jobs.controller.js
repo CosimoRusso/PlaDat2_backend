@@ -1,5 +1,5 @@
 'use strict';
-const { Job, Company, Skill} = require("../../models").models;
+const { Job, Company, Skill, City, Country} = require("../../models").models;
 
 //TODO write tests
 exports.getOne = async ctx => {
@@ -10,6 +10,7 @@ exports.getOne = async ctx => {
     where: {id: jobId},
     include: [
       {model: Company},
+      {model: City, include:[{ model: Country }]},
       {model: Skill, as: 'requiredSkills'},
       {model: Skill, as: 'optionalSkills'},
     ]});
