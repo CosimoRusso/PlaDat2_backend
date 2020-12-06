@@ -279,7 +279,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Capability"
+                  $ref: "#/components/schemas/CapabilityWithStarts"
         400:
           description: "Bad Request"
           content:
@@ -331,7 +331,7 @@ paths:
         content:
           application/json:
             schema:
-              type: "object"
+              type: "object" 
               properties:
                 id:
                   type: "integer"
@@ -459,7 +459,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Capability"
+                  $ref: "#/components/schemas/CapabilityWithStarts"
         400:
           description: "Bad Request"
           content:
@@ -1797,13 +1797,13 @@ components:
         - type: "object"
           properties:
             capabilities:
-              type: "array"
+              type: array
               items:
-                - $ref: '#/components/schemas/Capability'
+                $ref: '#/components/schemas/CapabilityWithStarts'
             otherCapabilities:
-              type: "array"
+              type: array
               items:
-                - $ref: '#/components/schemas/Capability'
+                $ref: '#/components/schemas/CapabilityWithStarts'
       example:
         firstName: "Pippo"
         lastName: "Poppi"
@@ -1815,7 +1815,7 @@ components:
         otherCapabilities: [ 1,2,3,5 ]
     Student:
       allOf:
-        - $ref: "#/components/schemas/StudentFullProfile"
+        - $ref: "#/components/schemas/StudentWithPopulatedCapabilities"
         - $ref: "#/components/schemas/Credentials"
 
     CompanyBasicProfile:
@@ -1934,6 +1934,17 @@ components:
         id: 12
         name: "Java"
 
+    CapabilityWithStarts:
+      allOf:
+      - $ref: "#/components/schemas/Capability"
+      - type: "object"
+        properties:
+          skillValue:
+            type: "integer"
+      example:
+        id: 12
+        name: "Java"
+        skillValue: 4
     Job:
       type: "object"
       properties:
