@@ -158,7 +158,7 @@ function countMatchingSkills(requiredSkills, ownedSkills) {
 exports.update = async ctx => {
   const { firstName, lastName, email, password, dateOfBirth, picture } = ctx.request.body;
   const student = ctx.user;
-  var changed = false;
+  let changed = false;
 
   if(email){
     const alreadyExists = await Student.findOne({where: { email: email }});

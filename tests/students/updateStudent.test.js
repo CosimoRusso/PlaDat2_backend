@@ -76,7 +76,7 @@ test('Student can change all the information', async function() {
 test("Student can change all the information - API version", async function (){
     const { apiStudent1 } = o;
     const jwt = signJWT({id: apiStudent1.id, userType: "student"});
-    const url = `http://localhost:3000/api/v1/student/update`;
+    const url = `http://localhost:3000/api/v1/student/profile`;
     const response = await r2.post(url, {json:{email: "apistudent1@new.com", firstName: "newName", dateOfBirth:'1998-12-19', lastName: "newLastname", password: 'newPassword', picture: "newPic.png"}, headers: {authorization: "Bearer " + jwt}}).response;
     await apiStudent1.reload();
 
@@ -95,7 +95,7 @@ test("Student can change all the information - API version", async function (){
   test("Student can change only the email - API version", async function (){
     const { apiStudent2 } = o;
     const jwt = signJWT({id: apiStudent2.id, userType: "student"});
-    const url = `http://localhost:3000/api/v1/student/update`;
+    const url = `http://localhost:3000/api/v1/student/profile`;
     const response = await r2.post(url, {json:{email: "apistudent2@new.com"}, headers: {authorization: "Bearer " + jwt}}).response;
     await apiStudent2.reload();
 
@@ -114,7 +114,7 @@ test("Student can change all the information - API version", async function (){
   test("Student can not change to an already used e-mail - API version", async function (){
     const { apiStudent2 } = o;
     const jwt = signJWT({id: apiStudent2.id, userType: "student"});
-    const url = `http://localhost:3000/api/v1/student/update`;
+    const url = `http://localhost:3000/api/v1/student/profile`;
     const response = await r2.post(url, {json:{email: "apistudent1@new.com"}, headers: {authorization: "Bearer " + jwt}}).response;
     await apiStudent2.reload();
 
@@ -126,7 +126,7 @@ test("Student can change all the information - API version", async function (){
   test("Student makes no changes - API version", async function (){
     const { apiStudent3 } = o;
     const jwt = signJWT({id: apiStudent3.id, userType: "student"});
-    const url = `http://localhost:3000/api/v1/student/update`;
+    const url = `http://localhost:3000/api/v1/student/profile`;
     const response = await r2.post(url, {json:{}, headers: {authorization: "Bearer " + jwt}}).response;
     await apiStudent3.reload();
 
