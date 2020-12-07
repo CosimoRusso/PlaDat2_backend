@@ -20,19 +20,19 @@ beforeAll(async () => {
   o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@searchJob.com" });
   o.studentSkill = [];
   assert(o.student.id > 0);
-  o.studentSkill.push(await StudentSkill.create({ StudentId: o.student.id, SkillId: getSkill("C#").id }));
+  o.studentSkill.push(await StudentSkill.create({ StudentId: o.student.id, SkillId: getSkill("C#").id, rating: 3}));
 
   o.studentAPI = await Student.create({ firstName: 'PippoAPI', lastName: 'Pluto', email: "studentAPI@searchJob.com" });
   o.studentAPISkill = [];
   assert(o.studentAPI.id > 0);
-  o.studentAPISkill.push(await StudentSkill.create({ StudentId: o.studentAPI.id, SkillId: getSkill("C#").id }));
+  o.studentAPISkill.push(await StudentSkill.create({ StudentId: o.studentAPI.id, SkillId: getSkill("C#").id , rating: 3}));
 
   o.company = await Company.create({email: "company@searchJob.com"});
   o.verySkilledStudent = await Student.create({ firstName: 'Rino', lastName: 'Pape', email: "paperino@searchJob.com" });
   o.verySkilledStudentSkill = [];
   assert(o.verySkilledStudent.id > 0);
-  o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("C#").id }));
-  o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("NodeJS").id }));
+  o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("C#").id , rating: 3}));
+  o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("NodeJS").id , rating: 4})); 
 
   o.job = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Normal Job"});
   o.skillsRequiredJob1 = await SkillSetReq.create({ JobId: o.job.id, SkillId: getSkill("C#").id });
@@ -44,6 +44,13 @@ beforeAll(async () => {
   o.skillsRequiredJobMoreReqSkills = [];
   o.skillsRequiredJobMoreReqSkills.push(await SkillSetReq.create({ JobId: o.jobWithMoreReqSkills.id, SkillId: getSkill("C#").id }));
   o.skillsRequiredJobMoreReqSkills.push(await SkillSetReq.create({ JobId: o.jobWithMoreReqSkills.id, SkillId: getSkill("NodeJS").id }));
+
+  /*should be ranked lower because the student does not have the F# skill */
+  o.jobWithTooManyOptionalSkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Hard Job"});
+  o.skillsTooManyOptional = [];
+  o.skillsTooManyOptional.push(await SkillSetReq.create({ JobId: o.jobWithTooManyOptionalSkills.id, SkillId: getSkill("C#").id }));
+  o.skillsTooManyOptional.push(await SkillSetReq.create({ JobId: o.jobWithTooManyOptionalSkills.id, SkillId: getSkill("NodeJS").id }));
+  o.skillsTooManyOptional.push(await SkillSetOpt.create({ JobId: o.jobWithTooManyOptionalSkills.id, SkillId: getSkill("F#").id }));
 
   o.jobWithTooManySkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Job Very Skilled"});
   o.skillsRequiredJobTooManySkills = [];
@@ -102,7 +109,7 @@ test("Student cannot find the job he already applied to", async function (){
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
 test("The student can find some jobs - API version", async function (){
-  const { studentAPI, verySkilledStudent, job, jobWithMoreReqSkills, company, applicationAPI } = o;
+  const { studentAPI, verySkilledStudent, job, jobWithMoreReqSkills, company, applicationAPI, skillsTooManyOptional} = o;
   const studentId = studentAPI.id;
   const jwt = signJWT({id: studentId, userType: "student"});
   const url = `http://localhost:3000/api/v1/student/jobs/search`;

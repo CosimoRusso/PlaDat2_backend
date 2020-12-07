@@ -72,6 +72,8 @@ Student.belongsToMany(Skill, { through: StudentSkill, as: "skills" });
 Skill.belongsToMany(Student, { through: StudentSkill, as: "students" });
 Student.hasMany(StudentSkill);
 StudentSkill.belongsTo(Student);
+Skill.hasMany(StudentSkill);
+StudentSkill.belongsTo(Skill);
 
 async function sync() {
   await sequelize.sync({ force: databaseConfig.reset });
