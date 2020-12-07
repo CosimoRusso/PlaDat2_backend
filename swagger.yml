@@ -1020,20 +1020,13 @@ paths:
       x-security-scopes:
         - "company"
 
-  /company/{companyId}/profile:
+  /company/profile:
     get:
       tags:
         - "company"
       summary: "Company profile"
       description: "Returns the complete profile of the company indicated by the id"
       operationId: "getCompanyProfile"
-      parameters:
-        - name: "companyId"
-          in: "path"
-          description: "id of the company"
-          required: true
-          schema:
-            type: "integer"
       responses:
         200:
           description: "Shows the company's profile"
@@ -1080,13 +1073,6 @@ paths:
       summary: "Edit Company profile"
       description: "Modifies the company's profile, it's worth mentioning that this request doesn't modify the job offers, but only the information about the company"
       operationId: "postCompanyProfile"
-      parameters:
-        - name: "companyId"
-          in: "path"
-          description: "id of the company"
-          required: true
-          schema:
-            type: "integer"
       requestBody:
         required: true
         content:
@@ -1137,20 +1123,13 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "company"
-  /company/{companyId}/jobOffers:
+  /company/jobOffers:
     get:
       tags:
         - "company"
       summary: "Job offered by the company"
       description: "Returns the job offers of the company specified by the companyId"
       operationId: "getJobsOffered"
-      parameters:
-        - name: "companyId"
-          in: "path"
-          description: "id of the company"
-          required: true
-          schema:
-            type: "integer"
       responses:
         200:
           description: "List of jobs"
@@ -1199,13 +1178,6 @@ paths:
       summary: "Add a Job"
       description: "Adds a job offer on the profile of the company"
       operationId: "addJob"
-      parameters:
-        - name: "companyId"
-          in: "path"
-          description: "id of the company"
-          required: true
-          schema:
-            type: "integer"
       requestBody:
         required: true
         content:
@@ -1216,8 +1188,13 @@ paths:
                 job:
                   $ref: "#/components/schemas/Job"
       responses:
-        201:
+        200:
           description: "Job offer added"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
         400:
           description: "Bad Request"
           content:
