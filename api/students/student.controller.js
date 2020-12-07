@@ -158,42 +158,42 @@ function countMatchingSkills(requiredSkills, ownedSkills) {
 exports.update = async ctx => {
   const { firstName, lastName, email, password, dateOfBirth, picture } = ctx.request.body;
   const student = ctx.user;
-  ctx.status = 401;
-  ctx.body = { message: 'No changes made' };
+  var changed = false;
 
   if(email){
     const alreadyExists = await Student.findOne({where: { email: email }});
     if(!alreadyExists){
+      changed = true;
       await student.update({email: email})
-      ctx.status = 200;
-      ctx.body = { message: 'Profile edited' };
     } else throw { status: 400, message: "This email is already taken." };
   }
 
   if(firstName){
+    changed = true;
     await student.update({firstName: firstName});
-    ctx.status = 200;
-    ctx.body = { message: 'Profile edited' };
   }
   if(lastName){
+    changed = true;
     await student.update({lastName: lastName});
-    ctx.status = 200;
-    ctx.body = { message: 'Profile edited' };
   }
   if(password){
+    changed = true;
     const hashedPassword = await hash(password);
     await student.update({password: hashedPassword});
-    ctx.status = 200;
-    ctx.body = { message: 'Profile edited' };
   }
   if(dateOfBirth){
+    changed = true;
     await student.update({dateOfBirth: dateOfBirth});
-    ctx.status = 200;
-    ctx.body = { message: 'Profile edited' };
   }
   if(picture){
+    changed = true;
     await student.update({picture: picture});
+  }
+  if(changed){
     ctx.status = 200;
-    ctx.body = { message: 'Profile edited' };
+    ctx.body = { message: 'Information updated' };
+  }else{
+    ctx.status = 401;
+    ctx.body = { message: 'No changes made' };
   }
 }

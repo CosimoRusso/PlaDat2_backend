@@ -21,6 +21,7 @@ beforeAll(async () => {
     o.student4 = await Student.create({email: "student4@old.com", firstName: "oldName", dateOfBirth:'1998-12-30', lastName: "oldLastname", password: hashed, picture: "oldPic.png"});
     o.apiStudent1 = await Student.create({email: "apistudent1@old.com", firstName: "oldName", dateOfBirth:'1998-12-30', lastName: "oldLastname", password: hashed, picture: "oldPic.png"});
     o.apiStudent2 = await Student.create({email: "apistudent2@old.com", firstName: "oldName", dateOfBirth:'1998-12-30', lastName: "oldLastname", password: hashed, picture: "oldPic.png"});
+    o.apiStudent3 = await Student.create({email: "apistudent3@old.com", firstName: "oldName", dateOfBirth:'1998-12-30', lastName: "oldLastname", password: hashed, picture: "oldPic.png"});
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
@@ -77,7 +78,7 @@ test("Student can change all the information - API version", async function (){
     const jwt = signJWT({id: apiStudent1.id, userType: "student"});
     const url = `http://localhost:3000/api/v1/student/update`;
     const response = await r2.post(url, {json:{email: "apistudent1@new.com", firstName: "newName", dateOfBirth:'1998-12-19', lastName: "newLastname", password: 'newPassword', picture: "newPic.png"}, headers: {authorization: "Bearer " + jwt}}).response;
-    apiStudent1.reload();
+    await apiStudent1.reload();
 
     expect(response.status).toBe(200);
     expect(apiStudent1.id).toBeGreaterThan(0);
@@ -89,4 +90,52 @@ test("Student can change all the information - API version", async function (){
     const comparePassword = await compare('newPassword', apiStudent1.password);
     expect(comparePassword).toBe(true);
     expect(response.status).toBe(200);
+  });
+
+  test("Student can change only the email - API version", async function (){
+    const { apiStudent2 } = o;
+    const jwt = signJWT({id: apiStudent2.id, userType: "student"});
+    const url = `http://localhost:3000/api/v1/student/update`;
+    const response = await r2.post(url, {json:{email: "apistudent2@new.com"}, headers: {authorization: "Bearer " + jwt}}).response;
+    await apiStudent2.reload();
+
+    expect(response.status).toBe(200);
+    expect(apiStudent2.id).toBeGreaterThan(0);
+    expect(apiStudent2.email).toBe("apistudent2@new.com");
+    expect(apiStudent2.firstName).toBe("oldName");
+    expect(apiStudent2.dateOfBirth).toBe('1998-12-30');
+    expect(apiStudent2.lastName).toBe('oldLastname');
+    expect(apiStudent2.picture).toBe('oldPic.png');
+    const comparePassword = await compare('oldPassword', apiStudent2.password);
+    expect(comparePassword).toBe(true);
+    expect(response.status).toBe(200);
+  });
+
+  test("Student can not change to an already used e-mail - API version", async function (){
+    const { apiStudent2 } = o;
+    const jwt = signJWT({id: apiStudent2.id, userType: "student"});
+    const url = `http://localhost:3000/api/v1/student/update`;
+    const response = await r2.post(url, {json:{email: "apistudent1@new.com"}, headers: {authorization: "Bearer " + jwt}}).response;
+    await apiStudent2.reload();
+
+    expect(response.status).toBe(400);
+    expect(apiStudent2.id).toBeGreaterThan(0);
+    expect(apiStudent2.email).toBe("apistudent2@new.com");
+  });
+
+  test("Student makes no changes - API version", async function (){
+    const { apiStudent3 } = o;
+    const jwt = signJWT({id: apiStudent3.id, userType: "student"});
+    const url = `http://localhost:3000/api/v1/student/update`;
+    const response = await r2.post(url, {json:{}, headers: {authorization: "Bearer " + jwt}}).response;
+    await apiStudent3.reload();
+
+    expect(apiStudent3.id).toBeGreaterThan(0);
+    expect(apiStudent3.email).toBe("apistudent3@old.com");
+    expect(apiStudent3.firstName).toBe("oldName");
+    expect(apiStudent3.dateOfBirth).toBe('1998-12-30');
+    expect(apiStudent3.lastName).toBe('oldLastname');
+    expect(apiStudent3.picture).toBe('oldPic.png');
+    const comparePassword = await compare('oldPassword', apiStudent3.password);
+    expect(comparePassword).toBe(true);
   });
