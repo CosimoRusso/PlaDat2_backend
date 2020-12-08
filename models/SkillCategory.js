@@ -3,9 +3,9 @@ const { Model, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize().getInstance();
 
-class Category extends Model {}
+class SkillCategory extends Model {}
 
-Category.init({
+SkillCategory.init({
   name: {
     type: DataTypes.STRING
   },
@@ -14,7 +14,7 @@ Category.init({
   }
 }, {
   sequelize,
-  modelName: "Category"
+  modelName: "SkillCategory"
 });
 
-module.exports = Category;
+module.exports = SkillCategory;

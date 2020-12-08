@@ -27,7 +27,7 @@ let City = models['City'];
 let SkillSetReq = models['SkillSetReq'];
 let SkillSetOpt = models['SkillSetOpt'];
 let StudentSkill = models['StudentSkill'];
-let Category = models['Category'];
+let SkillCategory = models['SkillCategory'];
 
 // associations definition
 Student.hasMany(Matching);
@@ -72,8 +72,8 @@ Job.belongsToMany(Skill, { through: SkillSetOpt, as: "optionalSkills" });
 Student.belongsToMany(Skill, { through: StudentSkill, as: "skills" });
 Skill.belongsToMany(Student, { through: StudentSkill, as: "students" });
 
-Category.hasMany(Skill);
-Skill.belongsTo(Category);
+SkillCategory.hasMany(Skill);
+Skill.belongsTo(SkillCategory);
 
 async function sync() {
   await sequelize.sync({ force: databaseConfig.reset });
