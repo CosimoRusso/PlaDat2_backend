@@ -8,6 +8,9 @@ class Skill extends Model {}
 Skill.init({
   name: {
     type: DataTypes.STRING
+  },
+  SkillCategoryId: {
+    type: DataTypes.INTEGER
   }
 }, {
   sequelize,
