@@ -71,6 +71,10 @@ Job.belongsToMany(Skill, { through: SkillSetOpt, as: "optionalSkills" });
 
 Student.belongsToMany(Skill, { through: StudentSkill, as: "skills" });
 Skill.belongsToMany(Student, { through: StudentSkill, as: "students" });
+Student.hasMany(StudentSkill);
+StudentSkill.belongsTo(Student);
+Skill.hasMany(StudentSkill);
+StudentSkill.belongsTo(Skill);
 
 SkillCategory.hasMany(Skill);
 Skill.belongsTo(SkillCategory);

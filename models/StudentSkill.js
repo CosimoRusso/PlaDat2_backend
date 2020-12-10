@@ -6,7 +6,9 @@ const sequelize = new Sequelize().getInstance();
 class StudentSkill extends Model {}
 
 StudentSkill.init({
-
+  rating: {
+    type: DataTypes.INTEGER
+  }
 }, {
   sequelize,
   modelName: "StudentSkill"
