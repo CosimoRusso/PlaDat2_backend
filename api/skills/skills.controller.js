@@ -15,7 +15,7 @@ exports.getAll = async ctx => {
   ctx.body = await Skill.findAll();
 }
 
-//TODO write tests
+//TODO write test
 exports.createOne = async ctx => {
   const { name } = ctx.request;
   const exists = await Skill.findOne({where: {name}});
@@ -25,7 +25,6 @@ exports.createOne = async ctx => {
   ctx.body = newSkill;
 };
 
-//TODO write tests
 exports.findByCategory = async ctx => {
   let { categoryId } = ctx.params;
   categoryId = parseInt(categoryId);

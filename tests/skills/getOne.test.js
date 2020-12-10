@@ -12,22 +12,23 @@ const o = {};
 
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
-  const skills = await Skill.findAll();
+  const skills = [];
   const getSkill = name => skills.find(s => s.name === name);
-
-  let c = getSkill("C#");
-  let nodeJS = getSkill("NodeJS");
-  let lang = await SkillCategory.create({name: "Programming Languages", description: ""});
-  let tech = await SkillCategory.create({name: "Technologies", description: ""})
-  await c.update({SkillCategoryId: lang.id});
-  await nodeJS.update({SkillCategoryId: tech.id});
+  const lang = await SkillCategory.create({name: "Programming Languages", description: ""});
+  const tech = await SkillCategory.create({name: "Technologies", description: ""})
+  const c = await Skill.create({ name: "C#", SkillCategoryId: lang.id })
+  const nodeJS = await Skill.create({ name: "NodeJS", SkillCategoryId: tech.id });
+  skills.push(c);
+  skills.push(nodeJS);
+  o.skills = skills;
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
 
 // unit tests - here you can include directly the middleware so you skip authorization!
 test("The skill exists", async function (){
-  const c = await Skill.findOne({ where: {name: "C#"}});
+  const { skills } = o
+  const c = skills.find(s => s.name === "C#");
   const ctx = { params: { skillId: c.id } };
   await getOne(ctx, noop);
   expect(ctx.body.name).toBe('C#');
@@ -56,7 +57,8 @@ test("Search skill with an id that does not exist returns 404", async function (
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
 test("The skill exists - API version", async function (){
-  const nodeJS = await Skill.findOne({ where: {name: "NodeJS"}});
+  const { skills } = o
+  const nodeJS = skills.find(s => s.name === "NodeJS");
   const url = `http://localhost:3000/api/v1/skills/getOne/${nodeJS.id}`;
   const response = await r2.get(url).json;
   expect(response.id).toBe(nodeJS.id);
