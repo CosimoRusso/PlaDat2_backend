@@ -18,5 +18,6 @@ module.exports = Router => {
     .post('/jobs/:jobId/accept/:studentId', controller.companyAcceptStudent)
     .get('/candidateStudents/:jobId', controller.getCandidatesForJob)
     .post('/update', controller.update)
+    .get('/getAcceptedStudents/:jobId', controller.getAcceptedStudents)
   return router;
 };

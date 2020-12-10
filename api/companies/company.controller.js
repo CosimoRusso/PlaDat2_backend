@@ -122,3 +122,24 @@ exports.update = async ctx => {
   ctx.status = 200;
   ctx.body = { message: 'Profile edited' };
 }
+
+exports.getAcceptedStudents = async ctx => {
+  const {jobId} = ctx.params;
+  const company = ctx.user;
+  //check if the job belongs to the company
+  const jobObj = await Job.findOne({where: {id: jobId, CompanyId: company.id}});
+  if(!jobObj) throw { status: 400, message: "This job does not belong to you" };
+
+  /**
+   * Takes the jobIds, queries in Application to find the studentId
+   * Returns a list of students (fetched using the studentsIds)
+   */
+  const acceptedStudents = await Student.findAll(
+    {include: [{
+      model: Application,
+      where:{JobId:jobObj.id, declined: false}
+    }]}
+  );
+  ctx.status=200;
+  ctx.body = acceptedStudents
+}
