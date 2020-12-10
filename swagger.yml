@@ -1643,7 +1643,7 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
-  /skills/findOne:
+  /skills/getOne/{skillId}:
     get:
       tags:
         - "skill"
@@ -1664,7 +1664,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Capability"
+                  $ref: "#/components/schemas/CapabilityWithCategory"
         400:
           description: "Bad Request"
           content:
@@ -1687,8 +1687,39 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
-
-
+  /skills/findByCategory/{categoryId}:
+    get:
+      tags:
+        - "skill"
+      summary: "Return the skills requested by the query"
+      description: "Given a query, returns all the skills that belongs to the given category"
+      parameters:
+        - name: categoryId
+          in : query
+          description: "Skill query"
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: "List of skills belonging to the given category"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Capability"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Query not valid"
 components:
   schemas:
     LoginResponse:
@@ -1922,6 +1953,17 @@ components:
         id: 12
         name: "Java"
         skillValue: 4
+    CapabilityWithCategory:
+      allOf:
+        - $ref: "#/components/schemas/Capability"
+        - type: "object"
+          properties:
+            skillCategory:
+              $ref: "#/components/schemas/Category"
+      example:
+        id: 12
+        name: "Java"
+        skillCategory: { id: 1, name: "Programming Languages", description: "" }
     Job:
       type: "object"
       properties:
@@ -2037,6 +2079,19 @@ components:
         state: "Italy"
         latitude: 45.05
         longitude: 9.7
+    Category:
+      type: object
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        description:
+          type: "string"
+      example:
+        id: 1
+        name: "Programming Languages"
+        description: ""
 
   securitySchemes:
     bearerAuth:

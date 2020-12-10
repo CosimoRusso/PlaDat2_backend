@@ -8,7 +8,7 @@ module.exports = Router => {
   });
 
   router
-    .get('/:skillId', controller.getOne)
+    .get('/getOne/:skillId', controller.getOne)
     .get('/', controller.getAll)
     .post('/', controller.createOne);
 
