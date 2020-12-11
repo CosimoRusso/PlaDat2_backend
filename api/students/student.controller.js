@@ -1,6 +1,6 @@
 'use strict';
 const { models } = require('../../models');
-const { Student, Job, Company, Application, Skill, Matching, StudentSkill } = models;
+const { Student, Job, Company, Application, Skill, Matching } = models;
 const signJWT=require('../../utils/signJWT');
 const pgDate = require("../../utils/postgresDate");
 const { Op } = require("sequelize");
