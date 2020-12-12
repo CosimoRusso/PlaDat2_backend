@@ -29,53 +29,10 @@ beforeAll(async () => {
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
 
-// unit tests - here you can include directly the middleware so you skip authorization!
-// test("List not found", async function (){
-//   const {user,listOfSkills} = o;
-//   const ctx = {request:{body: { listOfSkills:null, user: user}}};
-//   try{
-  
-//     await ModifyCapabilities(ctx, noop);
-//   }catch(e){
-//     expect(e.status).toBe(404);
-//     expect(e.message).toBeDefined();
-//   }
-// });
-
-// test("Skill deleted successfully", async function (){
-//   const {student} = o;
-//   const ctx = {request:{body: { removeSkillId: 1}}, user: student};
-//     await removeCapability(ctx, noop);
-//     const skills = await StudentSkill.findAll({where:{StudentId: student.id}});
-//     expect(skills.length).toBe(2);
-// });
-
-// test("New skill added", async function (){
-//   const {student} = o;
-//   const ctx = {request:{body: { newSkillId:4}}, user: student};
-//     await addCapability(ctx, noop);
-//     const skills = await StudentSkill.findAll({where:{StudentId: student.id}});
-//     const skillz = await Skill.findAll;
-
-
-//     expect(skills.length).toBe(4);
-// });
-
-// test("Skill already exists", async function (){
-//   const {student} = o;
-//   const ctx = {request:{body: { newSkillId:3}}, user: student};
-//   let skills = await StudentSkill.findAll({where:{StudentId: student.id}});
-//   console.log(skills.length+" a sto je ovo");
-//     await addCapability(ctx, noop);
-//      skills = await StudentSkill.findAll({where:{StudentId: student.id}});
-//     const skillz = await Skill.findAll;
-//     expect(skills.length).toBe(3);
-// });
 test("Add capability - API version", async function (){
   const {student,studentAPI, studentSkill } = o;
   const studentId = student.id;
   const jwt = signJWT({id: studentId, userType: "student"});
-  console.log(jwt);
   const url = `http://localhost:3000/api/v1/student/addCapability/`;
   const response = await r2.post(url,{json:{newSkillId:5},headers: {authorization: "Bearer " + jwt}}).response;
   expect(response.status).toBe(200);
@@ -85,7 +42,6 @@ test("Capability already exist- API version", async function (){
   const {student,studentAPI, studentSkill } = o;
   const studentId = student.id;
   const jwt = signJWT({id: studentId, userType: "student"});
-  console.log(jwt);
   const url = `http://localhost:3000/api/v1/student/addCapability/`;
   const response = await r2.post(url,{json:{newSkillId:1},headers: {authorization: "Bearer " + jwt}}).response;
   expect(response.status).toBe(400);
@@ -95,7 +51,6 @@ test("Remove capability - API version", async function (){
   const {student,studentAPI, studentSkill } = o;
   const studentId = student.id;
   const jwt = signJWT({id: studentId, userType: "student"});
-  console.log(jwt);
   const url = `http://localhost:3000/api/v1/student/removeCapability/`;
   const response = await r2.post(url,{json:{removeSkillId:3},headers: {authorization: "Bearer " + jwt}}).response;
   expect(response.status).toBe(200);

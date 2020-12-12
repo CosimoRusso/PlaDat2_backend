@@ -7,10 +7,6 @@ const { Op } = require("sequelize");
 const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
 
-const upload=require('../../config/services/file-upload');
-const { single } = require('../../config/services/file-upload');
-// const singleUpload=upload.single('image');
-
 const sequelize = new Sequelize().getInstance();
 
 exports.getOne = async ctx => {
@@ -244,7 +240,6 @@ if( !existingSkills ){
  exports.removeCapability= async ctx => {
   const studentId = ctx.user.id;
   const {removeSkillId} = ctx.request.body;
-  let existingSkills=await StudentSkill.findAll({where:{StudentId:studentId}})
 
   const exist = await StudentSkill.findOne({where: {StudentId:studentId, SkillId: removeSkillId}});
   if(!exist){
