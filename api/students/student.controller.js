@@ -285,10 +285,9 @@ if( !existingSkills ){
     throw { status: 404, message: 'Skill does not exist' };
    
   }else{
-    console.log('deleting'+exist.SkillId);
-       await StudentSkill.destroy({where: {StudentId:studentId, SkillId: removeSkillId}});
-       ctx.body = { message: 'Skill deleted' };
-       ctx.status = 200;
+     await StudentSkill.destroy({where: {StudentId:studentId, SkillId: removeSkillId}});
+     ctx.body = { message: 'Skill deleted' };
+     ctx.status = 200;
   }
 
  }
