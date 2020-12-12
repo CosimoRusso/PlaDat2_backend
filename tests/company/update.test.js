@@ -101,7 +101,7 @@ test('Company can change all the information', async function() {
   test("Company can change all the information - API version", async function (){
     const { apiCompany1 } = o;
     const jwt = signJWT({id: apiCompany1.id, userType: "company"});
-    const url = `http://localhost:3000/api/v1/company/update`;
+    const url = `http://localhost:3000/api/v1/company/profile`;
     const response = await r2.post(url, {json:{email: 'apicompany1@new.com', name: 'newName', password: 'newPassword', description: 'New description', picture: 'newPic.png'}, headers: {authorization: "Bearer " + jwt}}).response;
     await apiCompany1.reload();
     expect(response.status).toBe(200);
@@ -117,7 +117,7 @@ test('Company can change all the information', async function() {
   test("Company can change only the name - API version", async function (){
     const { apiCompany2 } = o;
     const jwt = signJWT({id: apiCompany2.id, userType: "company"});
-    const url = `http://localhost:3000/api/v1/company/update`;
+    const url = `http://localhost:3000/api/v1/company/profile`;
     const response = await r2.post(url, {json:{name: 'newName'}, headers: {authorization: "Bearer " + jwt}}).response;
     await apiCompany2.reload();
     expect(response.status).toBe(200);
@@ -133,7 +133,7 @@ test('Company can change all the information', async function() {
   test("Company can not change to an already used email - API version", async function (){
     const { apiCompany2 } = o;
     const jwt = signJWT({id: apiCompany2.id, userType: "company"});
-    const url = `http://localhost:3000/api/v1/company/update`;
+    const url = `http://localhost:3000/api/v1/company/profile`;
     const response = await r2.post(url, {json:{email: 'apicompany1@new.com'}, headers: {authorization: "Bearer " + jwt}}).response;
     await apiCompany2.reload();
     expect(response.status).toBe(400);
