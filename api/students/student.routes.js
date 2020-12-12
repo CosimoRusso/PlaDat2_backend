@@ -3,6 +3,7 @@
 const controller = require('./student.controller');
 const { authentication, studentAuthentication } = require("../../middleware/authentication");
 
+
 module.exports = Router => {
   const router = new Router({
     prefix: `/student`,
@@ -22,6 +23,9 @@ module.exports = Router => {
     .post('/jobs/discard/:jobId', controller.discard)
     .get('/jobs/search', controller.searchJobs)
     .post('/profile',controller.update)
+    .post('/removeCapability',controller.removeCapability)
+    .post('/addCapability',controller.addCapability)
+    // .post('/imageUpload',controller.imageUpload)
 
   return router;
 };
