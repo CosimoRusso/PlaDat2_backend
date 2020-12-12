@@ -1,11 +1,15 @@
 'use strict';
 const { models } = require('../../models');
-const { Student, Job, Company, Application, Skill, Matching } = models;
+const { Student, Job, Company, Application, Skill, Matching,StudentSkill } = models;
 const signJWT=require('../../utils/signJWT');
 const pgDate = require("../../utils/postgresDate");
 const { Op } = require("sequelize");
 const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
+
+const upload=require('../../config/services/file-upload');
+const { single } = require('../../config/services/file-upload');
+// const singleUpload=upload.single('image');
 
 const sequelize = new Sequelize().getInstance();
 
@@ -29,6 +33,7 @@ exports.getAll = async ctx => {
   ctx.status = 200;
   ctx.body = await Student.findAll();
 };
+
 
 exports.createOne = async ctx => {
   const { firstName, lastName } = ctx.request.body;
@@ -205,3 +210,51 @@ exports.update = async ctx => {
     ctx.body = { message: 'No changes made' };
   }
 }
+
+
+
+// exports.imageUpload = async ctx => {
+//   await singleUpload(req,res,err)
+//   return res.json({'imageUrl':req.file.location})
+
+// };
+
+exports.addCapability= async ctx => {
+  //add 
+  const studentId = ctx.user.id;
+  const {newSkillId} = ctx.request.body;
+  let existingSkills=await StudentSkill.findAll({where:{StudentId:studentId}})
+
+if( !existingSkills ){
+  throw { status: 404, message: "List not found, list does not exist" };
+}
+  const alreadyExists = await StudentSkill.findOne({where: {StudentId:studentId, SkillId: newSkillId}});
+  if(!alreadyExists){
+ 
+   const e= await StudentSkill.create({ StudentId:studentId, SkillId: newSkillId });
+ 
+    ctx.body = { message: 'New skill added' };
+       ctx.status = 200;  
+  }else{
+    throw { status: 400, message: "Skill already exist" };
+
+  }
+ }
+
+ exports.removeCapability= async ctx => {
+  const studentId = ctx.user.id;
+  const {removeSkillId} = ctx.request.body;
+  let existingSkills=await StudentSkill.findAll({where:{StudentId:studentId}})
+
+  const exist = await StudentSkill.findOne({where: {StudentId:studentId, SkillId: removeSkillId}});
+  if(!exist){
+    throw { status: 404, message: 'Skill does not exist' };
+   
+  }else{
+    console.log('deleting'+exist.SkillId);
+       await StudentSkill.destroy({where: {StudentId:studentId, SkillId: removeSkillId}});
+       ctx.body = { message: 'Skill deleted' };
+       ctx.status = 200;
+  }
+
+ }

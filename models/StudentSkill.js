@@ -7,6 +7,13 @@ class StudentSkill extends Model {}
 
 StudentSkill.init({
 
+  StudentId:{
+    type: DataTypes.INTEGER
+  },
+  SkillId:{
+    type: DataTypes.INTEGER
+  }
+
 }, {
   sequelize,
   modelName: "StudentSkill"
