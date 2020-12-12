@@ -136,7 +136,7 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
   await SkillSetOpt.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("UnderscoreJS").id});
   await SkillSetOpt.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("HTML").id});
 
-  const DatabaseJobMicrosoft = await Job.create({name: "DatabaseJobMicrosoft", description: "Database job at Microsoft. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at Microsoft, if the internship turns out to be successful ", CompanyId: microsoft.id, timeLimit: new Date("2022-02-16"), salary: 0, partTime: true, remote: true, CityId: milan.id});
+  const DatabaseJobMicrosoft = await Job.create({name: "DatabaseJobMicrosoft", description: "Database job at Microsoft. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at Microsoft, if the internship turns out to be successful ", CompanyId: microsoft.id, timeLimit: new Date("2022-02-16"), salary: 500, partTime: true, remote: true, CityId: milan.id});
   await SkillSetReq.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("Docker").id});
   await SkillSetOpt.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("Zebra").id});
   await SkillSetOpt.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("IBM\ Watson").id});
@@ -159,7 +159,7 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
   await SkillSetOpt.create({JobId: DeveloperJobGoogle.id, SkillId: getSkill("UnderscoreJS").id});
   await SkillSetOpt.create({JobId: DeveloperJobGoogle.id, SkillId: getSkill("Zebra").id});
   
-  const DatabaseJobGoogle = await Job.create({name: "DatabaseJobGoogle", description: "Database job at Google. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at Google, if the internship turns out to be successful ", CompanyId: google.id, timeLimit: new Date("2022-08-06"), salary: 0, partTime: true, remote: true, CityId: vasteras.id});
+  const DatabaseJobGoogle = await Job.create({name: "DatabaseJobGoogle", description: "Database job at Google. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at Google, if the internship turns out to be successful ", CompanyId: google.id, timeLimit: new Date("2022-08-06"), salary: 200, partTime: true, remote: true, CityId: vasteras.id});
   await SkillSetReq.create({JobId: DatabaseJobGoogle.id, SkillId: getSkill("MySQL").id});
   await SkillSetOpt.create({JobId: DatabaseJobGoogle.id, SkillId: getSkill("X++").id});
   await SkillSetOpt.create({JobId: DatabaseJobGoogle.id, SkillId: getSkill("Koa").id});
@@ -171,7 +171,7 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
   await SkillSetOpt.create({JobId: DeveloperJobIBM.id, SkillId: getSkill("IBM\ Watson").id});
   await SkillSetOpt.create({JobId: DeveloperJobIBM.id, SkillId: getSkill("Go").id});
   
-  const DatabaseJobIBM = await Job.create({name: "DatabaseJobIBM", description: "Database job at IBM. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at IBM, if the internship turns out to be successful ", CompanyId: ibm.id, timeLimit: new Date("2022-08-06"), salary: 0, partTime: true, remote: true, CityId: milan.id});
+  const DatabaseJobIBM = await Job.create({name: "DatabaseJobIBM", description: "Database job at IBM. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at IBM, if the internship turns out to be successful ", CompanyId: ibm.id, timeLimit: new Date("2022-08-06"), salary: 700, partTime: true, remote: true, CityId: milan.id});
   await SkillSetReq.create({JobId: DatabaseJobIBM.id, SkillId: getSkill("Wordpress").id});
   await SkillSetOpt.create({JobId: DatabaseJobIBM.id, SkillId: getSkill("Zebra").id});
   await SkillSetOpt.create({JobId: DatabaseJobIBM.id, SkillId: getSkill("Latex").id});
