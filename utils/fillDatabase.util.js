@@ -201,7 +201,7 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
   await Matching.create({StudentId: GeorgeJones.id, JobId: DeveloperJobGoogle.id, discarded: true});
   
   await Matching.create({StudentId: TheoPage.id, JobId: DeveloperJobGoogle.id, discarded: false});
-  await Application.create({StudentId: TheoPage.id, JobId: DeveloperJobGoogle.id, declined: false});
+  await Application.create({StudentId: TheoPage.id, JobId: DeveloperJobGoogle.id, declined: null});
   
   await Matching.create({StudentId: JacobJones.id, JobId: DatabaseJobGoogle.id, discarded: false});
   await Application.create({StudentId: JacobJones.id, JobId: DatabaseJobGoogle.id, declined: true});
