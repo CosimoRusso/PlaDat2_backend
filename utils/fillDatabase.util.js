@@ -1,6 +1,7 @@
 const { hash } = require("./password");
 const countrieslist = require("../data/countries.json");
 let skills = require("../data/skills");
+let skillCategories = require("../data/categories");
 const { env } = require("../config");
 const cities = [
     {name: "Milan", country: "IT", lat: "45.46427", lng: "9.18951"},
@@ -9,12 +10,21 @@ const cities = [
 function getSkill(name){
   return skills.find(s => s.name === name);
 }
+function getSkillCategory(name){
+  return skillCategories.find(s => s.name === name);
+}
 module.exports = async (models) => {
-  const { Application, City, Company, Country, Job, JobCategory, Matching, Skill, Student, SkillSetReq, SkillSetOpt, StudentSkill } = models;
+  const { Application, City, Company, Country, Job, SkillCategory, Matching, Skill, Student, SkillSetReq, SkillSetOpt, StudentSkill } = models;
   const randomSkill = await Skill.findOne();
   if (randomSkill) return false; // there are already skills in the db. Don't add them
 
-  await Skill.bulkCreate(skills);
+  await SkillCategory.bulkCreate(skillCategories);
+  skillCategories = await SkillCategory.findAll();
+
+  await Skill.bulkCreate(skills.map(s => {
+    s.SkillCategoryId = getSkillCategory(s.category).id;
+    return s;
+  }));
   skills = await Skill.findAll();
 
   await Promise.all(countrieslist.map(c => Country.create({name: c.name, code: c["alpha-2"]})));
