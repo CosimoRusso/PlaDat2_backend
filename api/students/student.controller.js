@@ -293,3 +293,18 @@ if( !existingSkills ){
   }
 
  }
+
+ //TODO write tests and API docs
+exports.editCapability = async ctx => {
+  const studentId = ctx.user.id;
+  const skillId = parseInt(ctx.request.body.id);
+  const skillRating = parseInt(ctx.request.body.rating);
+  if (!skillId) throw {status: 400, message: 'Wrong skill id'};
+  if (!skillRating) throw {status: 400, message: 'Wrong skill rating'};
+  if (skillRating < 1 || skillRating > 5) throw {status: 400, message: 'Skill rating must be between 1 and 5'};
+  const studentSkill = await StudentSkill.findOne({where: { StudentId: studentId, SkillId: skillId }});
+  if (!studentSkill) throw {status: 400, message: "This student does not have this skill"};
+  await studentSkill.update({rating: skillRating});
+  ctx.status = 201;
+  ctx.body = {};
+}

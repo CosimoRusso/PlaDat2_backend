@@ -25,6 +25,7 @@ module.exports = Router => {
     .post('/profile',controller.update)
     .post('/removeCapability',controller.removeCapability)
     .post('/addCapability',controller.addCapability)
+    .post('/editCapability', controller.editCapability)
     // .post('/imageUpload',controller.imageUpload)
 
   return router;
