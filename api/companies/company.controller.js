@@ -10,8 +10,7 @@ exports.getOne = async ctx => {
   const company = await Company.findOne({
     where: {id: companyId},
     include: [
-      { model: City },
-      { model: Country},
+      { model: City, include: [{model: Country}] },
       { model: Job} ]
   });
   if (!company) throw {status: 404, message: 'Company not found'};

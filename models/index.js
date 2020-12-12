@@ -45,14 +45,11 @@ Application.belongsTo(Job);
 Company.hasMany(Job);
 Job.belongsTo(Company);
 
-Company.hasOne(City);
-City.belongsTo(Company);
+City.hasMany(Company);
+Company.belongsTo(City);
 
 JobCategory.hasMany(Job);
 Job.belongsTo(JobCategory);
-
-Country.hasMany(Company);
-Company.belongsTo(Country);
 
 Country.hasMany(City);
 City.belongsTo(Country);
