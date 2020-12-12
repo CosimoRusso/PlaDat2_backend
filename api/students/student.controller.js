@@ -1,6 +1,6 @@
 'use strict';
 const { models } = require('../../models');
-const { Student, Job, Company, Application, Skill, Matching,StudentSkill, City, Country } = models;
+const { Student, Job, Company, Application, Skill, Matching,StudentSkill, City, Country, SkillCategory } = models;
 const signJWT=require('../../utils/signJWT');
 const pgDate = require("../../utils/postgresDate");
 const { Op } = require("sequelize");
@@ -12,7 +12,7 @@ const sequelize = new Sequelize().getInstance();
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
   const student = await Student.findByPk(userId, {include: [
-    {model: Skill, as: 'skills'},
+    {model: Skill, as: 'skills', include: [{model: SkillCategory}]},
       {model: City, include: [{model: Country}]}]});
   ctx.assert(student, 404, "The requested user doesn't exist");
   ctx.status = 200;
