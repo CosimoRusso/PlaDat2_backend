@@ -204,7 +204,7 @@ function jobFitness(job, ratings){
 }
 
 exports.update = async ctx => {
-  const { firstName, lastName, email, password, dateOfBirth, picture } = ctx.request.body;
+  const { firstName, lastName, email, password, dateOfBirth, picture, CityId } = ctx.request.body;
   const student = ctx.user;
   let changed = false;
 
@@ -237,6 +237,12 @@ exports.update = async ctx => {
     changed = true;
     await student.update({picture: picture});
   }
+
+  if(CityId){
+    changed = true;
+    await student.update({CityId: CityId});
+  }
+
   if(changed){
     ctx.status = 200;
     ctx.body = { message: 'Information updated' };
