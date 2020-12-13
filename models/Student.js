@@ -24,6 +24,9 @@ Student.init({
   },
   picture: {
     type: DataTypes.STRING
+  },
+  CityId: {
+    type: DataTypes.INTEGER
   }
 }, {
   sequelize,
