@@ -10,6 +10,7 @@ module.exports = Router => {
   router
     .get('/getOne/:skillId', controller.getOne)
     .get('/findByCategory/:categoryId', controller.findByCategory)
+    .get('/getAllCategories', controller.getAllCategories)
     .get('/', controller.getAll)
     .post('/', controller.createOne);
 

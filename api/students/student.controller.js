@@ -265,22 +265,14 @@ exports.update = async ctx => {
 exports.addCapability= async ctx => {
   //add 
   const studentId = ctx.user.id;
-  const {newSkillId} = ctx.request.body;
-  let existingSkills=await StudentSkill.findAll({where:{StudentId:studentId}})
-
-if( !existingSkills ){
-  throw { status: 404, message: "List not found, list does not exist" };
-}
-  const alreadyExists = await StudentSkill.findOne({where: {StudentId:studentId, SkillId: newSkillId}});
+  const {id, rating} = ctx.request.body;
+  const alreadyExists = await StudentSkill.findOne({where: {StudentId:studentId, SkillId: id}});
   if(!alreadyExists){
- 
-   const e= await StudentSkill.create({ StudentId:studentId, SkillId: newSkillId });
- 
+    await StudentSkill.create({ StudentId:studentId, SkillId: id, rating: rating });
     ctx.body = { message: 'New skill added' };
-       ctx.status = 200;  
+    ctx.status = 201;
   }else{
-    throw { status: 400, message: "Skill already exist" };
-
+    throw { status: 400, message: "Skill already exists" };
   }
  }
 

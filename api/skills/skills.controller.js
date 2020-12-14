@@ -32,3 +32,7 @@ exports.findByCategory = async ctx => {
   const skills = await Skill.findAll({ where: { SkillCategoryId: categoryId } });
   ctx.body = skills;
 }
+
+exports.getAllCategories = async ctx => {
+  ctx.body = await SkillCategory.findAll({include: [{ model: Skill }]});
+}
