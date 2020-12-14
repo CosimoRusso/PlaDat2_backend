@@ -265,7 +265,11 @@ exports.update = async ctx => {
 exports.addCapability= async ctx => {
   //add 
   const studentId = ctx.user.id;
-  const {id, rating} = ctx.request.body;
+  const id = parseInt(ctx.request.body.id);
+  const rating = parseInt(ctx.request.body.rating);
+  if (!id) throw {status: 400, message: 'Invalid skill id'};
+  if (!rating) throw {status: 400, message: 'Invalid skill rating'};
+  if (rating < 1 || rating > 5) throw {status: 400, message: 'Rating must be between 1 and 5'};
   const alreadyExists = await StudentSkill.findOne({where: {StudentId:studentId, SkillId: id}});
   if(!alreadyExists){
     await StudentSkill.create({ StudentId:studentId, SkillId: id, rating: rating });
