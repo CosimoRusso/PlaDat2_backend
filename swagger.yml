@@ -691,6 +691,59 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "student"
+  /student/jobs/getNotifications:
+    get:
+      tags:
+        - "student"
+      summary: "Gets the notifications for the job that the student has been accepted for"
+      description: "Returns a list of jobs that are the ones that the student has been accepted for (the student can be matched for more than one job, hence the list)"
+      operationId: "studentGetNotifications"
+      responses:
+        200:
+          description: "List of jobs"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Job"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Student id not valid"
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Notifications not found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "student"
   /student/applications:
     get:
       tags:
