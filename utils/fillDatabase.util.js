@@ -142,12 +142,12 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
   
 //BUILD JOBS
   const DeveloperJobMicrosoft = await Job.create({name: "DeveloperJobMicrosoft", description: "Developer job at Microsoft. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at Microsoft, if the internship turns out to be successful ", CompanyId: microsoft.id, timeLimit: new Date("2022-05-01"), salary: 400, partTime: true, remote: false, CityId: milan.id});
-  await SkillSetReq.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("Yii").id});
+  await SkillSetReq.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("Javascript").id});
   await SkillSetOpt.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("UnderscoreJS").id});
   await SkillSetOpt.create({JobId: DeveloperJobMicrosoft.id, SkillId: getSkill("HTML").id});
 
   const DatabaseJobMicrosoft = await Job.create({name: "DatabaseJobMicrosoft", description: "Database job at Microsoft. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at Microsoft, if the internship turns out to be successful ", CompanyId: microsoft.id, timeLimit: new Date("2022-02-16"), salary: 500, partTime: true, remote: true, CityId: milan.id});
-  await SkillSetReq.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("Docker").id});
+  await SkillSetReq.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("Javascript").id});
   await SkillSetOpt.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("Zebra").id});
   await SkillSetOpt.create({JobId: DatabaseJobMicrosoft.id, SkillId: getSkill("IBM\ Watson").id});
   
