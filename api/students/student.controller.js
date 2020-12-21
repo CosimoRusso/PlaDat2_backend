@@ -316,45 +316,44 @@ exports.sendMail = async ctx => {
   const name = ctx.user.firstName;
   const surname = ctx.user.lastName;
   const studentEmail = ctx.user.email;
-  const { subject, message, companyEmail } = ctx.request.body;
+  const { subject, companyEmail } = ctx.request.body;
+  const message = ctx.request.body.message + `\n\nFirst name: ${name}\nLast Name: ${surname}\nEmail: ${studentEmail}`;
+  const info = await sendEmail('test@example.com', companyEmail, subject, message);
+  ctx.body = info;
+}
 
-  // Generate test SMTP service account from ethereal.email
-  const testAccount = await nodemailer.createTestAccount();
+const sendEmail = (senderEmail, receiverEmail, subject, message) => {
+  return new Promise((resolve, reject) => {
+    // Generate test SMTP service account from ethereal.email
+    nodemailer.createTestAccount().then(testAccount => {
+      const transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user, // generated ethereal user
+          pass: testAccount.pass // generated ethereal password
+        },
+        tls: {
+          rejectUnauthorized: false
+        }
+      });
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false,
-    auth: {
-      user: testAccount.user, // generated ethereal user
-      pass: testAccount.pass // generated ethereal password
-    },
-    tls: {
-      rejectUnauthorized: false
-    }
-  });
+      const mailOptions = {
+        from: `"PlaDat" <${senderEmail}>`,
+        to: receiverEmail,
+        subject: subject,
+        text: message
+      };
 
-  const mailOptions = {
-    from: '"PlaDat" <test@example.com>',
-    to: companyEmail,
-    subject: subject,
-    text: message + '\n\nStudent info:\n' + name + ' ' + surname + '\n' + studentEmail
-  };
-
-  // Verify connection configuration
-  transporter.verify(function(error, success) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Server is ready to take our messages");
-    }
-  });
-
-  transporter.sendMail(mailOptions, function(error, info) {
-    if(error) {
-      ctx.status = 404;
-    } else {
-      ctx.status = 200;
-    }
+      // Verify connection configuration
+      transporter.verify(function(error) {
+        if (error) return reject(error);
+        transporter.sendMail(mailOptions, function(error, info) {
+          if(error) return reject(error);
+          resolve(info);
+        });
+      });
+    });
   });
 }
