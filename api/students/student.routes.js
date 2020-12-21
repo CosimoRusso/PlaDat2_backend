@@ -27,6 +27,7 @@ module.exports = Router => {
     .post('/addCapability',controller.addCapability)
     .post('/editCapability', controller.editCapability)
     // .post('/imageUpload',controller.imageUpload)
+    .post('/sendMail', controller.sendMail)
 
   return router;
 };

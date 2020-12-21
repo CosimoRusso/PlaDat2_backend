@@ -6,6 +6,7 @@ const pgDate = require("../../utils/postgresDate");
 const { Op } = require("sequelize");
 const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
+const nodemailer = require('nodemailer');
 
 const sequelize = new Sequelize().getInstance();
 
@@ -309,4 +310,51 @@ exports.editCapability = async ctx => {
   await studentSkill.update({rating: skillRating});
   ctx.status = 201;
   ctx.body = {};
+}
+
+exports.sendMail = async ctx => {
+  const name = ctx.user.firstName;
+  const surname = ctx.user.lastName;
+  const studentEmail = ctx.user.email;
+  const { subject, message, companyEmail } = ctx.request.body;
+
+  // Generate test SMTP service account from ethereal.email
+  const testAccount = await nodemailer.createTestAccount();
+
+  const transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false,
+    auth: {
+      user: testAccount.user, // generated ethereal user
+      pass: testAccount.pass // generated ethereal password
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+
+  const mailOptions = {
+    from: '"PlaDat" <test@example.com>',
+    to: companyEmail,
+    subject: subject,
+    text: message + '\n\nStudent info:\n' + name + ' ' + surname + '\n' + studentEmail
+  };
+
+  // Verify connection configuration
+  transporter.verify(function(error, success) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Server is ready to take our messages");
+    }
+  });
+
+  transporter.sendMail(mailOptions, function(error, info) {
+    if(error) {
+      ctx.status = 404;
+    } else {
+      ctx.status = 200;
+    }
+  });
 }
