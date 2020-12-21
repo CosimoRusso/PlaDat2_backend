@@ -10,7 +10,7 @@ module.exports = Router => {
   router
     .get('/findOne/:jobId', controller.getOne)
     .get('/', controller.getAll)
-    .post('/', controller.createOne);
-
+    .post('/', controller.createOne)
+    .post('/update', controller.update);
   return router;
 };
