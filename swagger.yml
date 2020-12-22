@@ -744,6 +744,61 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "student"
+  /student/jobs/markApplicationAsSeen/{ApplicationId}:
+    put:
+      tags:
+        - "student"
+      summary: "Marks an application as seen"
+      description: "Given an id of an application, it marks it as \"seen\", which means that that element will not be shown in future notifications"
+      operationId: "studentMarkAsNotified"
+      parameters:
+        - name: "ApplicationId"
+          in: "path"
+          description: "id of the application that will be marked as seen"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Application marked as seen "
+
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Application id not valid"
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Application not found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "student"
   /student/applications:
     get:
       tags:
