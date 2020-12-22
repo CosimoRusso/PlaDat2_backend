@@ -296,7 +296,7 @@ exports.addCapability= async ctx => {
 
  }
 
- //TODO write tests and API docs
+ //TODO write API docs
 exports.editCapability = async ctx => {
   const studentId = ctx.user.id;
   const skillId = parseInt(ctx.request.body.id);
