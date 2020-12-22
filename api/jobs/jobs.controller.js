@@ -1,7 +1,6 @@
 'use strict';
 const { Job, Company, Skill, City, Country} = require("../../models").models;
 
-//TODO write tests
 exports.getOne = async ctx => {
   let { jobId } = ctx.params;
   jobId = parseInt(jobId);
@@ -20,6 +19,7 @@ exports.getOne = async ctx => {
 
 exports.getAll = async ctx => {
   ctx.body = await Job.findAll({include: [{model: Company}]});
+  ctx.status = 200;
 }
 
 exports.createOne = async ctx => {

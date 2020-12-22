@@ -10,13 +10,12 @@ exports.getOne = async ctx => {
   ctx.body = skill;
 }
 
-//TODO write tests
 exports.getAll = async ctx => {
   ctx.body = await Skill.findAll();
   ctx.status = 200;
 }
 
-//TODO write test
+//This will probably disappear, if not, write tests
 exports.createOne = async ctx => {
   const { name } = ctx.request;
   const exists = await Skill.findOne({where: {name}});
