@@ -105,6 +105,27 @@ exports.discard = async ctx => {
   ctx.status = 201;
 };
 
+exports.getNotifications = async ctx => {
+  const student = ctx.user;
+
+  /**
+   * Takes nothing as input, only needs to be authenticated
+   * Returns all the applications that have alreadyNotified=false 
+   */
+  const query = await Application.findAll({
+    where: {alreadyNotified: false, StudentId: student.id},
+    include: [{
+      model: Job,
+      as: "Job",
+      include: [{model: Company, as: "Company"}] 
+    }]
+  })
+  //console.log(query)
+  ctx.status = 200;
+  ctx.body = query;
+  
+}
+
 exports.searchJobs = async ctx => {
   const ratings = await ctx.user.getStudentSkills()
   const today = pgDate(new Date());
@@ -116,7 +137,7 @@ exports.searchJobs = async ctx => {
 
   const alreadyAppliedJobs = sequelize.dialect.queryGenerator.selectQuery("Applications", {
     attributes: ['JobId'],
-    where: { StudentId: ctx.user.id }
+    where: { StudentId: ctx.user.id } 
   }).slice(0, -1); // removes ';'
   
   /*collects all the skills of the student */

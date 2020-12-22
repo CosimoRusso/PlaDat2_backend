@@ -19,6 +19,7 @@ module.exports = Router => {
     .get('/applications', controller.getApplications)
     .post('/jobs/apply/:jobId', controller.apply)
     .post('/jobs/discard/:jobId', controller.discard)
+    .get('/jobs/getNotifications', controller.getNotifications)
     .get('/jobs/search', controller.searchJobs);
 
   return router;
