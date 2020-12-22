@@ -13,6 +13,7 @@ exports.getOne = async ctx => {
 //TODO write tests
 exports.getAll = async ctx => {
   ctx.body = await Skill.findAll();
+  ctx.status = 200;
 }
 
 //TODO write test
