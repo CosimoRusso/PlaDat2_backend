@@ -28,6 +28,6 @@ test("Send an email - API version", async function (){
   const studentId = student.id;
   const jwt = signJWT({id: studentId, userType: "student"});
   const url = `http://localhost:3000/api/v1/student/sendMail/`;
-  const response = await r2.post(url,{json:{message: "Message Test", subject: "Subject Test", companyEmail: "cosimo@menuale.com"},headers: {authorization: "Bearer " + jwt}}).response;
+  const response = await r2.post(url,{json:{message: "Message Test", subject: "Subject Test", companyEmail: "gaialocchi@outlook.it"},headers: {authorization: "Bearer " + jwt}}).response;
   expect(response.status).toBe(200);
 });

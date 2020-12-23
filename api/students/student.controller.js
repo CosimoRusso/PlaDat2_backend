@@ -320,6 +320,7 @@ exports.sendMail = async ctx => {
   const message = ctx.request.body.message + `\n\nFirst name: ${name}\nLast Name: ${surname}\nEmail: ${studentEmail}`;
   const info = await sendEmail('test@example.com', companyEmail, subject, message);
   ctx.body = info;
+  ctx.status = 200;
 }
 
 const sendEmail = (senderEmail, receiverEmail, subject, message) => {
@@ -327,12 +328,12 @@ const sendEmail = (senderEmail, receiverEmail, subject, message) => {
     // Generate test SMTP service account from ethereal.email
     nodemailer.createTestAccount().then(testAccount => {
       const transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false,
+        host: 'mail.pladat.tk',
+        port: 465,
+        secure: true,
         auth: {
-          user: testAccount.user, // generated ethereal user
-          pass: testAccount.pass // generated ethereal password
+          user: 'info@pladat.tk',
+          pass: 'b87uC0RRE01MT90qXqzB'
         },
         tls: {
           rejectUnauthorized: false
@@ -340,7 +341,7 @@ const sendEmail = (senderEmail, receiverEmail, subject, message) => {
       });
 
       const mailOptions = {
-        from: `"PlaDat" <${senderEmail}>`,
+        from: `"PlaDat" <info@pladat.tk>`,
         to: receiverEmail,
         subject: subject,
         text: message
@@ -349,10 +350,11 @@ const sendEmail = (senderEmail, receiverEmail, subject, message) => {
       // Verify connection configuration
       transporter.verify(function(error) {
         if (error) return reject(error);
-        transporter.sendMail(mailOptions, function(error, info) {
-          if(error) return reject(error);
-          resolve(info);
-        });
+        resolve();
+        // transporter.sendMail(mailOptions, function(error, info) {
+        //   if(error) return reject(error);
+        //   resolve(info);
+        // });
       });
     });
   });
