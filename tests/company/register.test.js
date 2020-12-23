@@ -72,13 +72,13 @@ test('The student is able to register - API version', async function() {
     
     expect(response.status).toBe(201);
 
-    o.company = await Company.findOne({ where: { email } });
-    expect(o.company).toBeDefined;
-    expect(o.company.email).toBe(email);
+    o.companyAPI = await Company.findOne({ where: { email } });
+    expect(o.companyAPI).toBeDefined;
+    expect(o.companyAPI.email).toBe(email);
 
-    const comparison = await compare('MikeWazowski', o.company.password);
+    const comparison = await compare('MikeWazowski', o.companyAPI.password);
     expect(comparison).toBe(true);
 
-    expect(o.company.name).toBe('Monsters & Co.');
-    expect(o.company.description).toBe('Creepy');
+    expect(o.companyAPI.name).toBe('Monsters & Co.');
+    expect(o.companyAPI.description).toBe('Creepy');
 });
