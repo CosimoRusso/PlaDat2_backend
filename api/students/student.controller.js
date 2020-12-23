@@ -116,7 +116,46 @@ exports.discard = async ctx => {
   ctx.status = 201;
 };
 
-exports.searchJobs = async ctx => {
+/**
+ * Takes nothing as input, only needs to be authenticated
+ * Returns all the applications that have alreadyNotified=false 
+ */
+exports.getNotifications = async ctx => {
+  const student = ctx.user;
+
+  const query = await Application.findAll({
+    where: {alreadyNotified: false, StudentId: student.id},
+    include: [{
+      model: Job,
+      as: "Job",
+      include: [{model: Company, as: "Company"}] 
+    }]
+  })
+  
+  ctx.status = 200;
+  ctx.body = query;
+}
+
+/**
+ * Takes as input the id of the application to be marked as read 
+ */
+exports.markApplicationAsSeen = async ctx => {
+  const student = ctx.user;
+  const {applicationId} = ctx.params;
+
+  if(isNaN(applicationId) ) throw {status: 400, message: "Invalid id"} //if the applicationId is not a number (usually undefined) returns an error
+
+  const application = await Application.findByPk(applicationId)
+  if (application === null || application.StudentId !== student.id ) throw {status: 400, message: "No application found with this id "} //if the student is not the student whom made the call it returns a 404 error 
+  await application.update({alreadyNotified: true}) 
+  
+  ctx.status = 201;
+  ctx.body = {message: "Application marked as seen"};
+}
+/**
+ * Takes the user id and returnes the jobs that he is fit to do ordered by the fitness function "jobFitness" 
+ */
+exports.searchJobs = async ctx => { 
   const ratings = await ctx.user.getStudentSkills()
   const today = pgDate(new Date());
 
@@ -127,7 +166,7 @@ exports.searchJobs = async ctx => {
 
   const alreadyAppliedJobs = sequelize.dialect.queryGenerator.selectQuery("Applications", {
     attributes: ['JobId'],
-    where: { StudentId: ctx.user.id }
+    where: { StudentId: ctx.user.id } 
   }).slice(0, -1); // removes ';'
 
   /*collects all the skills of the student */

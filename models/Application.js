@@ -12,6 +12,9 @@ Application.init({
   declined: {
     type: DataTypes.BOOLEAN
   },
+  alreadyNotified:{
+    type: DataTypes.BOOLEAN
+  },
   createdAt: {
     type: DataTypes.DATE
   },
