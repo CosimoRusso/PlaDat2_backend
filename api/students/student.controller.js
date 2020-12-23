@@ -144,7 +144,7 @@ exports.markApplicationAsSeen = async ctx => {
 /**
  * Takes the user id and returnes the jobs that he is fit to do ordered by the fitness function "jobFitness" 
  */
-exports.searchJobs = async ctx => {
+exports.searchJobs = async ctx => { 
   const ratings = await ctx.user.getStudentSkills()
   const today = pgDate(new Date());
 

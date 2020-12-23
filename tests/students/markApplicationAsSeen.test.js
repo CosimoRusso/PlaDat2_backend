@@ -13,13 +13,13 @@ const o = {};
 
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
-  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@applicationTest.c" });
-  o.studentNotApplied = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentNotApplied@applicationTest.c" });
-  o.student1 = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student1@applicationTest.c" });
-  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@applicationTest.c" });
-  o.company = await Company.create({name: "TestCompany", email: "company@pippo.com"});
-  o.company1 = await Company.create({name: "TestCompany1", email: "company1@pippo.com"});
-  o.companyAlreadyShown = await Company.create({name: "TestCompany12", email: "company12@pippo.com"});
+  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student_mark@applicationTest.c" });
+  o.studentNotApplied = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student_mark@studentNotApplied_mark@applicationTest.c.c" });
+  o.student1 = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student1_mark@applicationTest.c" });
+  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI_mark@applicationTest.c" });
+  o.company = await Company.create({name: "TestCompany", email: "company_mark@pippo.com"});
+  o.company1 = await Company.create({name: "TestCompany1", email: "company1_mark@pippo.com"});
+  o.companyAlreadyShown = await Company.create({name: "TestCompany12", email: "company12_mark@pippo.com"});
   o.job = await Job.create({CompanyId: o.company.id});
   o.jobWithAppDeclined = await Job.create({CompanyId: o.company.id, name: "1"});
   o.jobWithAppAccepted = await Job.create({CompanyId: o.company.id, name: "2"});

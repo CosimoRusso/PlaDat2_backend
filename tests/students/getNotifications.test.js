@@ -13,13 +13,13 @@ const o = {};
 
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
-  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@applicationTest.c" });
-  o.studentNotApplied = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentNotApplied@applicationTest.c" });
-  o.student1 = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student1@applicationTest.c" });
-  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@applicationTest.c" });
-  o.company = await Company.create({name: "TestCompany", email: "company@pippo.com"});
-  o.company1 = await Company.create({name: "TestCompany1", email: "company1@pippo.com"});
-  o.companyAlreadyShown = await Company.create({name: "TestCompany12", email: "company12@pippo.com"});
+  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student_noti@applicationTest.c" });
+  o.studentNotApplied = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentNotApplied_noti@applicationTest.c" });
+  o.student1 = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student1_noti@applicationTest.c" });
+  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI_noti@applicationTest.c" });
+  o.company = await Company.create({name: "TestCompany", email: "company_noti@pippo.com"});
+  o.company1 = await Company.create({name: "TestCompany1", email: "company1_noti@pippo.com"});
+  o.companyAlreadyShown = await Company.create({name: "TestCompany12", email: "company12_noti@pippo.com"});
   o.job = await Job.create({CompanyId: o.company.id});
   o.jobWithAppDeclined = await Job.create({CompanyId: o.company.id, name: "1"});
   o.jobWithAppAccepted = await Job.create({CompanyId: o.company.id, name: "2"});
@@ -67,8 +67,8 @@ test("The student actually receives the notifications - API version", async func
   const url = `http://localhost:3000/api/v1/student/jobs/getNotifications`;
   const response = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).json;
   expect(response.length).toBe(2);
-  expect(response.find(a => a.Job.name ==="2").Job.Company.email).toBe("company@pippo.com")
-  expect(response.find(a => a.Job.name ==="3").Job.Company.email).toBe("company1@pippo.com")
+  expect(response.find(a => a.Job.name ==="2").Job.Company.email).toBe("company_noti@pippo.com")
+  expect(response.find(a => a.Job.name ==="3").Job.Company.email).toBe("company1_noti@pippo.com")
   expect(response.find(a => a.Job.name ==="2").Job.id).toBe(jobWithAppAccepted.id)
   expect(response.find(a => a.Job.name ==="3").Job.id).toBe(jobWithAppAccepted1.id)
 
