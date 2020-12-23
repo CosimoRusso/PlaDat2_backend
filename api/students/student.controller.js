@@ -318,44 +318,30 @@ exports.sendMail = async ctx => {
   const studentEmail = ctx.user.email;
   const { subject, companyEmail } = ctx.request.body;
   const message = ctx.request.body.message + `\n\nFirst name: ${name}\nLast Name: ${surname}\nEmail: ${studentEmail}`;
-  const info = await sendEmail('test@example.com', companyEmail, subject, message);
-  ctx.body = info;
+  await sendEmail('info@pladat.tk', companyEmail, subject, message);
+  ctx.body = {message: "OK"};
   ctx.status = 200;
 }
 
-const sendEmail = (senderEmail, receiverEmail, subject, message) => {
-  return new Promise((resolve, reject) => {
-    // Generate test SMTP service account from ethereal.email
-    nodemailer.createTestAccount().then(testAccount => {
-      const transporter = nodemailer.createTransport({
-        host: 'mail.pladat.tk',
-        port: 465,
-        secure: true,
-        auth: {
-          user: 'info@pladat.tk',
-          pass: 'b87uC0RRE01MT90qXqzB'
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-      });
-
-      const mailOptions = {
-        from: `"PlaDat" <info@pladat.tk>`,
-        to: receiverEmail,
-        subject: subject,
-        text: message
-      };
-
-      // Verify connection configuration
-      transporter.verify(function(error) {
-        if (error) return reject(error);
-        resolve();
-        // transporter.sendMail(mailOptions, function(error, info) {
-        //   if(error) return reject(error);
-        //   resolve(info);
-        // });
-      });
+const sendEmail = async (senderEmail, receiverEmail, subject, message) => {
+    const transporter = nodemailer.createTransport({
+      host: 'mail.pladat.tk',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'info@pladat.tk',
+        pass: 'b87uC0RRE01MT90qXqzB'
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
-  });
+
+    const mailOptions = {
+      from: `"PlaDat" <${senderEmail}>`,
+      to: receiverEmail,
+      subject: subject,
+      text: message
+    };
+    return await transporter.sendMail(mailOptions);
 }
