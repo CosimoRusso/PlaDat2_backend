@@ -15,12 +15,13 @@ module.exports = Router => {
     .post('/login', controller.login)
     .post('/register', controller.register)
     .use(authentication)
-    .use(studentAuthentication)
+    .use(studentAuthentication) 
     .get('/applications', controller.getApplications)
     .post('/jobs/apply/:jobId', controller.apply)
     .post('/jobs/discard/:jobId', controller.discard)
+    .post('/jobs/markApplicationAsSeen/:applicationId', controller.markApplicationAsSeen)
     .get('/jobs/getNotifications', controller.getNotifications)
-    .get('/jobs/search', controller.searchJobs);
+    .get('/jobs/search', controller.searchJobs); 
 
   return router;
-};
+};  

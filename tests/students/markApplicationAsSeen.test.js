@@ -1,5 +1,5 @@
 const r2 = require("r2");
-const { getApplications, getNotifications } = require("../../api/students/student.controller");
+const { getApplications, getNotifications, markApplicationAsSeen } = require("../../api/students/student.controller");
 const { Student, Application, Company, Job } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
@@ -31,49 +31,57 @@ beforeAll(async () => {
   o.applicationAccepted = await Application.create({StudentId: o.student.id, JobId: o.jobWithAppAccepted.id, declined: false, alreadyNotified: false});
   o.applicationAccepted1 = await Application.create({StudentId: o.student.id, JobId: o.jobWithAppAccepted1.id, declined: false, alreadyNotified: false});
   o.applicationAlreadyShown = await Application.create({StudentId: o.student.id, JobId: o.jobAlreadyShown.id, declined: false, alreadyNotified: true});
-  
-  
+
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
 
 // unit tests - here you can include directly the middleware so you skip authorization!
-test("A student that has no applications accepted has no notifications", async function (){
-  const { studentNotApplied } = o;
-  const ctx = {user: studentNotApplied};
-  await getNotifications(ctx, noop);
-  expect(ctx.body.length).toBe(0);
+test("If we try to mark an application of another student we get an error", async function(){
+    const {studentNotApplied, applicationAccepted} = o;
+    const ctx = {params: {applicationId: applicationAccepted.id}, user: studentNotApplied};   
+
+    try{
+      await markApplicationAsSeen(ctx, noop);
+    }catch(e){
+      expect(e.status).toBe(400);
+    }
 });
 
-test('The student that has two application accepted can see them both', async function() {
-  const { student, application, applicationAccepted, applicationAccepted1, jobWithAppAccepted, jobWithAppAccepted1 } = o;
-  expect(application.declined).toBe(null);
-  const ctx = {user: student};
-  await getNotifications(ctx, noop);
-  const notifications = ctx.body;
+test("If we try to mark an application of another student we get an error", async function(){
+  const {studentNotApplied, applicationAccepted} = o;
+  const ctx = {params: {applicationId: undefined}, user: studentNotApplied};
 
-  expect(ctx.body.length).toBe(2);
-  expect(notifications.find(a => a.id === applicationAccepted.id).Job.name).toBe(jobWithAppAccepted.name)
-  expect(notifications.find(a => a.id === applicationAccepted1.id).Job.name).toBe(jobWithAppAccepted1.name)
-  
+  try{
+    await markApplicationAsSeen(ctx, noop);
+  }catch(e){
+    expect(e.status).toBe(400);
+  }
+});
+
+
+test('If markApplicationAsSeen is called on an application, that application has "alreadyNodified = true" ', async function() {
+  const { student, application, applicationAccepted, applicationAccepted1, jobWithAppAccepted, jobWithAppAccepted1 } = o;
+  const ctx = {params: {applicationId: applicationAccepted.id}, user: student};
+  expect((await Application.findByPk(applicationAccepted.id)).alreadyNotified).toBe(false)
+
+  await markApplicationAsSeen(ctx, noop);
+
+  expect((await Application.findByPk(applicationAccepted.id)).alreadyNotified).toBe(true)
 });
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
-test("The student actually receives the notifications - API version", async function (){
-  const { student, job, company, jobWithAppAccepted, jobWithAppAccepted1 } = o;
+test("MarkApplicationAsSeen actually modifies the 'alreadyNotified' - API version", async function (){
+  const { student, job, company, applicationAccepted1, jobWithAppAccepted1 } = o;
   const studentId = student.id;
+  expect((await Application.findByPk(applicationAccepted1.id)).alreadyNotified).toBe(false)
+
+  
   const jwt = signJWT({id: studentId, userType: "student"});
-  const url = `http://localhost:3000/api/v1/student/jobs/getNotifications`;
-  const response = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).json;
-  expect(response.length).toBe(2);
-  expect(response.find(a => a.Job.name ==="2").Job.Company.email).toBe("company@pippo.com")
-  expect(response.find(a => a.Job.name ==="3").Job.Company.email).toBe("company1@pippo.com")
-  expect(response.find(a => a.Job.name ==="2").Job.id).toBe(jobWithAppAccepted.id)
-  expect(response.find(a => a.Job.name ==="3").Job.id).toBe(jobWithAppAccepted1.id)
-  console.dir(response)
-  console.dir(response[0].Job.Company.email)
-  /*const application = response[0];
-  expect(application.id).toBe(applicationAPI.id);
-  expect(application.Job.id).toBe(job.id);
-  expect(application.Job.Company.id).toBe(company.id);*/
+
+  const url = `http://localhost:3000/api/v1/student/jobs/markApplicationAsSeen/${applicationAccepted1.id}`;
+  const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
+  
+  expect((await Application.findByPk(applicationAccepted1.id)).alreadyNotified).toBe(true)  
+  expect(response.status).toBe(201)
 });

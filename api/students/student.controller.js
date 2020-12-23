@@ -105,13 +105,13 @@ exports.discard = async ctx => {
   ctx.status = 201;
 };
 
+/**
+ * Takes nothing as input, only needs to be authenticated
+ * Returns all the applications that have alreadyNotified=false 
+ */
 exports.getNotifications = async ctx => {
   const student = ctx.user;
 
-  /**
-   * Takes nothing as input, only needs to be authenticated
-   * Returns all the applications that have alreadyNotified=false 
-   */
   const query = await Application.findAll({
     where: {alreadyNotified: false, StudentId: student.id},
     include: [{
@@ -120,10 +120,25 @@ exports.getNotifications = async ctx => {
       include: [{model: Company, as: "Company"}] 
     }]
   })
-  //console.log(query)
+
+
   ctx.status = 200;
   ctx.body = query;
-  
+}
+/**
+ * Takes as input the id of the application to be marked as read 
+ */
+exports.markApplicationAsSeen = async ctx => {
+  const student = ctx.user;
+  const {applicationId} = ctx.params;
+  if(isNaN(applicationId)) throw {status: 400, message: "Invalid id"}
+
+  const application = await Application.findByPk(applicationId, {where: {StudentId: student.id}})
+  if (application === null) throw {status: 400, message: "No application found with this id "}
+
+  await application.update({alreadyNotified: true})
+  ctx.status = 201;
+  ctx.body = {message: "Application marked as seen"};
 }
 
 exports.searchJobs = async ctx => {
