@@ -40,18 +40,19 @@ afterAll(cleanDatabase.bind(null, o, sequelize));
 test("If we try to mark an application of another student we get an error", async function(){
     const {studentNotApplied, applicationAccepted} = o;
     const ctx = {params: {applicationId: applicationAccepted.id}, user: studentNotApplied};   
-
+    expect((await Application.findByPk(applicationAccepted.id)).alreadyNotified).toBe(false) 
     try{
       await markApplicationAsSeen(ctx, noop);
     }catch(e){
       expect(e.status).toBe(400);
     }
+    expect((await Application.findByPk(applicationAccepted.id)).alreadyNotified).toBe(false)//verify that the value does not change even if a 404 message was returned
+
 });
 
 test("If we try to mark an application of another student we get an error", async function(){
-  const {studentNotApplied, applicationAccepted} = o;
+  const {studentNotApplied} = o;
   const ctx = {params: {applicationId: undefined}, user: studentNotApplied};
-
   try{
     await markApplicationAsSeen(ctx, noop);
   }catch(e){
@@ -61,27 +62,27 @@ test("If we try to mark an application of another student we get an error", asyn
 
 
 test('If markApplicationAsSeen is called on an application, that application has "alreadyNodified = true" ', async function() {
-  const { student, application, applicationAccepted, applicationAccepted1, jobWithAppAccepted, jobWithAppAccepted1 } = o;
-  const ctx = {params: {applicationId: applicationAccepted.id}, user: student};
-  expect((await Application.findByPk(applicationAccepted.id)).alreadyNotified).toBe(false)
+  const { student, applicationAccepted1 } = o;
+  const ctx = {params: {applicationId: applicationAccepted1.id}, user: student};
+  expect((await Application.findByPk(applicationAccepted1.id)).alreadyNotified).toBe(false)
 
   await markApplicationAsSeen(ctx, noop);
 
-  expect((await Application.findByPk(applicationAccepted.id)).alreadyNotified).toBe(true)
+  expect((await Application.findByPk(applicationAccepted1.id)).alreadyNotified).toBe(true)
 });
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test
 test("MarkApplicationAsSeen actually modifies the 'alreadyNotified' - API version", async function (){
-  const { student, job, company, applicationAccepted1, jobWithAppAccepted1 } = o;
+  const { student, applicationAccepted} = o;
   const studentId = student.id;
-  expect((await Application.findByPk(applicationAccepted1.id)).alreadyNotified).toBe(false)
-
   
+  expect((await Application.findByPk(applicationAccepted.id)).alreadyNotified).toBe(false) //verifies that the value actually changes (the value could be 'true' from the beginning)
+
   const jwt = signJWT({id: studentId, userType: "student"});
 
-  const url = `http://localhost:3000/api/v1/student/jobs/markApplicationAsSeen/${applicationAccepted1.id}`;
+  const url = `http://localhost:3000/api/v1/student/jobs/markApplicationAsSeen/${applicationAccepted.id}`;
   const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
   
-  expect((await Application.findByPk(applicationAccepted1.id)).alreadyNotified).toBe(true)  
-  expect(response.status).toBe(201)
-});
+  expect((await Application.findByPk(applicationAccepted.id)).alreadyNotified).toBe(true)  
+  expect(response.status).toBe(201)  
+});   

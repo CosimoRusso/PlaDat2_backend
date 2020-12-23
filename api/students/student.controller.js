@@ -120,27 +120,30 @@ exports.getNotifications = async ctx => {
       include: [{model: Company, as: "Company"}] 
     }]
   })
-
-
+  
   ctx.status = 200;
   ctx.body = query;
 }
+
 /**
  * Takes as input the id of the application to be marked as read 
  */
 exports.markApplicationAsSeen = async ctx => {
   const student = ctx.user;
   const {applicationId} = ctx.params;
-  if(isNaN(applicationId)) throw {status: 400, message: "Invalid id"}
 
-  const application = await Application.findByPk(applicationId, {where: {StudentId: student.id}})
-  if (application === null) throw {status: 400, message: "No application found with this id "}
+  if(isNaN(applicationId) ) throw {status: 400, message: "Invalid id"} //if the applicationId is not a number (usually undefined) returns an error
 
-  await application.update({alreadyNotified: true})
+  const application = await Application.findByPk(applicationId)
+  if (application === null || application.StudentId !== student.id ) throw {status: 400, message: "No application found with this id "} //if the student is not the student whom made the call it returns a 404 error 
+  await application.update({alreadyNotified: true}) 
+  
   ctx.status = 201;
   ctx.body = {message: "Application marked as seen"};
 }
-
+/**
+ * Takes the user id and returnes the jobs that he is fit to do ordered by the fitness function "jobFitness" 
+ */
 exports.searchJobs = async ctx => {
   const ratings = await ctx.user.getStudentSkills()
   const today = pgDate(new Date());

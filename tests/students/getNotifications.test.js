@@ -47,6 +47,7 @@ test("A student that has no applications accepted has no notifications", async f
 
 test('The student that has two application accepted can see them both', async function() {
   const { student, application, applicationAccepted, applicationAccepted1, jobWithAppAccepted, jobWithAppAccepted1 } = o;
+  
   expect(application.declined).toBe(null);
   const ctx = {user: student};
   await getNotifications(ctx, noop);
@@ -70,10 +71,5 @@ test("The student actually receives the notifications - API version", async func
   expect(response.find(a => a.Job.name ==="3").Job.Company.email).toBe("company1@pippo.com")
   expect(response.find(a => a.Job.name ==="2").Job.id).toBe(jobWithAppAccepted.id)
   expect(response.find(a => a.Job.name ==="3").Job.id).toBe(jobWithAppAccepted1.id)
-  console.dir(response)
-  console.dir(response[0].Job.Company.email)
-  /*const application = response[0];
-  expect(application.id).toBe(applicationAPI.id);
-  expect(application.Job.id).toBe(job.id);
-  expect(application.Job.Company.id).toBe(company.id);*/
+
 });

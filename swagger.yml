@@ -745,7 +745,7 @@ paths:
       x-security-scopes:
         - "student"
   /student/jobs/markApplicationAsSeen/{ApplicationId}:
-    put:
+    post:
       tags:
         - "student"
       summary: "Marks an application as seen"
