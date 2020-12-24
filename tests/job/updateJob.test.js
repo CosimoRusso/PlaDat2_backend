@@ -1,6 +1,6 @@
 const r2 = require("r2");
 const { update } = require("../../api/jobs/jobs.controller");
-const {  Job, Company } = require('../../models').models;
+const {  Job, Company, City } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 const cleanDatabase = require('../../utils/cleanDatabase.util');
@@ -14,18 +14,20 @@ const o = {};
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
     o.company = await Company.create({name:'Company'})
-    o.job = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false});
-    o.job2 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false});
-    o.job3 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false});
-    o.job4 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false});
+    o.city1 = await City.create({name:'Podgorica'});
+    o.city2 = await City.create({name:'Milan'});
+    o.job = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id});
+    o.job2 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id});
+    o.job3 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id});
+    o.job4 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id});
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
 
 //unit test
 test('Jobs every information is updated', async function() {
-    const { job } = o;
-    const ctx = {request: { body: {jobId: job.id, name: 'newName', description: 'New description', timeLimit: '2021-1-15', salary: 2500, partTime: true, remote: true} }};
+    const { job, city2, company } = o;
+    const ctx = {request: { body: {jobId: job.id, name: 'newName', description: 'New description', timeLimit: '2021-1-15', salary: 2500, partTime: true, remote: true, CityId: city2.id} }, user: company};
     await update(ctx, noop);
     await job.reload();
 
@@ -38,11 +40,12 @@ test('Jobs every information is updated', async function() {
     expect(job.salary).toBe(2500);
     expect(job.partTime).toBe(true);
     expect(job.remote).toBe(true);
+    expect(job.CityId).toBe(city2.id);
   });
 
   test('Jobs name is updated', async function() {
-    const { job2 } = o;
-    const ctx = {request: { body: {jobId: job2.id, name: 'newName'} }};
+    const { job2, company } = o;
+    const ctx = {request: { body: {jobId: job2.id, name: 'newName'} }, user: company};
     await update(ctx, noop);
     await job2.reload();
 
@@ -52,10 +55,10 @@ test('Jobs every information is updated', async function() {
 
 //api test
 test("Jobs every information is updated - API version", async function (){
-    const { job3, company } = o;
+    const { job3, company, city2 } = o;
     const jwt = signJWT({id: company.id, userType: "company"});
     const url = `http://localhost:3000/api/v1/jobs/update`;
-    const response = await r2.post(url, {json:{jobId: job3.id, name: 'newName', description: 'New description', timeLimit: '2021-1-15', salary: 2500, partTime: true, remote: true}, headers: {authorization: "Bearer " + jwt}}).response;
+    const response = await r2.post(url, {json:{jobId: job3.id, name: 'newName', description: 'New description', timeLimit: '2021-1-15', salary: 2500, partTime: true, remote: true, CityId: city2.id}, headers: {authorization: "Bearer " + jwt}}).response;
     await job3.reload();
     expect(response.status).toBe(200);
     expect(job3.id).toBeGreaterThan(0);
@@ -67,6 +70,7 @@ test("Jobs every information is updated - API version", async function (){
     expect(job3.salary).toBe(2500);
     expect(job3.partTime).toBe(true);
     expect(job3.remote).toBe(true);
+    expect(job.CityId).toBe(city2.id);
 });
 
 test("Jobs name is updated - API version", async function (){

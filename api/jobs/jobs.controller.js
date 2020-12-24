@@ -1,5 +1,5 @@
 'use strict';
-const { Job, Company, Skill, City, Country} = require("../../models").models;
+const { Job, Company, Skill, City, Country, SkillSetOpt, SkillSetReq} = require("../../models").models;
 
 //TODO write tests
 exports.getOne = async ctx => {
@@ -31,7 +31,9 @@ exports.createOne = async ctx => {
 };
 
 exports.update = async ctx => {
-  const { jobId, name, description, timeLimit, salary, partTime, remote } = ctx.request.body;
+  const { jobId, name, description, timeLimit, salary, partTime, remote, CityId } = ctx.request.body;
+  const company = ctx.user;
+  if(!company) throw {status: 400, message: 'You must be logged in'};
 
   const job = await Job.findOne({ where: {id: jobId}});
   if(name){
@@ -52,7 +54,64 @@ exports.update = async ctx => {
   if(remote){
     await job.update({remote: remote});
   }
+  if(CityId){
+    await job.update({CityId: CityId});
+  }
 
   ctx.status = 200;
   ctx.body = { message: 'Job updated' };
+}
+
+exports.removeRequiredSkill = async ctx => {
+  const { jobId, skillId} = ctx.params;
+  const company = ctx.user;
+  if(!company) throw {status: 400, message: 'You must be logged in'};
+
+  const exist = await SkillSetReq.findOne({where: {JobId: jobId, SkillId: skillId}});
+  if(!exist){
+    throw { status: 404, message: 'Skill does not exist' };
+  }else{
+     await SkillSetReq.destroy({where: {JobId: jobId, SkillId: skillId}});
+     ctx.body = { message: 'Required skill deleted' };
+     ctx.status = 200;
+  }
+}
+
+exports.AddRequiredSkill = async ctx => {
+  const { jobId, skillId} = ctx.params;
+  const company = ctx.user;
+  if(!company) throw {status: 400, message: 'You must be logged in'};
+
+  const exist = await SkillSetReq.findOne({where: {JobId: jobId, SkillId: skillId}});
+  if(exist) throw { status: 404, message: 'Required skill already exists' };
+  await SkillSetReq.create({ JobId: jobId, SkillId: skillId });
+  ctx.body = { message: 'Required skill added' };
+  ctx.status = 200;
+}
+
+exports.removeOptionalSkill = async ctx => {
+  const { jobId, skillId} = ctx.params;
+  const company = ctx.user;
+  if(!company) throw {status: 400, message: 'You must be logged in'};
+
+  const exist = await SkillSetOpt.findOne({where: {JobId: jobId, SkillId: skillId}});
+  if(!exist){
+    throw { status: 404, message: 'Skill does not exist' };
+  }else{
+     await SkillSetOpt.destroy({where: {JobId: jobId, SkillId: skillId}});
+     ctx.body = { message: 'Optional skill deleted' };
+     ctx.status = 200;
+  }
+}
+
+exports.AddOptionalSkill = async ctx => {
+  const { jobId, skillId} = ctx.params;
+  const company = ctx.user;
+  if(!company) throw {status: 400, message: 'You must be logged in'};
+
+  const exist = await SkillSetOpt.findOne({where: {JobId: jobId, SkillId: skillId}});
+  if(exist) throw { status: 404, message: 'Optional skill already exists' };
+  await SkillSetOpt.create({ JobId: jobId, SkillId: skillId });
+  ctx.body = { message: 'Optional skill added' };
+  ctx.status = 200;
 }
