@@ -29,7 +29,7 @@ module.exports = Router => {
     // .post('/imageUpload',controller.imageUpload)
     .post('/jobs/markApplicationAsSeen/:applicationId', controller.markApplicationAsSeen)
     .get('/jobs/getNotifications', controller.getNotifications)
-    .get('/jobs/search', controller.searchJobs);
+    .get('/jobs/search', controller.searchJobs)
     .post('/sendMail', controller.sendMail)
 
   return router;
