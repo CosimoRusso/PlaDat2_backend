@@ -24,6 +24,7 @@ beforeAll(async () => {
 afterAll(cleanDatabase.bind(null, o, sequelize));
 
 test("Send an email - API version", async function (){
+  jest.setTimeout(30000);
   const { student } = o;
   const studentId = student.id;
   const jwt = signJWT({id: studentId, userType: "student"});
