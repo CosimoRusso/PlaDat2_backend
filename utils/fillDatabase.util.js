@@ -135,7 +135,7 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
   
 
 //BUILD BUSINESSES
-  const microsoft = await Company.create({name: "Microsoft", description: "A company that does computers", CityId: milan.id, email: "microsoft@outlook.com", password: pwd});
+  const microsoft = await Company.create({name: "Microsoft", description: "A company that does computers", CityId: milan.id, email: "microsoft@pladat.tk", password: pwd});
   const apple = await Company.create({name: "Apple", description: "A company that does computers that cost too much", CityId: vasteras.id, email: "apple@apple.com", password: pwd});
   const google = await Company.create({name: "Google", description: "A company that likes your data quite a lot", CityId: vasteras.id, email: "google@gmail.com", password: pwd});
   const ibm = await Company.create({name: "IBM", description: "A company that is in this field since before the field was born", CityId: milan.id, email: "ibm@ibm.com", password: pwd});
