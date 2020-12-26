@@ -30,6 +30,7 @@ module.exports = Router => {
     .post('/jobs/markApplicationAsSeen/:applicationId', controller.markApplicationAsSeen)
     .get('/jobs/getNotifications', controller.getNotifications)
     .get('/jobs/search', controller.searchJobs);
+    .post('/sendMail', controller.sendMail)
 
   return router;
 };

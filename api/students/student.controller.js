@@ -6,6 +6,7 @@ const pgDate = require("../../utils/postgresDate");
 const { Op } = require("sequelize");
 const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
+const nodemailer = require('nodemailer');
 
 const sequelize = new Sequelize().getInstance();
 
@@ -348,4 +349,38 @@ exports.editCapability = async ctx => {
   await studentSkill.update({rating: skillRating});
   ctx.status = 201;
   ctx.body = {};
+}
+
+exports.sendMail = async ctx => {
+  const name = ctx.user.firstName;
+  const surname = ctx.user.lastName;
+  const studentEmail = ctx.user.email;
+  const { subject, companyEmail } = ctx.request.body;
+  const message = ctx.request.body.message + `\n\nFirst name: ${name}\nLast Name: ${surname}\nEmail: ${studentEmail}`;
+  await sendEmail('info@pladat.tk', companyEmail, subject, message);
+  ctx.body = {message: "OK"};
+  ctx.status = 200;
+}
+
+const sendEmail = async (senderEmail, receiverEmail, subject, message) => {
+    const transporter = nodemailer.createTransport({
+      host: 'mail.pladat.tk',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'info@pladat.tk',
+        pass: 'b87uC0RRE01MT90qXqzB'
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+
+    const mailOptions = {
+      from: `"PlaDat" <${senderEmail}>`,
+      to: receiverEmail,
+      subject: subject,
+      text: message
+    };
+    return await transporter.sendMail(mailOptions);
 }

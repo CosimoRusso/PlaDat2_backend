@@ -950,6 +950,60 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "student"
+  /student/sendMail:
+    post:
+      tags:
+        - "student"
+      summary: "Sends an email"
+      description: "Sends an email to the company along with the information of the student"
+      operationId: "studentSendMail"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Email"
+      responses:
+        200:
+          description: "Email sent"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
   /company/findOne:
     get:
       tags:
@@ -2200,6 +2254,19 @@ components:
         id: 1
         name: "Programming Languages"
         description: ""
+    Email:
+      type: object
+      properties:
+        message:
+          type: "string"
+        subject:
+          type: "string"
+        companyEmail:
+          type: "string"
+      example:
+        message: "I am the message of the email"
+        subject: "I am the subject of the email"
+        companyEmail: "sample@email.com"
 
   securitySchemes:
     bearerAuth:
