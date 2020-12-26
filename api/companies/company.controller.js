@@ -46,7 +46,7 @@ exports.companyDiscardStudent = async ctx => {
   const application = await Application.findOne({where: { JobId: jobId, StudentId: studentId, declined: null }});
   if(!application) throw { status: 400, message: "This user did not apply to this job" };
 
-  await application.update({declined: "true"});
+  await application.update({declined: "true", alreadyNotified: false});
   ctx.body = ""
   ctx.status = 201;
 };
