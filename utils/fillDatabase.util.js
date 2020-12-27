@@ -22,7 +22,7 @@ module.exports = async (models) => {
   skillCategories = await SkillCategory.findAll();
 
   await Skill.bulkCreate(skills.map(s => {
-    s.SkillCategoryId = getSkillCategory(s.category).id;
+    s.SkillCategoryId = null;
     return s;
   }));
   skills = await Skill.findAll();

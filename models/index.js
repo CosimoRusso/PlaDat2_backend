@@ -28,6 +28,7 @@ let SkillSetReq = models['SkillSetReq'];
 let SkillSetOpt = models['SkillSetOpt'];
 let StudentSkill = models['StudentSkill'];
 let SkillCategory = models['SkillCategory'];
+let LevelDescription = models['LevelDescription'];
 
 // associations definition
 Student.hasMany(Matching);
@@ -75,6 +76,8 @@ StudentSkill.belongsTo(Skill);
 
 SkillCategory.hasMany(Skill);
 Skill.belongsTo(SkillCategory);
+SkillCategory.hasMany(LevelDescription);
+LevelDescription.belongsTo(SkillCategory);
 
 async function sync() {
   await sequelize.sync({ force: databaseConfig.reset });
