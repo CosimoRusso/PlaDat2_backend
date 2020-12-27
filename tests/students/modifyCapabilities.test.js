@@ -23,6 +23,56 @@ beforeAll(async () => {
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
+//unit test
+
+test("Skill already exist", async function (){
+  const {student, studentSkill} = o;
+  const ctx = {request: { body: {id: 1, rating: 3,}}, user:student};
+  // await addCapability(ctx, noop);
+  // expect(status).toBe(400);
+  try{
+    await addCapability(ctx,noop);
+  }catch(e){
+    expect(e.status).toBe(400);
+    expect(e.message).toBeDefined();
+  }
+});
+test("Add capability", async function (){
+  const {student, studentSkill} = o;
+  const ctx = {request: { body: {id: 4, rating: 3,}}, user:student};
+  // await addCapability(ctx, noop);
+  // expect(status).toBe(400);
+  try{
+    await addCapability(ctx,noop);
+  }catch(e){
+    expect(e.status).toBe(200);
+    expect(e.message).toBeDefined();
+  }
+});
+test("Remove capability", async function (){
+  const {student, studentSkill} = o;
+  const ctx = {request: { body: {removeSkillId: 1}}, user:student};
+  // await addCapability(ctx, noop);
+  // expect(status).toBe(400);
+  try{
+    await removeCapability(ctx,noop);
+  }catch(e){
+    expect(e.status).toBe(200);
+    expect(e.message).toBeDefined();
+  }
+});
+test("Capability does not exist", async function (){
+  const {student, studentSkill} = o;
+  const ctx = {request: { body: {removeSkillId: 1}}, user:student};
+  // await addCapability(ctx, noop);
+  // expect(status).toBe(400);
+  try{
+    await removeCapability(ctx,noop);
+  }catch(e){
+    expect(e.status).toBe(404);
+    expect(e.message).toBeDefined();
+  }
+});
 
 test("Add capability - API version", async function (){
   const {student } = o;
@@ -38,7 +88,7 @@ test("Capability already exist- API version", async function (){
   const studentId = student.id;
   const jwt = signJWT({id: studentId, userType: "student"});
   const url = `http://localhost:3000/api/v1/student/addCapability/`;
-  const response = await r2.post(url,{json:{id:1, rating: 5},headers: {authorization: "Bearer " + jwt}}).response;
+  const response = await r2.post(url,{json:{id:5, rating: 5},headers: {authorization: "Bearer " + jwt}}).response;
   expect(response.status).toBe(400);
 });
 
