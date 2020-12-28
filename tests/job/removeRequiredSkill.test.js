@@ -17,8 +17,10 @@ beforeAll(async () => {
     o.job1 = await Job.create({name: 'oldName', CompanyId: o.company.id});
     o.job2 = await Job.create({name: 'oldName', CompanyId: o.company.id});
     o.job3 = await Job.create({name: 'oldName', CompanyId: o.company.id});
-    o.skill = await Skill.create({name: 'JavaScript'});
-    o.skillSet = await SkillSetReq.create({ JobId: o.job1.id, SkillId: o.skill.id});
+    o.skill = await Skill.create({name: 'removeReqSkill'});
+    o.skillSet1 = await SkillSetReq.create({ JobId: o.job1.id, SkillId: o.skill.id});
+    o.skillSet2 = await SkillSetReq.create({ JobId: o.job2.id, SkillId: o.skill.id});
+    o.skillSet3 = await SkillSetReq.create({ JobId: o.job3.id, SkillId: o.skill.id});
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
