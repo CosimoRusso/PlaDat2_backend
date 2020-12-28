@@ -27,16 +27,16 @@ afterAll(cleanDatabase.bind(null, o, sequelize));
 //unit test
 test('Jobs every information is updated', async function() {
     const { job, city2, company } = o;
-    const ctx = {request: { body: {jobId: job.id, name: 'newName', description: 'New description', timeLimit: '2021-1-15', salary: 2500, partTime: true, remote: true, CityId: city2.id} }, user: company};
+    newDate1 = new Date('2021-01-15');
+    const ctx = {request: { body: {jobId: job.id, name: 'newName', description: 'New description', timeLimit: newDate1, salary: 2500, partTime: true, remote: true, CityId: city2.id} }, user: company};
     await update(ctx, noop);
     await job.reload();
 
     expect(job.id).toBeGreaterThan(0);
     expect(job.name).toBe('newName');
     expect(job.description).toBe('New description');
-    //expect(job.timeLimit).toBe('2021-01-15');
-    //Expected: "2021-01-15"
-    //Received: 2021-01-14T23:00:00.000Z
+    newDate = new Date('2021-01-15');
+    expect(job.timeLimit).toStrictEqual(newDate);
     expect(job.salary).toBe(2500);
     expect(job.partTime).toBe(true);
     expect(job.remote).toBe(true);
@@ -58,19 +58,19 @@ test("Jobs every information is updated - API version", async function (){
     const { job3, company, city2 } = o;
     const jwt = signJWT({id: company.id, userType: "company"});
     const url = `http://localhost:3000/api/v1/jobs/update`;
-    const response = await r2.post(url, {json:{jobId: job3.id, name: 'newName', description: 'New description', timeLimit: '2021-1-15', salary: 2500, partTime: true, remote: true, CityId: city2.id}, headers: {authorization: "Bearer " + jwt}}).response;
+    newDate1 = new Date('2021-01-15');
+    const response = await r2.post(url, {json:{jobId: job3.id, name: 'newName', description: 'New description', timeLimit: newDate1, salary: 2500, partTime: true, remote: true, CityId: city2.id}, headers: {authorization: "Bearer " + jwt}}).response;
     await job3.reload();
     expect(response.status).toBe(200);
     expect(job3.id).toBeGreaterThan(0);
     expect(job3.name).toBe('newName');
     expect(job3.description).toBe('New description');
-    //expect(job3.timeLimit).toBe('2021-01-15');
-    //Expected: "2021-01-15"
-    //Received: 2021-01-14T23:00:00.000Z
+    newDate = new Date('2021-01-15');
+    expect(job3.timeLimit).toStrictEqual(newDate);
     expect(job3.salary).toBe(2500);
     expect(job3.partTime).toBe(true);
     expect(job3.remote).toBe(true);
-    expect(job.CityId).toBe(city2.id);
+    expect(job3.CityId).toBe(city2.id);
 });
 
 test("Jobs name is updated - API version", async function (){

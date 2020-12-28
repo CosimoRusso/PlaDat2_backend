@@ -12,9 +12,9 @@ module.exports = Router => {
     .get('/', controller.getAll)
     .post('/', controller.createOne)
     .post('/update', controller.update)
-    .get('/update/:jobId/removeReq/:skillId', controller.removeRequiredSkill)
-    .get('/update/:jobId/addReq/:skillId', controller.AddRequiredSkill)
-    .get('/update/:jobId/removeOpt/:skillId', controller.removeOptionalSkill)
-    .get('/update/:jobId/addOpt/:skillId', controller.AddOptionalSkill);
+    .post('/update/:jobId/removeReq/:skillId', controller.removeRequiredSkill)
+    .post('/update/:jobId/addReq/:skillId', controller.addRequiredSkill)
+    .post('/update/:jobId/removeOpt/:skillId', controller.removeOptionalSkill)
+    .post('/update/:jobId/addOpt/:skillId', controller.addOptionalSkill);
   return router;
 };

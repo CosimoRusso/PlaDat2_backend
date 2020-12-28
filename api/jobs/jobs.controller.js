@@ -69,7 +69,7 @@ exports.removeRequiredSkill = async ctx => {
 
   const exist = await SkillSetReq.findOne({where: {JobId: jobId, SkillId: skillId}});
   if(!exist){
-    throw { status: 404, message: 'Skill does not exist' };
+    throw { status: 401, message: 'Skill does not exist' };
   }else{
      await SkillSetReq.destroy({where: {JobId: jobId, SkillId: skillId}});
      ctx.body = { message: 'Required skill deleted' };
@@ -77,13 +77,13 @@ exports.removeRequiredSkill = async ctx => {
   }
 }
 
-exports.AddRequiredSkill = async ctx => {
+exports.addRequiredSkill = async ctx => {
   const { jobId, skillId} = ctx.params;
   const company = ctx.user;
   if(!company) throw {status: 400, message: 'You must be logged in'};
 
   const exist = await SkillSetReq.findOne({where: {JobId: jobId, SkillId: skillId}});
-  if(exist) throw { status: 404, message: 'Required skill already exists' };
+  if(exist) throw { status: 401, message: 'Required skill already exists' };
   await SkillSetReq.create({ JobId: jobId, SkillId: skillId });
   ctx.body = { message: 'Required skill added' };
   ctx.status = 200;
@@ -96,7 +96,7 @@ exports.removeOptionalSkill = async ctx => {
 
   const exist = await SkillSetOpt.findOne({where: {JobId: jobId, SkillId: skillId}});
   if(!exist){
-    throw { status: 404, message: 'Skill does not exist' };
+    throw { status: 401, message: 'Skill does not exist' };
   }else{
      await SkillSetOpt.destroy({where: {JobId: jobId, SkillId: skillId}});
      ctx.body = { message: 'Optional skill deleted' };
@@ -104,13 +104,13 @@ exports.removeOptionalSkill = async ctx => {
   }
 }
 
-exports.AddOptionalSkill = async ctx => {
+exports.addOptionalSkill = async ctx => {
   const { jobId, skillId} = ctx.params;
   const company = ctx.user;
   if(!company) throw {status: 400, message: 'You must be logged in'};
 
   const exist = await SkillSetOpt.findOne({where: {JobId: jobId, SkillId: skillId}});
-  if(exist) throw { status: 404, message: 'Optional skill already exists' };
+  if(exist) throw { status: 401, message: 'Optional skill already exists' };
   await SkillSetOpt.create({ JobId: jobId, SkillId: skillId });
   ctx.body = { message: 'Optional skill added' };
   ctx.status = 200;
