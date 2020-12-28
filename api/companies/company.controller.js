@@ -2,6 +2,8 @@
 const { Application, Job, Student,Company, City, Country } = require("../../models").models;
 const signJWT=require('../../utils/signJWT');
 const { hash, compare } = require('../../utils/password');
+const upload=require('../../config/services/file-upload');
+const singleUpload=upload.single('image');
 
 exports.getOne = async ctx => {
   let { companyId } = ctx.params;
@@ -136,7 +138,11 @@ exports.update = async ctx => {
   ctx.status = 200;
   ctx.body = { message: 'Profile edited' };
 }
+exports.imageUpload = async ctx => {
+  // const res= await singleUpload(ctx.request)
+  ctx.body= ctx.file;
 
+};
 exports.getAcceptedStudents = async ctx => {
   const {jobId} = ctx.params;
   const company = ctx.user;
@@ -157,3 +163,4 @@ exports.getAcceptedStudents = async ctx => {
   ctx.status=200;
   ctx.body = acceptedStudents
 }
+
