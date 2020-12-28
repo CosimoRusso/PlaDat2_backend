@@ -1,5 +1,6 @@
 const { hash } = require("./password");
 const countrieslist = require("../data/countries.json");
+const { Op } = require("sequelize");
 let skills = require("../data/skills");
 let skillCategories = require("../data/categories");
 const { env } = require("../config");
@@ -14,17 +15,32 @@ function getSkillCategory(name){
   return skillCategories.find(s => s.name === name);
 }
 module.exports = async (models) => {
-  const { Application, City, Company, Country, Job, SkillCategory, Matching, Skill, Student, SkillSetReq, SkillSetOpt, StudentSkill } = models;
+  
+  const { Application, City, Company, Country, Job, SkillCategory, Matching, Skill, Student, SkillSetReq, SkillSetOpt, StudentSkill, LevelDescription } = models;
   const randomSkill = await Skill.findOne();
   if (randomSkill) return false; // there are already skills in the db. Don't add them
+  
+  //builds the skillcategories and the level descriptions
+  var skillCategoriesArray = [];
 
-  await SkillCategory.bulkCreate(skillCategories);
-  skillCategories = await SkillCategory.findAll();
+  Object.keys(skillCategories).forEach(x => skillCategoriesArray.push({name: x, description: skillCategories[x]["description"]})) //creates an array of the form {name: nameOfCategoryskill, description: "..."} 
+  
+  await SkillCategory.bulkCreate(skillCategoriesArray); //puts the instances of categories into the db
+  var levelDescriptionArray = [];
+  //adds the leveldescriptions to the database  
+  for (let x of Object.keys(skillCategories)){
+    for (let level of Object.keys(skillCategories[x]["levels"])){
+      levelDescriptionArray.push({level: parseInt(level), description: skillCategories[x]["levels"][level], SkillCategoryId: (await SkillCategory.findOne({where: {name: x}})).id})
+    }
+  }
+  await LevelDescription.bulkCreate(levelDescriptionArray) 
 
+  skillCategories = await SkillCategory.findAll(); 
+  
   await Skill.bulkCreate(skills.map(s => {
-    s.SkillCategoryId = null;
+    s.SkillCategoryId = getSkillCategory(s.category).id;
     return s;
-  }));
+  })); 
   skills = await Skill.findAll();
 
   await Promise.all(countrieslist.map(c => Country.create({name: c.name, code: c["alpha-2"]})));
@@ -38,8 +54,7 @@ module.exports = async (models) => {
       lat: city.lat,
       long: city.lng,
     }
-  }));
-
+  })); 
   if (env !== "production") return false; // if in local just add skills, countries and cities
 
   const milan = await City.findOne({where: {name: "Milan"}}, { include: [{ model: Country, as: "Country", where: {name: "Italy"} }] });
