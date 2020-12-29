@@ -112,6 +112,7 @@ exports.login = async ctx => {
 
 exports.update = async ctx => {
   const { name, description, email, password, picture } = ctx.request.body;
+
   const company = ctx.user;
 
   if(email !== undefined){
@@ -140,8 +141,10 @@ exports.update = async ctx => {
 }
 exports.imageUpload = async ctx => {
   // const res= await singleUpload(ctx.request)
-  ctx.body= ctx.file;
-
+  const company = ctx.user;
+  await company.update({picture:  ctx.file.location})
+  ctx.body= 'ok'
+  ctx.status=200;
 };
 exports.getAcceptedStudents = async ctx => {
   const {jobId} = ctx.params;
