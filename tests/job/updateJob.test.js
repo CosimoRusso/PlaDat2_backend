@@ -14,13 +14,15 @@ const o = {};
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
     o.company = await Company.create({name:'Company'})
+    o.company2 = await Company.create({name:'Company'})
     o.city1 = await City.create({name:'Podgorica'});
     o.city2 = await City.create({name:'Milan'});
-    o.job = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id});
-    o.job2 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id});
-    o.job3 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id});
-    o.job4 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id});
-});
+    o.job = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id, CompanyId: o.company.id});
+    o.job2 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id, CompanyId: o.company.id});
+    o.job3 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id, CompanyId: o.company.id});
+    o.job4 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id, CompanyId: o.company.id});
+    o.job5 = await Job.create({name: 'oldName', description: 'oldDescription', timeLimit: '2020-12-30', salary: 2300, partTime: false, remote: false, CityId: o.city1.id, CompanyId: o.company2.id});
+  });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
 
@@ -82,4 +84,16 @@ test("Jobs name is updated - API version", async function (){
     expect(response.status).toBe(200);
     expect(job4.id).toBeGreaterThan(0);
     expect(job4.name).toBe('newName');
+});
+
+test("This job does not belog to the company - API version", async function (){
+  const { job5, company } = o;
+  const jwt = signJWT({id: company.id, userType: "company"});
+  const url = `http://localhost:3000/api/v1/jobs/update`;
+  try{
+    const response = await r2.post(url, {json:{jobId: job5.id, name: 'newName'}, headers: {authorization: "Bearer " + jwt}}).response; 
+  }catch(e){
+    expect(e.status).toBe(401);
+    expect(e.message).toBeDefined();
+  }
 });

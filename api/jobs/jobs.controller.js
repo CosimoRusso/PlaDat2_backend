@@ -34,6 +34,9 @@ exports.update = async ctx => {
   const { jobId, name, description, timeLimit, salary, partTime, remote, CityId } = ctx.request.body;
   const company = ctx.user;
 
+  const hasJob = await company.getJobs({where: {id: jobId}});
+  if (!hasJob) throw {status: 401, message: "This job does not belong to this company"}
+
   const job = await Job.findOne({ where: {id: jobId}});
   if(name){
     await job.update({name: name});
@@ -82,6 +85,12 @@ exports.addRequiredSkill = async ctx => {
   const { jobId, skillId} = ctx.params;
   const company = ctx.user;
 
+  const hasJob = await company.getJobs({where: {id: jobId}});
+  if (!hasJob) throw {status: 401, message: "This job does not belong to this company"}
+
+  const skillExist = await Skill.findOne({where: {id: skillId}});
+  if(!skillExist) throw { status: 401, message: 'Skill does not exist' }
+
   const exist = await SkillSetReq.findOne({where: {JobId: jobId, SkillId: skillId}});
   if(exist) throw { status: 401, message: 'Required skill already exists' };
   await SkillSetReq.create({ JobId: jobId, SkillId: skillId });
@@ -92,6 +101,9 @@ exports.addRequiredSkill = async ctx => {
 exports.removeOptionalSkill = async ctx => {
   const { jobId, skillId} = ctx.params;
   const company = ctx.user;
+
+  const hasJob = await company.getJobs({where: {id: jobId}});
+  if (!hasJob) throw {status: 401, message: "This job does not belong to this company"}
 
   const exist = await SkillSetOpt.findOne({where: {JobId: jobId, SkillId: skillId}});
   if(!exist){
@@ -106,6 +118,12 @@ exports.removeOptionalSkill = async ctx => {
 exports.addOptionalSkill = async ctx => {
   const { jobId, skillId} = ctx.params;
   const company = ctx.user;
+
+  const hasJob = await company.getJobs({where: {id: jobId}});
+  if (!hasJob) throw {status: 401, message: "This job does not belong to this company"}
+
+  const skillExist = await Skill.findOne({where: {id: skillId}});
+  if(!skillExist) throw { status: 401, message: 'Skill does not exist' }
 
   const exist = await SkillSetOpt.findOne({where: {JobId: jobId, SkillId: skillId}});
   if(exist) throw { status: 401, message: 'Optional skill already exists' };

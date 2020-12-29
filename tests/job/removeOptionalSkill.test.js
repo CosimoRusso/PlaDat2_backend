@@ -1,6 +1,6 @@
 const r2 = require("r2");
-const { addRequiredSkill } = require("../../api/jobs/jobs.controller");
-const {  Job, Company, SkillSetReq, Skill } = require('../../models').models;
+const { removeOptionalSkill } = require("../../api/jobs/jobs.controller");
+const {  Job, Company, SkillSetOpt, Skill } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 const cleanDatabase = require('../../utils/cleanDatabase.util');
@@ -19,70 +19,54 @@ beforeAll(async () => {
     o.job2 = await Job.create({name: 'oldName', CompanyId: o.company.id});
     o.job3 = await Job.create({name: 'oldName', CompanyId: o.company.id});
     o.job4 = await Job.create({name: 'oldName', CompanyId: o.company2.id});
-    o.skill = await Skill.create({name: 'JavaScript'});
-    o.skillSet = await SkillSetReq.create({ JobId: o.job2.id, SkillId: o.skill.id});
+    o.skill = await Skill.create({name: 'removeOptSkill'});
+    o.skillSet1 = await SkillSetOpt.create({ JobId: o.job1.id, SkillId: o.skill.id});
+    o.skillSet2 = await SkillSetOpt.create({ JobId: o.job2.id, SkillId: o.skill.id});
+    o.skillSet3 = await SkillSetOpt.create({ JobId: o.job3.id, SkillId: o.skill.id});
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
 
 //unit test
-test('Required skill is added', async function() {
+test('Optional skill is removed', async function() {
     const { job1, company, skill } = o;
     const ctx = { params:{jobId: job1.id, skillId: skill.id}, user: company};
-    await addRequiredSkill(ctx, noop);
-    const skillSet = await SkillSetReq.findOne({where: {JobId: job1.id, SkillId: skill.id}});
-    expect(skillSet.JobId).toBe(job1.id);
-    expect(skillSet.SkillId).toBe(skill.id);
+    await removeOptionalSkill(ctx, noop);
+    const skillSet = await SkillSetOpt.findOne({where: {JobId: job1.id, SkillId: skill.id}});
+    expect(skillSet).toBe(null);
   });
 
-  test('Required skill is already added', async function() {
+  test('Optional skill does not exist', async function() {
     const { job2, company, skill } = o;
     const ctx = { params:{jobId: job2.id, skillId: skill.id}, user: company};
     try{
-        await addRequiredSkill(ctx, noop);
+        await removeOptionalSkill(ctx, noop);
     }catch(e){
         expect(e.status).toBe(401);
         expect(e.message).toBeDefined();
     }
   });
 
-  //api test
-  test('Required skill is added - API version', async function() {
+  //API tests
+test('Optional skill is removed - API version', async function() {
     const { job3, company, skill } = o;
     const jwt = signJWT({id: company.id, userType: "company"});
     const jobId = job3.id, skillId = skill.id;
-    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addReq/${skillId}`;
+    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/removeOpt/${skillId}`;
     const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    //console.log(response.statusText);  //Unauthorized
+
     expect(response.status).toBe(200);
-    const skillSet = await SkillSetReq.findOne({where: {JobId: job3.id, SkillId: skill.id}});
-    expect(skillSet.JobId).toBe(job3.id);
-    expect(skillSet.SkillId).toBe(skill.id);
+    const skillSet = await SkillSetOpt.findOne({where: {JobId: job3.id, SkillId: skill.id}});
+    expect(skillSet).toBe(null);
   });
 
-  test('Required skill is already added - API version', async function() {
-    const { job2, company, skill } = o;
+  test('Optional skill does not exist - API version', async function() {
+    const { job3, company } = o;
     const jwt = signJWT({id: company.id, userType: "company"});
-    const jobId = job2.id, skillId = skill.id;
-    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addReq/${skillId}`;
+    const jobId = job3.id, skillId = 69696969;
+    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/removeOpt/${skillId}`;
     try{
       const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-      //console.log(response.statusText); //Unauthorized
-    }catch(e){
-      expect(e.status).toBe(401);
-      expect(e.message).toBeDefined();
-      expect(e.message).toBe('Required skill already exists');
-    }
-  });
-
-  test('Skill does not exist - API version', async function() {
-    const { job2, company } = o;
-    const jwt = signJWT({id: company.id, userType: "company"});
-    const jobId = job2.id, skillId = 6969;
-    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addReq/${skillId}`;
-    try{
-      const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-      //console.log(response.statusText);//Internal Server Error
     }catch(e){
       expect(e.status).toBe(401);
       expect(e.message).toBeDefined();
@@ -94,13 +78,12 @@ test('Required skill is added', async function() {
     const { job4, company, skill } = o;
     const jwt = signJWT({id: company.id, userType: "company"});
     const jobId = job4.id, skillId = skill.id;
-    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addReq/${skillId}`;
+    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/removeOpt/${skillId}`;
     try{
       const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-      //console.log(response.statusText);//Unauthorized
     }catch(e){
       expect(e.status).toBe(401);
       expect(e.message).toBeDefined();
-      expect(e.message).toBe("This job does not belong to this company");
+      expect(e.message).toBe('This job does not belong to this company');
     }
   });
