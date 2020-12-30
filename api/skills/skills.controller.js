@@ -1,5 +1,6 @@
 'use strict';
-const { Skill, SkillCategory } = require("../../models").models;
+const { Skill, SkillCategory, LevelDescription } = require("../../models").models;
+const { Op } = require("sequelize");
 
 exports.getOne = async ctx => {
   let { skillId } = ctx.params;
@@ -35,4 +36,28 @@ exports.findByCategory = async ctx => {
 
 exports.getAllCategories = async ctx => {
   ctx.body = await SkillCategory.findAll({include: [{ model: Skill }]});
+}
+
+exports.search = async ctx => {
+  const { name } = ctx.params;
+  const skills = await Skill.findAll(
+    {
+      include: [
+        { model: SkillCategory,
+          include: [{
+            model: LevelDescription
+          }]
+        }],
+      where: {
+        [Op.or]: [
+          { '$Skill.name$': {
+              [Op.like]: name + '%'
+            }},
+          { '$SkillCategory.name$': {
+              [Op.like]: name + '%'
+            }
+          }]
+      }
+    });
+  ctx.body = skills;
 }

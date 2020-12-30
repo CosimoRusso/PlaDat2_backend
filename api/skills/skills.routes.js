@@ -12,6 +12,7 @@ module.exports = Router => {
     .get('/findByCategory/:categoryId', controller.findByCategory)
     .get('/getAllCategories', controller.getAllCategories)
     .get('/', controller.getAll)
+    .get('/search/:name', controller.search)
     .post('/', controller.createOne);
 
   return router;
