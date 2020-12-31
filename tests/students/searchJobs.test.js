@@ -33,6 +33,7 @@ beforeAll(async () => {
   assert(o.verySkilledStudent.id > 0);
   o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("C#").id , rating: 3}));
   o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("NodeJS").id , rating: 4})); 
+  o.verySkilledStudentSkill.push(await StudentSkill.create({ StudentId: o.verySkilledStudent.id, SkillId: getSkill("F#").id , rating: 4})); 
 
   o.job = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Normal Job"});
   o.skillsRequiredJob1 = await SkillSetReq.create({ JobId: o.job.id, SkillId: getSkill("C#").id });
@@ -40,10 +41,12 @@ beforeAll(async () => {
   o.jobExpired = await Job.create({CompanyId: o.company.id, timeLimit: "2010-01-10", name: "Expired Job"});
   o.skillsRequiredJobExpired = await SkillSetReq.create({ JobId: o.jobExpired.id, SkillId: getSkill("C#").id });
 
-  o.jobWithMoreReqSkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Hard Job"});
+  o.jobWithMoreReqSkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "JobWithManySkills"});
   o.skillsRequiredJobMoreReqSkills = [];
   o.skillsRequiredJobMoreReqSkills.push(await SkillSetReq.create({ JobId: o.jobWithMoreReqSkills.id, SkillId: getSkill("C#").id }));
   o.skillsRequiredJobMoreReqSkills.push(await SkillSetReq.create({ JobId: o.jobWithMoreReqSkills.id, SkillId: getSkill("NodeJS").id }));
+  o.skillsRequiredJobMoreReqSkills.push(await SkillSetOpt.create({ JobId: o.jobWithMoreReqSkills.id, SkillId: getSkill("F#").id }));
+
 
   /*should be ranked lower because the student does not have the F# skill */
   o.jobWithTooManyOptionalSkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Hard Job"});
@@ -51,6 +54,7 @@ beforeAll(async () => {
   o.skillsTooManyOptional.push(await SkillSetReq.create({ JobId: o.jobWithTooManyOptionalSkills.id, SkillId: getSkill("C#").id }));
   o.skillsTooManyOptional.push(await SkillSetReq.create({ JobId: o.jobWithTooManyOptionalSkills.id, SkillId: getSkill("NodeJS").id }));
   o.skillsTooManyOptional.push(await SkillSetOpt.create({ JobId: o.jobWithTooManyOptionalSkills.id, SkillId: getSkill("F#").id }));
+  o.skillsTooManyOptional.push(await SkillSetOpt.create({ JobId: o.jobWithTooManyOptionalSkills.id, SkillId: getSkill("Sequelize").id }));
 
   o.jobWithTooManySkills = await Job.create({CompanyId: o.company.id, timeLimit: "2030-01-10", name: "Job Very Skilled"});
   o.skillsRequiredJobTooManySkills = [];

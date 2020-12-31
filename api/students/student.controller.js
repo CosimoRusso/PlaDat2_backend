@@ -1,13 +1,12 @@
 'use strict';
 const { models } = require('../../models');
-const { Student, Job, Company, Application, Skill, Matching,StudentSkill, City, Country, SkillCategory } = models;
+const { Student, Job, Company, Application, Skill, Matching,StudentSkill, City, Country, SkillCategory, LevelDescription } = models;
 const signJWT=require('../../utils/signJWT');
 const pgDate = require("../../utils/postgresDate");
 const { Op } = require("sequelize");
 const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
 const nodemailer = require('nodemailer');
-
 const sequelize = new Sequelize().getInstance();
 
 exports.getOne = async ctx => {
@@ -160,37 +159,37 @@ exports.searchJobs = async ctx => {
   const ratings = await ctx.user.getStudentSkills()
   const today = pgDate(new Date());
 
-  const alreadyExcludedJobs = sequelize.dialect.queryGenerator.selectQuery("Matchings", {
+  const alreadyExcludedJobs = await sequelize.dialect.queryGenerator.selectQuery("Matchings", {
     attributes: ['JobId'],
     where: { StudentId: ctx.user.id, discarded: true }
   }).slice(0, -1); // removes ';'
 
-  const alreadyAppliedJobs = sequelize.dialect.queryGenerator.selectQuery("Applications", {
+  const alreadyAppliedJobs = await  sequelize.dialect.queryGenerator.selectQuery("Applications", {
     attributes: ['JobId'],
     where: { StudentId: ctx.user.id } 
   }).slice(0, -1); // removes ';'
 
   /*collects all the skills of the student */
-  const skillStudent = sequelize.dialect.queryGenerator.selectQuery("StudentSkills",{
+  const skillStudent = await  sequelize.dialect.queryGenerator.selectQuery("StudentSkills",{
     attributes: ['SkillId'],
     where: {StudentId: ctx.user.id, rating: {[Op.gt]: 2}}
   }).slice(0, -1);// removes ';'
 
   /*collects all the skill that the student does not have*/
-  const notSkillStudent = sequelize.dialect.queryGenerator.selectQuery("StudentSkills",{
+  const notSkillStudent = await sequelize.dialect.queryGenerator.selectQuery("StudentSkills",{
     attributes: ['SkillId'],
     where: {SkillId:{[Op.notIn]: sequelize.literal('('+skillStudent+')')}}
   }).slice(0, -1);// removes ';'
 
   /*collects all jobs  that contain a skill the student does not possess */
 
-  const jobStudentIsNotQualifiedFor = sequelize.dialect.queryGenerator.selectQuery("SkillSetReqs",{
+  const jobStudentIsNotQualifiedFor = await sequelize.dialect.queryGenerator.selectQuery("SkillSetReqs",{
     attributes: ['JobId'],
     where: {SkillId: {[Op.in]: sequelize.literal('('+notSkillStudent+')')}}
   }).slice(0, -1);// removes ';'
 
   /*collect all the jobs that contain a skill that the student does not possess */
-  const jobStudentIsQualifiedFor = sequelize.dialect.queryGenerator.selectQuery("Jobs", {
+  const jobStudentIsQualifiedFor = await sequelize.dialect.queryGenerator.selectQuery("Jobs", {
     attributes: ['id'],
     where: {id: {[Op.notIn]: sequelize.literal('('+jobStudentIsNotQualifiedFor+')')}}
   }).slice(0, -1);// removes ';'
@@ -212,37 +211,56 @@ exports.searchJobs = async ctx => {
     ]
   });
 
-  jobs = jobs.sort(function(j1,j2){return jobFitness(j2, ratings) - jobFitness(j1, ratings)})
+  //calculate the fitness of the jobs first and then sort the jobs (more efficient because jobfitness is called only once and less problems with async functions)
+  let comparisonArray = await Promise.all(jobs.map(async x => [await jobFitness(x, ratings), x]))
+  
+  jobs = comparisonArray.sort(function(a,b){return b[0] - a[0]}).map(x => x[1]) //maps to the second element of the list to retrieve the job (the first is just the fitness)
+  
   ctx.body = jobs;
 }
 /**
  * Calculates the fitness of the job for the student
  * It has two parameters, alpha regulates the contribution of requested skills to the final result (the weight of the contribution of the optional skills will be 1-alpha)
  * The constant denominator helps both with division by zero and making sure that we take into consideration how many skills are matched in the final result (if I match 1 out of 1 skill is different from matching 10/10 skills, and adding a constant value at the denominator adds this information). It basically discourages matches with jobs with few overall skills
- * The fitness formula is the following (alpha)*(sum of the rating of the student for the given required skill)/(number of required skills*5 + constant_denominator) + (1-alpha)*(sum of the rating of the student for the optional skills)/(number of optional skills*5 + constant_denominator)
- * The denominator has a "*5" in it to ensure that the fitness is never bigger than one
+ * The fitness formula is the following (alpha)*(sum of the rating of the student for the given required skill)/(maximum possible required skills score + constant_denominator) + (1-alpha)*(sum of the rating of the student for the optional skills)/(maximum possible optional skills score  + constant_denominator)
  */
-function jobFitness(job, ratings){
+async function jobFitness(job, ratings){
   const alpha = 0.6
   const constantDenominatorValue = 2;
-
-  let totalCountRequired = job.requiredSkills.length; //counts how many required skills are in the job
-  let totalCountOptional = job.optionalSkills.length; //counts how many optional skills are in the job
 
   let sumRatingRequired = 0; //sum of the skill rating of the skill required by job (note that the rating represents how good a student is at a certain skill)
   let sumRatingOptional = 0; //sum of the skill rating of the optional skill by job (note that the rating represents how good a student is at a certain skill)
 
+  let sumPossibleRequiredSkills = 0; //stores the maximum score that can be obtained from a certain set of required skills
+  let sumPossibleOptionalSkills = 0; //stores the maximum score that can be obtained from a certain set of optional skills
+
   //sum all the ratings of the skills
-  ratings.forEach(owned =>{
-    if(job.requiredSkills.map(x => x.id).includes(owned.SkillId)){
-      sumRatingRequired += owned.rating;
+  for(let requiredSkill of job.requiredSkills){
+    if(ratings.map(x => x.SkillId).includes(requiredSkill.id)){
+      sumRatingRequired += ratings.filter(x => x.SkillId === requiredSkill.id)[0].rating
     }
-    if(job.optionalSkills.map(x => x.id).includes(owned.SkillId)){
-      sumRatingOptional += owned.rating;
+    sumPossibleRequiredSkills += await getMaxRating(requiredSkill.id)
+  }
+
+  for(let optionalSkill of job.optionalSkills){
+    if(ratings.map(x => x.SkillId).includes(optionalSkill.id)){
+      sumRatingOptional += ratings.filter(x => x.SkillId === optionalSkill.id)[0].rating
+    }
+    sumPossibleOptionalSkills += await getMaxRating(optionalSkill.id)
+  }
+  return alpha*sumRatingRequired/(sumPossibleRequiredSkills+constantDenominatorValue) + (1-alpha)*sumRatingOptional/(sumPossibleOptionalSkills+constantDenominatorValue)
+}
+/*Takes as input the skillId, returns the maximum rating that can be obtained in that skill */
+async function getMaxRating(skillId){
+
+  const skill = await Skill.findByPk(skillId)
+  const levels = await LevelDescription.findAll({
+    where: {
+      SkillCategoryId: skill.SkillCategoryId
     }
   })
 
-  return alpha*sumRatingRequired/(totalCountRequired*5+constantDenominatorValue) + (1-alpha)*sumRatingOptional/(totalCountOptional*5+constantDenominatorValue)
+  return levels.map(x => x.level).reduce(function(acc, curr){ return Math.max(acc, curr)}) //selects the maximum level possible
 }
 
 exports.update = async ctx => {
