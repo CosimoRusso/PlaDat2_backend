@@ -26,7 +26,6 @@ module.exports = Router => {
     .post('/removeCapability',controller.removeCapability)
     .post('/addCapability',controller.addCapability)
     .post('/editCapability', controller.editCapability)
-    // .post('/imageUpload',controller.imageUpload)
     .post('/jobs/markApplicationAsSeen/:applicationId', controller.markApplicationAsSeen)
     .get('/jobs/getNotifications', controller.getNotifications)
     .get('/jobs/search', controller.searchJobs)

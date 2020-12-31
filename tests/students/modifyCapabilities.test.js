@@ -3,7 +3,7 @@ const { Student, Skill, SkillCategory, StudentSkill } = require('../../models').
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 const cleanDatabase = require('../../utils/cleanDatabase.util');
-const { editCapability } = require("../../api/students/student.controller");
+const { editCapability, addCapability, removeCapability } = require("../../api/students/student.controller");
 const noop = () => {};
 const sequelize = new Sequelize().getInstance();
 
@@ -34,10 +34,8 @@ afterAll(cleanDatabase.bind(null, o, sequelize));
 //unit test
 
 test("Skill already exist", async function (){
-  const {student, studentSkill} = o;
+  const {student} = o;
   const ctx = {request: { body: {id: 1, rating: 3,}}, user:student};
-  // await addCapability(ctx, noop);
-  // expect(status).toBe(400);
   try{
     await addCapability(ctx,noop);
   }catch(e){
@@ -46,10 +44,8 @@ test("Skill already exist", async function (){
   }
 });
 test("Add capability", async function (){
-  const {student, studentSkill} = o;
+  const {student} = o;
   const ctx = {request: { body: {id: 4, rating: 3,}}, user:student};
-  // await addCapability(ctx, noop);
-  // expect(status).toBe(400);
   try{
     await addCapability(ctx,noop);
   }catch(e){
@@ -58,10 +54,8 @@ test("Add capability", async function (){
   }
 });
 test("Remove capability", async function (){
-  const {student, studentSkill} = o;
+  const {student} = o;
   const ctx = {request: { body: {removeSkillId: 1}}, user:student};
-  // await addCapability(ctx, noop);
-  // expect(status).toBe(400);
   try{
     await removeCapability(ctx,noop);
   }catch(e){
@@ -70,10 +64,8 @@ test("Remove capability", async function (){
   }
 });
 test("Capability does not exist", async function (){
-  const {student, studentSkill} = o;
+  const {student} = o;
   const ctx = {request: { body: {removeSkillId: 1}}, user:student};
-  // await addCapability(ctx, noop);
-  // expect(status).toBe(400);
   try{
     await removeCapability(ctx,noop);
   }catch(e){

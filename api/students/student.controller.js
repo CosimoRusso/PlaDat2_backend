@@ -312,14 +312,6 @@ exports.update = async ctx => {
   }
 }
 
-
-
-// exports.imageUpload = async ctx => {
-//   await singleUpload(req,res,err)
-//   return res.json({'imageUrl':req.file.location})
-
-// };
-
 exports.addCapability= async ctx => {
   //add 
   const studentId = ctx.user.id;
