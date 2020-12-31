@@ -214,31 +214,31 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
   await Application.create({StudentId: RosiePlant.id, JobId: DeveloperJobMicrosoft.id, declined: false});
   
   await Matching.create({StudentId: OscarBonham.id, JobId: DatabaseJobMicrosoft.id, discarded: false});
-  await Application.create({StudentId: OscarBonham.id, JobId: DatabaseJobMicrosoft.id, declined: false});
-  await Application.create({StudentId: OscarBonham.id, JobId: DeveloperJobApple.id, declined: true});
+  await Application.create({StudentId: OscarBonham.id, JobId: DatabaseJobMicrosoft.id, declined: false, alreadyNotified: false});
+  await Application.create({StudentId: OscarBonham.id, JobId: DeveloperJobApple.id, declined: true, alreadyNotified: false});
   await Application.create({StudentId: OscarBonham.id, JobId: DeveloperJobGoogle.id, declined: null});
 
   await Matching.create({StudentId: JacobJones.id, JobId: DatabaseJobMicrosoft.id, discarded: true});
   
   await Matching.create({StudentId: GeorgeJones.id, JobId: DeveloperJobApple.id, discarded: false});
-  await Application.create({StudentId: GeorgeJones.id, JobId: DeveloperJobApple.id, declined: false});
+  await Application.create({StudentId: GeorgeJones.id, JobId: DeveloperJobApple.id, declined: false, alreadyNotified: false});
   
   await Matching.create({StudentId: TheoPage.id, JobId: DeveloperJobApple.id, discarded: true});
   
   await Matching.create({StudentId: GeorgeJones.id, JobId: DeveloperJobGoogle.id, discarded: true});
   
   await Matching.create({StudentId: TheoPage.id, JobId: DeveloperJobGoogle.id, discarded: false});
-  await Application.create({StudentId: TheoPage.id, JobId: DeveloperJobGoogle.id, declined: null});
+  await Application.create({StudentId: TheoPage.id, JobId: DeveloperJobGoogle.id, declined: null, alreadyNotified: false});
   
   await Matching.create({StudentId: JacobJones.id, JobId: DatabaseJobGoogle.id, discarded: false});
-  await Application.create({StudentId: JacobJones.id, JobId: DatabaseJobGoogle.id, declined: true});
+  await Application.create({StudentId: JacobJones.id, JobId: DatabaseJobGoogle.id, declined: true, alreadyNotified: false});
   
   await Matching.create({StudentId: TheoPage.id, JobId: DeveloperJobIBM.id, discarded: true});
   
   await Matching.create({StudentId: EmilyBonham.id, JobId: DeveloperJobIBM.id, discarded: false});
-  await Application.create({StudentId: EmilyBonham.id, JobId: DeveloperJobIBM.id, declined: false});
+  await Application.create({StudentId: EmilyBonham.id, JobId: DeveloperJobIBM.id, declined: false, alreadyNotified: false});
   
   await Matching.create({StudentId: RosiePlant.id, JobId: DeveloperJobIBM.id, discarded: false});
-  await Application.create({StudentId: RosiePlant.id, JobId: DeveloperJobIBM.id, declined: true});
+  await Application.create({StudentId: RosiePlant.id, JobId: DeveloperJobIBM.id, declined: true, alreadyNotified: false});
   
   }

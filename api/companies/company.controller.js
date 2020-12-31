@@ -140,10 +140,11 @@ exports.update = async ctx => {
   ctx.body = { message: 'Profile edited' };
 }
 exports.imageUpload = async ctx => {
-  // const res= await singleUpload(ctx.request)
   const company = ctx.user;
-  await company.update({picture:  ctx.file.location})
-  ctx.body= 'ok'
+  if (!ctx.file || !ctx.file.location) throw {status:400, message: "No image in the upload" };
+  const location = ctx.file.location;
+  await company.update({picture: location})
+  ctx.body= {picture: location};
   ctx.status=200;
 };
 exports.getAcceptedStudents = async ctx => {
