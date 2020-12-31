@@ -6,7 +6,7 @@ exports.getOne = async ctx => {
   let { skillId } = ctx.params;
   skillId = parseInt(skillId);
   if (!skillId) throw {status: 400, message: 'Invalid skill id'};
-  const skill = await Skill.findByPk(skillId, {include: [{model: SkillCategory, as: 'SkillCategory'}]});
+  const skill = await Skill.findByPk(skillId, {include: [{model: SkillCategory, include: [{ model: LevelDescription }]}]});
   if (!skill) throw {status: 404, message: 'Skill not found'};
   ctx.body = skill;
 }

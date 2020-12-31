@@ -1882,6 +1882,37 @@ paths:
                     type: "string"
                 example:
                   msg: "Query not valid"
+  /skills/search/{name}:
+    get:
+      tags:
+        - "skill"
+      summary: "Return the skills requested by the query"
+      description: "Return the skills with their name or category name starting with the given name"
+      parameters:
+        - name: name
+          in: query
+          description: "name or partial name of a skill or a category"
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "List of skills with their name or category name starting with the given name"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CapabilityWithCategory"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
 components:
   schemas:
     LoginResponse:
@@ -2250,10 +2281,24 @@ components:
           type: "string"
         description:
           type: "string"
+        LevelDescriptions:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LevelDescription"
       example:
         id: 1
         name: "Programming Languages"
         description: ""
+        LevelDescriptions: [{id: 1, level: 1, description: 'First Level'}, {id: 2, level: 2, description: 'Second Level'}]
+    LevelDescription:
+      type: object
+      properties:
+        id:
+          type: "integer"
+        level:
+          type: "integer"
+        description:
+          type: "string"
     Email:
       type: object
       properties:
