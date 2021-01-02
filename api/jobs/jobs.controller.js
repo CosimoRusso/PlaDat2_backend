@@ -23,11 +23,11 @@ exports.getAll = async ctx => {
 }
 
 exports.createOne = async ctx => {
-  const body = ctx.request;
-  if (!body.CompanyId) throw {status: 400, message: 'Company id is required'};
-  const newJob = await Job.create(body);
-  if (!newJob) throw {status: 500, message: 'Something went wrong while creating the job'};
-  ctx.body = newJob;
+  const company = ctx.user;
+  const body = ctx.request.body;
+  body.CompanyId = company.id;
+  ctx.body = await Job.create(body);
+  ctx.status = 200;
 };
 
 exports.update = async ctx => {

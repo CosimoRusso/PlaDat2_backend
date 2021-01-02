@@ -20,6 +20,7 @@ beforeAll(async () => {
     o.job3 = await Job.create({name: 'oldName', CompanyId: o.company.id});
     o.job4 = await Job.create({name: 'oldName', CompanyId: o.company2.id});
     o.skill = await Skill.create({name: 'removeOptSkill'});
+    o.skillNotExisting = await Skill.create({name: 'removeOptSkillNotExisting'});
     o.skillSet1 = await SkillSetOpt.create({ JobId: o.job1.id, SkillId: o.skill.id});
     o.skillSet2 = await SkillSetOpt.create({ JobId: o.job2.id, SkillId: o.skill.id});
     o.skillSet3 = await SkillSetOpt.create({ JobId: o.job3.id, SkillId: o.skill.id});
@@ -37,13 +38,14 @@ test('Optional skill is removed', async function() {
   });
 
   test('Optional skill does not exist', async function() {
-    const { job2, company, skill } = o;
-    const ctx = { params:{jobId: job2.id, skillId: skill.id}, user: company};
+    const { job2, company, skillNotExisting } = o;
+    const ctx = { params:{jobId: job2.id, skillId: skillNotExisting.id}, user: company};
     try{
         await removeOptionalSkill(ctx, noop);
+        fail("should not be here");
     }catch(e){
-        expect(e.status).toBe(401);
-        expect(e.message).toBeDefined();
+        expect(e.status).toBe(400);
+        expect(e.message).toBe('Skill does not exist');
     }
   });
 

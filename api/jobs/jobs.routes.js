@@ -11,9 +11,9 @@ module.exports = Router => {
   router
     .get('/findOne/:jobId', controller.getOne)
     .get('/', controller.getAll)
-    .post('/', controller.createOne)
     .use(authentication) //from now on, only authenticated requests!
     .use(companyAuthentication) //from now on, only authenticated companies
+    .post('/', controller.createOne)
     .post('/update', controller.update)
     .post('/update/:jobId/removeReq/:skillId', controller.removeRequiredSkill)
     .post('/update/:jobId/addReq/:skillId', controller.addRequiredSkill)

@@ -1,5 +1,5 @@
 const r2 = require("r2");
-const { companyAcceptStudent, getAcceptedStudents } = require("../../api/companies/company.controller");
+const { getAcceptedStudents } = require("../../api/companies/company.controller");
 const { Student, Application, Company, Job } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
@@ -40,14 +40,24 @@ test("Only the company that proposed the job can see the accepted students", asy
 });
 
 test("Company can get the students which are accepted to the job", async function(){
-    const { company, job } = o;
+  const {company, job, student, studentAPI} = o;
+  const ctx = { user: company, params: {jobId: job.id} };
+  await getAcceptedStudents(ctx, noop);
+  expect( ctx.status ).toBe(200);
+  expect(ctx.body.length).toBe(2);
+  expect(ctx.body.find(s => s.email===student.email)).not.toBe(null);
+  expect(ctx.body.find(s => s.email===studentAPI.email)).not.toBe(null);
+})
+
+test("Company can get the students which are accepted to the job - API", async function(){
+    const { company, job, student, studentAPI } = o;
     const JobId = job.id;
     const jwt = signJWT({id: company.id, userType: "company"});
     const url = `http://localhost:3000/api/v1/company/getAcceptedStudents/${JobId}`;
     const responseStatus = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).response; 
     const responseBody = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).json;
     expect(responseStatus.status).toBe(200);
-    expect(responseBody.length).toBe(2); //makes sure that studentNotAccepted is not in the students returned 
-    expect(responseBody[0].email ==="studentAPI@lol.c" || responseBody[1].email === "studentAPI@lol.c")
-    expect(responseBody[0].email ==="student@lol.c" || responseBody[1].email === "student@lol.c")
+    expect(responseBody.length).toBe(2); //makes sure that studentNotAccepted is not in the students returned
+    expect(responseBody.find(s => s.email===student.email)).not.toBe(null);
+    expect(responseBody.find(s => s.email===studentAPI.email)).not.toBe(null);
 });
