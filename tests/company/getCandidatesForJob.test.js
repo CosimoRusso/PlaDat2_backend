@@ -1,6 +1,6 @@
 const r2 = require("r2");
-const { companyAcceptStudent, getCandidatesForJob } = require("../../api/companies/company.controller");
-const { Student, Application, Matching, Company, Job } = require('../../models').models;
+const { getCandidatesForJob } = require("../../api/companies/company.controller");
+const { Student, Application, Company, Job } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 const cleanDatabase = require('../../utils/cleanDatabase.util');
@@ -16,7 +16,7 @@ beforeAll(async () => {
   o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@lol.c" });
   o.studentNotApplied = await Student.create({ firstName: 'PippoNotApplied', lastName: 'PlutoNotApplied', email: "studentNotApplied@lol.c" });
   o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@lol.c" });
-  o.company = await Company.create({email: "company@company.com"});
+  o.company = await Company.create({email: "company@getCandidatesForJob.com"});
   o.companyThatDidntCreateJob = await Company.create({email: "companynotauth@company.com"});
   o.job = await Job.create({CompanyId: o.company.id});
   o.application = await Application.create({StudentId: o.student.id, JobId: o.job.id});
@@ -37,7 +37,17 @@ test("Only the company that proposed the job can visualize the applicants", asyn
     }
 });
 
-test("The function returns all and only the candidates", async function(){
+test("THe function returns all and only the candidates", async function(){
+  const {company, job, student, studentAPI} = o;
+  const ctx = { user: company, params: { jobId: job.id } };
+  await getCandidatesForJob(ctx, noop);
+  expect(ctx.status).toBe(200);
+  expect(ctx.body.length).toBe(2);
+  expect(ctx.body.find(s => s.email === studentAPI.email)).not.toBe(null);
+  expect(ctx.body.find(s => s.email === student.email)).not.toBe(null);
+})
+
+test("The function returns all and only the candidates - API version", async function(){
   const{company, job, student, studentAPI} = o; 
   const jobId = job.id;
   const jwt = signJWT({id: company.id, userType: "company"});
@@ -45,8 +55,7 @@ test("The function returns all and only the candidates", async function(){
   const responseStatus = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).response; 
   const responseBody = await r2.get(url, {headers: {authorization: "Bearer " + jwt}}).json;
   expect(responseStatus.status).toBe(200);
-  expect(responseBody.length).toBe(2); //makes sure that studentNotApplied is not in the students returned 
-  expect(responseBody[0].email ==="studentAPI@lol.c" || responseBody[1].email === "studentAPI@lol.c")
-  expect(responseBody[0].email ==="student@lol.c" || responseBody[1].email === "student@lol.c")
-
+  expect(responseBody.length).toBe(2); //makes sure that studentNotApplied is not in the students returned
+  expect(responseBody.find(s => s.email === studentAPI.email)).not.toBe(null);
+  expect(responseBody.find(s => s.email === student.email)).not.toBe(null);
 });

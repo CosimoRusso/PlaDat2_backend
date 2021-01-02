@@ -119,7 +119,9 @@ exports.update = async ctx => {
     const alreadyExists = await Company.findOne({where: { email: email }});
     if(!alreadyExists){
       await company.update({email: email})
-    } else throw { status: 400, message: "This email is already taken." };
+    } else {
+      throw { status: 400, message: "This email is already taken." };
+    }
   }
 
   if(name){

@@ -15,6 +15,7 @@ const o = {};
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
     const hashed = await hash("oldPassword");
+    o.companyThatAlreadyExists = await Company.create({email: "hello@alreadyExisting.co", name: "Very old company"});
     o.company = await Company.create({email: "company@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
     o.company2 = await Company.create({email: "company2@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
     o.company3 = await Company.create({email: "company3@old.com", name: "oldName", description: "Old description", password: hashed, picture: "oldPic.png"});
@@ -72,13 +73,13 @@ test('Company can change all the information', async function() {
   });
 
   test('Company can not change to an already used email', async function() {
-    const { company3 } = o;
-    const ctx = {request: { body: {email: 'company3@new.com' } }, user: company3};
+    const { company3, companyThatAlreadyExists } = o;
+    const ctx = {request: { body: {email: companyThatAlreadyExists.email } }, user: company3};
     try{
-        await update(ctx, noop);
+      await update(ctx, noop);
     }catch(e){
         expect(e.status).toBe(400);
-        expect(e.message).toBeDefined();
+        expect(e.message).toBe("This email is already taken.");
     }
   });
 
