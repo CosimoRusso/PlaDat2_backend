@@ -31,34 +31,16 @@ exports.createOne = async ctx => {
 };
 
 exports.update = async ctx => {
-  const { jobId, name, description, timeLimit, salary, partTime, remote, CityId } = ctx.request.body;
+  const { jobId, CompanyId, ...rest } = ctx.request.body;
   const company = ctx.user;
 
   const hasJob = await company.getJobs({where: {id: jobId}});
   if (hasJob.length === 0) throw {status: 401, message: "This job does not belong to this company"}
 
   const job = await Job.findOne({ where: {id: jobId}});
-  if(name){
-    await job.update({name: name});
-  }
-  if(description){
-    await job.update({description: description});
-  }
-  if(timeLimit){
-    await job.update({timeLimit: timeLimit});
-  }
-  if(salary){
-    await job.update({salary: salary});
-  }
-  if(partTime){
-    await job.update({partTime: partTime});
-  }
-  if(remote){
-    await job.update({remote: remote});
-  }
-  if(CityId){
-    await job.update({CityId: CityId});
-  }
+  if(!rest.name) throw {status: 400, message: 'Job Name cannot be null'};
+  if (parseInt(rest.salary < 0)) throw {status: 400, message: 'Salary cannot be negative'};
+  await job.update(rest);
 
   ctx.status = 200;
   ctx.body = { message: 'Job updated' };
