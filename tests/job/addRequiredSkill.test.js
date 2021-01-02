@@ -46,6 +46,17 @@ test('Required skill is added', async function() {
     }
   });
 
+test('Job does not belong to the company  ', async function() {
+  const { job4, company, skill } = o;
+  const ctx = { params:{jobId: job4.id, skillId: skill.id}, user: company};
+    try{
+        await addRequiredSkill(ctx, noop);
+    }catch(e){
+        expect(e.status).toBe(401);
+        expect(e.message).toBeDefined();
+    }
+  });
+  
   //api test
   test('Required skill is added - API version', async function() {
     const { job3, company, skill } = o;
@@ -65,7 +76,7 @@ test('Required skill is added', async function() {
     const jobId = job2.id, skillId = skill.id;
     const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addReq/${skillId}`;
     const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
   });
 
   test('Skill does not exist - API version', async function() {

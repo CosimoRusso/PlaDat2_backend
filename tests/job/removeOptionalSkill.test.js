@@ -47,6 +47,17 @@ test('Optional skill is removed', async function() {
     }
   });
 
+  test('Job does not belong to the company', async function() {
+    const { job4, company, skill } = o;
+    const ctx = { params:{jobId: job4.id, skillId: skill.id}, user: company};
+      try{
+          await removeOptionalSkill(ctx, noop);
+      }catch(e){
+          expect(e.status).toBe(401);
+          expect(e.message).toBeDefined();
+      }
+    });
+
   //API tests
 test('Optional skill is removed - API version', async function() {
     const { job3, company, skill } = o;
@@ -54,24 +65,9 @@ test('Optional skill is removed - API version', async function() {
     const jobId = job3.id, skillId = skill.id;
     const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/removeOpt/${skillId}`;
     const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-
     expect(response.status).toBe(200);
     const skillSet = await SkillSetOpt.findOne({where: {JobId: job3.id, SkillId: skill.id}});
     expect(skillSet).toBe(null);
-  });
-
-  test('Optional skill does not exist - API version', async function() {
-    const { job3, company } = o;
-    const jwt = signJWT({id: company.id, userType: "company"});
-    const jobId = job3.id, skillId = 69696969;
-    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/removeOpt/${skillId}`;
-    try{
-      const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    }catch(e){
-      expect(e.status).toBe(401);
-      expect(e.message).toBeDefined();
-      expect(e.message).toBe('Skill does not exist');
-    }
   });
 
   test('Job does not belog to the company - API version', async function() {
@@ -79,11 +75,6 @@ test('Optional skill is removed - API version', async function() {
     const jwt = signJWT({id: company.id, userType: "company"});
     const jobId = job4.id, skillId = skill.id;
     const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/removeOpt/${skillId}`;
-    try{
-      const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    }catch(e){
-      expect(e.status).toBe(401);
-      expect(e.message).toBeDefined();
-      expect(e.message).toBe('This job does not belong to this company');
-    }
+    const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
+    expect(response.status).toBe(401);
   });

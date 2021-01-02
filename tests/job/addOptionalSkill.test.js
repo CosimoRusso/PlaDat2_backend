@@ -13,14 +13,14 @@ const o = {};
 
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
-    o.company = await Company.create({name:'Company'})
-    o.company2 = await Company.create({name:'Company'})
-    o.job1 = await Job.create({name: 'oldName', CompanyId: o.company.id});
-    o.job2 = await Job.create({name: 'oldName', CompanyId: o.company.id});
-    o.job3 = await Job.create({name: 'oldName', CompanyId: o.company.id});
-    o.job4 = await Job.create({name: 'oldName', CompanyId: o.company2.id});
-    o.skill = await Skill.create({name: 'JavaScript'});
-    o.skillSet = await SkillSetOpt.create({ JobId: o.job2.id, SkillId: o.skill.id});
+  o.company = await Company.create({name:'Company 1'})
+  o.company2 = await Company.create({name:'Company 2'})
+  o.job1 = await Job.create({name: 'Job 1', CompanyId: o.company.id});
+  o.job2 = await Job.create({name: 'Job 2', CompanyId: o.company.id});
+  o.job3 = await Job.create({name: 'Job 3', CompanyId: o.company.id});
+  o.job4 = await Job.create({name: 'Job 4', CompanyId: o.company2.id});
+  o.skill = await Skill.create({name: 'JavaScript'});
+  o.skillSet = await SkillSetOpt.create({ JobId: o.job2.id, SkillId: o.skill.id});
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
@@ -46,6 +46,17 @@ test('Optional skill is added', async function() {
     }
   });
 
+  test('Job does not belong to the company  ', async function() {
+    const { job4, company, skill } = o;
+    const ctx = { params:{jobId: job4.id, skillId: skill.id}, user: company};
+      try{
+          await addOptionalSkill(ctx, noop);
+      }catch(e){
+          expect(e.status).toBe(401);
+          expect(e.message).toBeDefined();
+      }
+    });
+
   //api test
   test('Optional skill is added - API version', async function() {
     const { job3, company, skill } = o;
@@ -53,7 +64,6 @@ test('Optional skill is added', async function() {
     const jobId = job3.id, skillId = skill.id;
     const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addOpt/${skillId}`;
     const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    //console.log(response.statusText);  //Unauthorized
     expect(response.status).toBe(200);
     const skillSet = await SkillSetOpt.findOne({where: {JobId: job3.id, SkillId: skill.id}});
     expect(skillSet.JobId).toBe(job3.id);
@@ -65,26 +75,8 @@ test('Optional skill is added', async function() {
     const jwt = signJWT({id: company.id, userType: "company"});
     const jobId = job2.id, skillId = skill.id;
     const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addOpt/${skillId}`;
-    try{
-      const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-      //console.log(response.statusText); //Unauthorized
-    }catch(e){
-      expect(e.status).toBe(401);
-      expect(e.message).toBeDefined();
-    }
-  });
-
-  test('Skill does not exist - API version', async function() {
-    const { job2, company } = o;
-    const jwt = signJWT({id: company.id, userType: "company"});
-    const jobId = job2.id, skillId = 69696969;
-    const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addOpt/${skillId}`;
-    try{
-      const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    }catch(e){
-      expect(e.status).toBe(401);
-      expect(e.message).toBeDefined();
-    }
+    const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
+    expect(response.status).toBe(401);
   });
 
   test('Job does not belog to the company - API version', async function() {
@@ -92,10 +84,6 @@ test('Optional skill is added', async function() {
     const jwt = signJWT({id: company.id, userType: "company"});
     const jobId = job4.id, skillId = skill.id;
     const url = `http://localhost:3000/api/v1/jobs/update/${jobId}/addOpt/${skillId}`;
-    try{
-      const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
-    }catch(e){
-      expect(e.status).toBe(401);
-      expect(e.message).toBeDefined();
-    }
+    const response = await r2.post(url, {headers: {authorization: "Bearer " + jwt}}).response;
+    expect(response.status).toBe(401);
   });

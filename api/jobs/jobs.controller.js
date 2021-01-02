@@ -73,7 +73,7 @@ exports.removeRequiredSkill = async ctx => {
 
   const exist = await SkillSetReq.findOne({where: {JobId: jobId, SkillId: skillId}});
   if(!exist){
-    throw { status: 401, message: 'Skill does not exist' };
+    throw { status: 400, message: 'Skill does not exist' };
   }else{
      await SkillSetReq.destroy({where: {JobId: jobId, SkillId: skillId}});
      ctx.body = { message: 'Required skill deleted' };
@@ -107,7 +107,7 @@ exports.removeOptionalSkill = async ctx => {
 
   const exist = await SkillSetOpt.findOne({where: {JobId: jobId, SkillId: skillId}});
   if(!exist){
-    throw { status: 401, message: 'Skill does not exist' };
+    throw { status: 400, message: 'Skill does not exist' };
   }else{
      await SkillSetOpt.destroy({where: {JobId: jobId, SkillId: skillId}});
      ctx.body = { message: 'Optional skill deleted' };
@@ -123,7 +123,7 @@ exports.addOptionalSkill = async ctx => {
   if (hasJob.length === 0) throw {status: 401, message: "This job does not belong to this company"}
 
   const skillExist = await Skill.findOne({where: {id: skillId}});
-  if(!skillExist) throw { status: 401, message: 'Skill does not exist' }
+  if(!skillExist) throw { status: 400, message: 'Skill does not exist' }
 
   const exist = await SkillSetOpt.findOne({where: {JobId: jobId, SkillId: skillId}});
   if(exist) throw { status: 401, message: 'Optional skill already exists' };
