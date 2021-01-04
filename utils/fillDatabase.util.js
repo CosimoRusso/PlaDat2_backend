@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const { hash } = require("./password");
 const countrieslist = require("../data/countries.json");
 const { Op } = require("sequelize");

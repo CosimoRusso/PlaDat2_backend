@@ -11,7 +11,6 @@ module.exports = Router => {
 
   router
     .get('/', controller.getAll)
-    .post('/', controller.createOne)
     .get('/findOne/:userId', controller.getOne)
     .get('/findByEmail/:email', controller.getOneByEmail)
     .post('/login', controller.login)

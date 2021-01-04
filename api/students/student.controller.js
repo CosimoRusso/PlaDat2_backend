@@ -32,16 +32,6 @@ exports.getAll = async ctx => {
   ctx.body = await Student.findAll();
 };
 
-
-exports.createOne = async ctx => {
-  const { firstName, lastName } = ctx.request.body;
-  ctx.assert(firstName, 400, 'The user info is malformed!');
-  ctx.assert(lastName, 400, 'The user info is malformed!');
-  const newStudent = await Student.create({firstName, lastName});
-  ctx.status = 201;
-  ctx.body = newStudent;
-};
-
 exports.getApplications = async ctx => {
   const student = ctx.user;
   ctx.body = await student.getApplications({
