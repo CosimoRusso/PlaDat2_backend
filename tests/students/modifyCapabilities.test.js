@@ -1,5 +1,5 @@
 const r2 = require("r2");
-const { Student, Skill, SkillCategory, StudentSkill } = require('../../models').models;
+const { Student, Skill, SkillCategory, StudentSkill, LevelDescription } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 const cleanDatabase = require('../../utils/cleanDatabase.util');
@@ -21,6 +21,12 @@ beforeAll(async () => {
   o.skillAlreadyExisting2 = await Skill.create({name: "modify capabilities test skill 2", SkillCategoryId: o.skillCategory.id});
   o.skillAlreadyExisting3 = await Skill.create({name: "modify capabilities test skill 3", SkillCategoryId: o.skillCategory.id});
   o.skillNotUsed = await Skill.create({name: "Nobody has this skill", SkillCategoryId: o.skillCategory.id});
+
+  o.level1 = await LevelDescription.create({level: 1, SkillCategoryId: o.skillCategory.id});
+  o.level2 = await LevelDescription.create({level: 2, SkillCategoryId: o.skillCategory.id});
+  o.level3 = await LevelDescription.create({level: 3, SkillCategoryId: o.skillCategory.id});
+  o.level4 = await LevelDescription.create({level: 4, SkillCategoryId: o.skillCategory.id});
+  o.level5 = await LevelDescription.create({level: 5, SkillCategoryId: o.skillCategory.id});
 
   o.studentSkill1 = await StudentSkill.create({StudentId: o.student.id, SkillId: o.skillAlreadyExisting1.id, rating: 3 });
   o.studentSkill2 = await StudentSkill.create({StudentId: o.student.id, SkillId: o.skillAlreadyExisting2.id, rating: 3 });

@@ -41,6 +41,13 @@ module.exports = async (models) => {
     s.SkillCategoryId = getSkillCategory(s.category).id;
     return s;
   })); 
+
+  let categoriesWithoutSkills = await SkillCategory.findAll({include: [{model: Skill}]});
+  categoriesWithoutSkills = categoriesWithoutSkills.filter(c => c.Skills.length === 0);
+  for (let c of categoriesWithoutSkills){
+    await Skill.create({name: c.name, SkillCategoryId: c.id});
+  }
+
   skills = await Skill.findAll();
 
   await Promise.all(countrieslist.map(c => Country.create({name: c.name, code: c["alpha-2"]})));
@@ -114,7 +121,7 @@ const RosiePlant = await Student.create({firstName: "Rosie", lastName: "Plant", 
   await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Bootstrap").id, rating: 3 });
   await StudentSkill.create({ StudentId: RosiePlant.id, SkillId: getSkill("Yii").id, rating: 4 });
   
-const OscarBonham = await Student.create({firstName: "Oscar", lastName: "Bonham", email: "Oscar@Bonham.com", password: pwd, dateOfBirth: "1999-12-27", CityId: milan.id});
+const OscarBonham = await Student.create({firstName: "Oscar", lastName: "Bonham", email: "Oscar@Bonham.com", password: pwd, dateOfBirth: "1999-12-27", CityId: milan.id, description: 'Passionate about music, I\'m studying a lot of instruments'});
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("C#").id, rating: 4 });
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("Koa").id, rating: 1 });
   await StudentSkill.create({ StudentId: OscarBonham.id, SkillId: getSkill("IBM\ Watson").id, rating: 3 });

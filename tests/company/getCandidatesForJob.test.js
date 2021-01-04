@@ -13,11 +13,11 @@ const o = {};
 
 // first thing, Fill the database with all the necessary stuff
 beforeAll(async () => {
-  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@lol.c" });
-  o.studentNotApplied = await Student.create({ firstName: 'PippoNotApplied', lastName: 'PlutoNotApplied', email: "studentNotApplied@lol.c" });
-  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@lol.c" });
+  o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@lol.ccc" });
+  o.studentNotApplied = await Student.create({ firstName: 'PippoNotApplied', lastName: 'PlutoNotApplied', email: "studentNotApplied@lol.ccc" });
+  o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@lol.ccc" });
   o.company = await Company.create({email: "company@getCandidatesForJob.com"});
-  o.companyThatDidntCreateJob = await Company.create({email: "companynotauth@company.com"});
+  o.companyThatDidntCreateJob = await Company.create({email: "companynotauth@company.ccc"});
   o.job = await Job.create({CompanyId: o.company.id});
   o.application = await Application.create({StudentId: o.student.id, JobId: o.job.id});
   o.applicationAPI = await Application.create({StudentId: o.studentAPI.id, JobId: o.job.id});

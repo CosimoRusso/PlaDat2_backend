@@ -264,52 +264,24 @@ async function getMaxRating(skillId){
 }
 
 exports.update = async ctx => {
-  const { firstName, lastName, email, password, dateOfBirth, picture, CityId } = ctx.request.body;
+  const { id, email, password, ...rest } = ctx.request.body;
   const student = ctx.user;
-  let changed = false;
 
   if(email){
     const alreadyExists = await Student.findOne({where: { email: email }});
     if(!alreadyExists){
-      changed = true;
       await student.update({email: email})
     } else throw { status: 400, message: "This email is already taken." };
   }
-
-  if(firstName){
-    changed = true;
-    await student.update({firstName: firstName});
-  }
-  if(lastName){
-    changed = true;
-    await student.update({lastName: lastName});
-  }
   if(password){
-    changed = true;
     const hashedPassword = await hash(password);
     await student.update({password: hashedPassword});
   }
-  if(dateOfBirth){
-    changed = true;
-    await student.update({dateOfBirth: dateOfBirth});
-  }
-  if(picture){
-    changed = true;
-    await student.update({picture: picture});
-  }
 
-  if(CityId){
-    changed = true;
-    await student.update({CityId: CityId});
-  }
+  await student.update(rest);
 
-  if(changed){
-    ctx.status = 200;
-    ctx.body = { message: 'Information updated' };
-  }else{
-    ctx.status = 401;
-    ctx.body = { message: 'No changes made' };
-  }
+  ctx.status = 200;
+  ctx.body = { message: 'Information updated' };
 }
 
 exports.addCapability= async ctx => {
@@ -319,7 +291,6 @@ exports.addCapability= async ctx => {
   const rating = parseInt(ctx.request.body.rating);
   if (!id) throw {status: 400, message: 'Invalid skill id'};
   if (!rating) throw {status: 400, message: 'Invalid skill rating'};
-  if (rating < 1 || rating > 5) throw {status: 400, message: 'Rating must be between 1 and 5'};
   const alreadyExists = await StudentSkill.findOne({where: {StudentId:studentId, SkillId: id}});
   if(!alreadyExists){
     await StudentSkill.create({ StudentId:studentId, SkillId: id, rating: rating });
@@ -353,9 +324,13 @@ exports.editCapability = async ctx => {
   const skillRating = parseInt(ctx.request.body.rating);
   if (!skillId) throw {status: 400, message: 'Wrong skill id'};
   if (!skillRating) throw {status: 400, message: 'Wrong skill rating'};
-  if (skillRating < 1 || skillRating > 5) throw {status: 400, message: 'Skill rating must be between 1 and 5'};
   const studentSkill = await StudentSkill.findOne({where: { StudentId: studentId, SkillId: skillId }});
   if (!studentSkill) throw {status: 400, message: "This student does not have this skill"};
+
+  const skill = await studentSkill.getSkill();
+  const levelDescription = await LevelDescription.findOne({where: {SkillCategoryId: skill.SkillCategoryId, level: skillRating}});
+  if (!levelDescription) throw {message: 'Level for this skill not in range', status: 400};
+
   await studentSkill.update({rating: skillRating});
   ctx.status = 201;
   ctx.body = {};

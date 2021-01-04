@@ -19,6 +19,9 @@ Student.init({
   password: {
     type: DataTypes.STRING
   },
+  description: {
+    type: DataTypes.STRING
+  },
   dateOfBirth: {
     type: DataTypes.DATEONLY
   },
