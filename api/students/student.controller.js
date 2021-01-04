@@ -14,7 +14,7 @@ exports.getOne = async ctx => {
   const student = await Student.findByPk(userId, {include: [
     {model: Skill, as: 'skills', include: [{model: SkillCategory}]},
       {model: City, include: [{model: Country}]}]});
-  ctx.assert(student, 404, "The requested user doesn't exist");
+  if (!student) throw {status: 404, message: "The requested user doesn't exist"};
   ctx.status = 200;
   ctx.body = student;
 };

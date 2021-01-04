@@ -1,5 +1,5 @@
 const r2 = require("r2");
-const { getApplications, getNotifications } = require("../../api/students/student.controller");
+const { getNotifications } = require("../../api/students/student.controller");
 const { Student, Application, Company, Job } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
@@ -31,8 +31,6 @@ beforeAll(async () => {
   o.applicationAccepted = await Application.create({StudentId: o.student.id, JobId: o.jobWithAppAccepted.id, declined: false, alreadyNotified: false});
   o.applicationAccepted1 = await Application.create({StudentId: o.student.id, JobId: o.jobWithAppAccepted1.id, declined: false, alreadyNotified: false});
   o.applicationAlreadyShown = await Application.create({StudentId: o.student.id, JobId: o.jobAlreadyShown.id, declined: false, alreadyNotified: true});
-  
-  
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
