@@ -22,7 +22,7 @@ exports.getOne = async ctx => {
 exports.getOneByEmail = async ctx => {
   const { email } = ctx.params;
   const student = await Student.findOne({where: { email }});
-  ctx.assert(student, 404, "The requested user doesn't exist");
+  if (!student) throw {status: 404, message: "The requested user doesn't exist"};
   ctx.status = 200;
   ctx.body = student;
 };

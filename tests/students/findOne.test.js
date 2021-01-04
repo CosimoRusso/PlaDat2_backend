@@ -1,4 +1,4 @@
-const { getOne } = require("../../api/students/student.controller");
+const { getOne, getAll } = require("../../api/students/student.controller");
 const { Student } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const cleanDatabase = require('../../utils/cleanDatabase.util');
@@ -10,10 +10,19 @@ const sequelize = new Sequelize().getInstance();
 const o = {};
 
 beforeAll(async () => {
-  o.student = await Student.create({email: 'student@testCreate.com'});
+  o.student = await Student.create({email: 'student@testFindStud.com'});
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
+
+test("find all student", async function (){
+  const { student } = o;
+  const ctx = {};
+  await getAll(ctx, noop);
+  expect(ctx.status).toBe(200);
+  expect(ctx.body.length).toBeGreaterThan(0);
+  expect(ctx.body.find(s => s.id===student.id)).toBeDefined();
+});
 
 test("The student can be found", async function (){
   const { student } = o;
@@ -24,7 +33,6 @@ test("The student can be found", async function (){
 });
 
 test("An invalid id does not find any student", async function (){
-  const { student } = o;
   const ctx = {params: {userId: 10000}};
   try{
     await getOne(ctx, noop);
