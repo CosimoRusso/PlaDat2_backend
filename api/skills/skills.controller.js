@@ -51,10 +51,10 @@ exports.search = async ctx => {
       where: {
         [Op.or]: [
           { '$Skill.name$': {
-              [Op.like]: name + '%'
+              [Op.iLike]: name + '%'
             }},
           { '$SkillCategory.name$': {
-              [Op.like]: name + '%'
+              [Op.iLike]: name + '%'
             }
           }]
       }
