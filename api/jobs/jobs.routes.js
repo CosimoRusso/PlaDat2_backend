@@ -18,6 +18,7 @@ module.exports = Router => {
     .post('/update/:jobId/removeReq/:skillId', controller.removeRequiredSkill)
     .post('/update/:jobId/addReq/:skillId', controller.addRequiredSkill)
     .post('/update/:jobId/removeOpt/:skillId', controller.removeOptionalSkill)
-    .post('/update/:jobId/addOpt/:skillId', controller.addOptionalSkill);
+    .post('/update/:jobId/addOpt/:skillId', controller.addOptionalSkill)
+    .post('/delete/:jobId', controller.deleteJob);
   return router;
 };

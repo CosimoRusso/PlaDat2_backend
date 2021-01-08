@@ -25,8 +25,6 @@ afterAll(cleanDatabase.bind(null, o, sequelize));
 
 // unit tests - here you can include directly the middleware so you skip authorization!
 test("The user must enter correct email in order to login", async function (){
-    
-  
   const ctx = {request:{body: { email: "non@gmail.com", password: "plut" }}};
   try{
     await login(ctx,noop);
