@@ -17,8 +17,8 @@ tags:
     description: "Operations about jobs"
   - name: "skill"
     description: "Operations about skills"
-  - name: "general"
-    description: "General operations that are about both students and companies"
+  - name: "city"
+    description: "Operations that involve the cities"
 paths:
   /student/register:
     post:
@@ -1059,6 +1059,45 @@ paths:
                 example:
                   msg: "Internal Server error."
 
+  /company/:
+    get:
+      tags:
+        - 'company'
+      summary: 'Gets basic info of all the companies in the db'
+      description: 'Returns all the basic informations of all the companies , that is, the infos that are stored inside the companies table without any join query'
+      operationId: 'findAllCompanies'
+      responses:
+        200:
+          description: "Shows an array with the companies' basic information"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CompanyWithCredentials"
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Companies not Found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+
   /company/register:
     post:
       tags:
@@ -1145,90 +1184,7 @@ paths:
                 example:
                   msg: "Internal Server error."
 
-  /company/logout:
-    post:
-      tags:
-        - "company"
-      summary: "Logout company"
-      description: "Lets the company log out of the service"
-      operationId: "logoutCompany"
-      responses:
-        201:
-          description: "Company logged out successfully"
-        401:
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "You must be logged in to do this"
-        500:
-          description: "Internal server error"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Internal Server error."
-      security:
-        - bearerAuth: []
-      x-security-scopes:
-        - "company"
-
   /company/profile:
-    get:
-      tags:
-        - "company"
-      summary: "Company profile"
-      description: "Returns the complete profile of the company indicated by the id"
-      operationId: "getCompanyProfile"
-      responses:
-        200:
-          description: "Shows the company's profile"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Company"
-        400:
-          description: "Bad Request"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Company id not valid"
-        404:
-          description: "Not Found"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Company profile not Found"
-        500:
-          description: "Internal server error"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Internal Server error."
     post:
       tags:
         - "company"
@@ -1248,115 +1204,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Company"
-        400:
-          description: "Bad Request"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Company id not valid"
-        404:
-          description: "Not Found"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Company not Found"
-        500:
-          description: "Internal server error"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Internal Server error."
-      security:
-        - bearerAuth: []
-      x-security-scopes:
-        - "company"
-  /company/jobOffers:
-    get:
-      tags:
-        - "company"
-      summary: "Job offered by the company"
-      description: "Returns the job offers of the company specified by the companyId"
-      operationId: "getJobsOffered"
-      responses:
-        200:
-          description: "List of jobs"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/JobWithPopulatedCapabilities"
-        400:
-          description: "Bad Request"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Company id not valid"
-        404:
-          description: "Not Found"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Company not Found"
-        500:
-          description: "Internal server error"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Internal Server error."
-    put:
-      tags:
-        - "company"
-      summary: "Add a Job"
-      description: "Adds a job offer on the profile of the company"
-      operationId: "addJob"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: "object"
-              properties:
-                job:
-                  $ref: "#/components/schemas/Job"
-      responses:
-        200:
-          description: "Job offer added"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Job'
-
         400:
           description: "Bad Request"
           content:
@@ -1721,7 +1568,7 @@ paths:
   /cities/{cityId}:
     get:
       tags:
-        - "general"
+        - "city"
       summary: "Returns the details about a city"
       description: "Returns the details about a city (such as name, state, longitude, latitude) given the city id "
       operationId: "getCity"
@@ -1761,6 +1608,46 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
+
+  /cities:
+    get:
+      tags:
+        - "city"
+      summary: "Returns all the cities in the database"
+      description: "Returns all the cities in the database with their fields(such as name, state, longitude, latitude)"
+      operationId: "getAllCities"
+      responses:
+        200:
+          description: "List of the cities in the database"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                $ref: "#/components/schemas/City"
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "This command is not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+
   /skills:
     get:
       tags:
