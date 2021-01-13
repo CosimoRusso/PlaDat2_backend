@@ -1241,32 +1241,27 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "company"
-  /company/jobOffers/{jobId}:
-    delete:
+
+  /company/imageUpload: 
+    post:
       tags:
         - "company"
-      summary: "Removes a job"
-      description: "Removes a job from the ones available at that company"
-      operationId: "removeJob"
-      parameters:
-        - name: "jobId"
-          in: "path"
-          description: "id of the job to delete"
-          required: true
-          schema:
-            type: "integer"
+      summary: "Upload an image for the company's profile"
+      description: "Upload an image for the company's profile, note that the API basically reroutes to the AWS service, so the syntax of the request is similar"
+      operationId: "imageUpload"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: "object"
-              properties:
-                id:
-                  type: "integer"
+              $ref: "#/components/schemas/Image"
       responses:
-        201:
-          description: "Job removed"
+        200:
+          description: "Loads the image on the application"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
         400:
           description: "Bad Request"
           content:
@@ -1277,18 +1272,8 @@ paths:
                   msg:
                     type: "string"
                 example:
-                  msg: "Company or job id is not valid"
-        404:
-          description: "Not Found"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Company or job not Found"
+                  msg: "No image in the upload"
+
         500:
           description: "Internal server error"
           content:
@@ -1304,6 +1289,7 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "company"
+
   /company/candidateStudents/{jobId}:
     get:
       tags:
@@ -1364,6 +1350,67 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "company"
+  /company/getAcceptedStudents/{jobId}:
+    get:
+      tags:
+        - "company"
+      summary: "List of students accepted for a job"
+      description: "Returnes the list of students that are accepted for the specific job, in case the Id is not corresponding to the company that's asking the list a 400 code is returned "
+      operationId: "scrollThroughAcceptedCandidates"
+      parameters:
+        - name: "jobId"
+          in: "path"
+          description: "id of the job who's accepted students we want to get"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "List of students"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/StudentWithPopulatedCapabilities"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company or Job id not valid"
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Company not Found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
+
   /company/jobs/{jobId}/discard/{studentId}:
     post:
       tags:
@@ -2138,8 +2185,13 @@ components:
           password: "s3cr3t"
 
     Image:
-      type: "string"
-      format: "url"
+      type: "object"
+      format: "form-encoded"
+      properties:
+        image: 
+          type: "string"
+      example:
+        image: "<form-encoded>"
     City:
       type: object
       properties:
