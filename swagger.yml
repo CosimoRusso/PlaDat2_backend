@@ -21,6 +21,9 @@ tags:
     description: "Operations that involve the cities"
   - name: "country"
     description: "operations that involve countries"
+  - name: "ping"
+    description: "Ping operations"
+
 paths:
   /student/register:
     post:
@@ -109,43 +112,8 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
-  /student/logout:
-    post:
-      tags:
-        - "student"
-      summary: "Logout student"
-      description: "Lets the student log out of the service"
-      operationId: "logoutStudent"
-      responses:
-        201:
-          description: "Student logged out sucessfully"
-        401:
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "You must be logged in to do this"
-        500:
-          description: "Internal server error"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  msg:
-                    type: "string"
-                example:
-                  msg: "Internal Server error."
-      security:
-        - bearerAuth: []
-      x-security-scopes:
-        - "student"
-  /student/{studentId}/profile:
+
+  /student/findOne/{studentId}:
     get:
       tags:
         - "student"
@@ -199,28 +167,28 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
-    post:
+  
+  /student/findByEmail/{email}:
+    get:
       tags:
         - "student"
-      summary: "Edit Student profile"
-      description: "Request that edits the student's profile"
-      operationId: "postStudentProfile"
+      summary: "Returns the student of the mail"
+      description: "Given the mail returns the full student profile corresponding to the mail"
+      operationId: "getStudentProfileByMail"
       parameters:
-        - name: "studentId"
+        - name: "email"
           in: "path"
-          description: "id of the student"
+          description: "mail of the student"
           required: true
           schema:
-            type: "integer"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/StudentWithCredentials"
+            type: "string"
       responses:
-        201:
-          description: "Profile update successful"
+        200:
+          description: "Shows student profile"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentWithPopulatedCapabilities"
         400:
           description: "Bad Request"
           content:
@@ -231,7 +199,7 @@ paths:
                   msg:
                     type: "string"
                 example:
-                  msg: "Student id not valid"
+                  msg: "Student mail not valid"
         404:
           description: "Not Found"
           content:
@@ -254,10 +222,91 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
+  /student/profile:
+    post:
+      tags:
+        - "student"
+      summary: "Updates the profile of the student"
+      description: "Updates the profile of the student who made the call"
+      operationId: "studentProfileUpdate"
+      requestBody:
+        description: "Student profile that needs to be updated"
+        content: 
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentWithPopulatedCapabilities"
+      responses:
+        200:
+          description: "profile updated "
+
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "The request is not formulated well"
+
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
       security:
         - bearerAuth: []
       x-security-scopes:
-        - "student"  
+        - "student"
+        
+  /student:
+    get:
+      tags:
+        - "student"
+      summary: "Returnes all the students"
+      description: "Returns all the students"
+      operationId: "getAllStudents"
+      responses:
+        200:
+          description: "List of students"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/StudentWithPopulatedCapabilities"
+
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Students not Found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+
   /student/{studentId}/capabilities:
     get:
       tags:
@@ -1532,6 +1581,16 @@ paths:
         - bearerAuth: []
       x-security-scopes:
         - "company"
+  /ping:
+    get:
+      tags:
+        - "ping"
+      summary: "Basic ping"
+      description: "If the site receives this ping, it returns a 200 ok status"
+      responses:
+        200:
+          description: "List of jobs that match the search"
+
   /jobs:
     get:
       tags:
@@ -1762,7 +1821,7 @@ paths:
             type: integer
       responses:
         200:
-          description: "Successfully removed the skill"
+          description: "Successfully added the skill"
         400:
           description: "Bad Request"
           content:
@@ -1796,7 +1855,7 @@ paths:
         - "job"
       summary: "Adds optional skill from job"
       description: "Adds the required skill from the job (both are given as ids)"
-      operationId: "AddReqSkill"
+      operationId: "AddOptSkill"
       parameters:
         - name: jobId
           in: path
@@ -1812,7 +1871,51 @@ paths:
             type: integer
       responses:
         200:
-          description: "Successfully removed the skill"
+          description: "Successfully added the skill"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Command not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
+
+  /jobs/delete/{jobId}:
+    post:
+      tags:
+        - "job"
+      summary: "Deletes job"
+      description: "Deletes the job whos jobId was in the request"
+      operationId: "DeleteJob"
+      parameters:
+        - name: jobId
+          in: path
+          description: "job id"
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Job successfully removed"
         400:
           description: "Bad Request"
           content:
@@ -2137,6 +2240,45 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
+  /skills/getAllCategories:
+    get:
+      tags:
+        - "skill"
+      summary: "Return all the categories"
+      description: "Return all the possible categories"
+
+      responses:
+        200:
+          description: "Skill with that id"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Command not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+
   /skills/findByCategory/{categoryId}:
     get:
       tags:
