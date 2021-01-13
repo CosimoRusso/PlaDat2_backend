@@ -19,6 +19,8 @@ tags:
     description: "Operations about skills"
   - name: "city"
     description: "Operations that involve the cities"
+  - name: "country"
+    description: "operations that involve countries"
 paths:
   /student/register:
     post:
@@ -59,7 +61,6 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
- 
   /student/login:
     post:
       tags:
@@ -1568,6 +1569,277 @@ paths:
                     type: "string"
                 example:
                   msg: "Internal Server error."
+    post:
+      tags:
+        - "job"
+      summary: "Create an empty job"
+      description: "Create an empty job for the company"
+      operationId: "createEmptyJob"
+      responses:
+        201:
+          description: "Successfully created the job"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Command not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
+
+  /jobs/update:
+    post:
+      tags:
+        - "job"
+      summary: "Update the job"
+      description: "Update the job with all the information"
+      operationId: "updateJob"
+      responses:
+        200:
+          description: "Successfully updated the job"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Command not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
+
+  /jobs/update/{jobId}/removeReq/{skillId}:
+    post:
+      tags:
+        - "job"
+      summary: "Remove required skill from job"
+      description: "Removes the required skill from the job (both are given as ids)"
+      operationId: "RemoveReqSkill"
+      parameters:
+        - name: jobId
+          in: path
+          description: "job id"
+          required: true
+          schema:
+            type: integer
+        - name: skillId
+          in: path
+          description: "skill id"
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Successfully removed the skill"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Command not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
+  /jobs/update/{jobId}/removeOpt/{skillId}:
+    post:
+      tags:
+        - "job"
+      summary: "Remove optional  skill from job"
+      description: "Removes the optional skill from the job (both are given as ids)"
+      operationId: "RemoveOptSkill"
+      parameters:
+        - name: jobId
+          in: path
+          description: "job id"
+          required: true
+          schema:
+            type: integer
+        - name: skillId
+          in: path
+          description: "skill id"
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Successfully removed the skill"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Command not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
+  /jobs/update/{jobId}/addReq/{skillId}:
+    post:
+      tags:
+        - "job"
+      summary: "Adds required skill from job"
+      description: "Adds the required skill from the job (both are given as ids)"
+      operationId: "AddReqSkill"
+      parameters:
+        - name: jobId
+          in: path
+          description: "job id"
+          required: true
+          schema:
+            type: integer
+        - name: skillId
+          in: path
+          description: "skill id"
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Successfully removed the skill"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Command not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
+
+  /jobs/update/{jobId}/addOpt/{skillId}:
+    post:
+      tags:
+        - "job"
+      summary: "Adds optional skill from job"
+      description: "Adds the required skill from the job (both are given as ids)"
+      operationId: "AddReqSkill"
+      parameters:
+        - name: jobId
+          in: path
+          description: "job id"
+          required: true
+          schema:
+            type: integer
+        - name: skillId
+          in: path
+          description: "skill id"
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Successfully removed the skill"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Command not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+      security:
+        - bearerAuth: []
+      x-security-scopes:
+        - "company"
+
   /jobs/findOne/{jobId}:
     get:
       tags:
@@ -1672,6 +1944,88 @@ paths:
                 type: array
                 items:
                 $ref: "#/components/schemas/City"
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "This command is not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+  /countries/findOne/{cityId}:
+    get:
+      tags:
+        - "country"
+      summary: "Returns the details about a country"
+      description: "Returns the details about a country (name and code) given the city id "
+      operationId: "getCountry"
+      parameters:
+        - name: "countryId"
+          in: "path"
+          description: "id of the country"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Details of the country"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Country"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Country id not valid"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  msg:
+                    type: "string"
+                example:
+                  msg: "Internal Server error."
+
+  /countries:
+    get:
+      tags:
+        - "country"
+      summary: "Returns all the countries in the database"
+      description: "Returns all the countries in the database with their fields(name and code)"
+      operationId: "getAllCountries"
+      responses:
+        200:
+          description: "List of the countries in the database"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                $ref: "#/components/schemas/Country"
         404:
           description: "Not Found"
           content:
@@ -2192,6 +2546,20 @@ components:
           type: "string"
       example:
         image: "<form-encoded>"
+    Country:
+      type: object
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        code:
+          type: "string"
+      example:
+        id: 42
+        name: "Italy"
+        code: "IT"
+
     City:
       type: object
       properties:
