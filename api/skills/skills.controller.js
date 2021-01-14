@@ -16,15 +16,6 @@ exports.getAll = async ctx => {
   ctx.status = 200;
 }
 
-//This will probably disappear, if not, write tests
-exports.createOne = async ctx => {
-  const { name } = ctx.request;
-  const exists = await Skill.findOne({where: {name}});
-  if (exists) throw {status: 400, message: 'Skill already exists'};
-  const newSkill = await Skill.create({ name });
-  if (!newSkill) throw {status: 500, message: 'Something went wrong while creating the skill'};
-  ctx.body = newSkill;
-};
 
 exports.findByCategory = async ctx => {
   let { categoryId } = ctx.params;

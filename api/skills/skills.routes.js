@@ -13,7 +13,5 @@ module.exports = Router => {
     .get('/getAllCategories', controller.getAllCategories)
     .get('/', controller.getAll)
     .get('/search/:name', controller.search)
-    .post('/', controller.createOne);
-
   return router;
 };

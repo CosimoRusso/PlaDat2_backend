@@ -16,7 +16,6 @@ module.exports = Router => {
     .post('/register', controller.register)
     .get('/findOne/:companyId', controller.getOne)
     .get('/', controller.getAll)
-    
     .use(authentication) //from now on, only authenticated requests!
     .use(companyAuthentication) //from now on, only authenticated companies
     .post('/imageUpload',singleUpload,controller.imageUpload)
