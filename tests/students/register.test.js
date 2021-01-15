@@ -1,6 +1,6 @@
 const r2 = require("r2");
 const { register } = require("../../api/students/student.controller");
-const { Student } = require('../../models').models;
+const { Student, City } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const { hash, compare } =require("../../utils/password");
 const cleanDatabase = require('../../utils/cleanDatabase.util');
@@ -16,6 +16,7 @@ const email = 'pippo@testRegister.com';
 beforeAll(async () => {
   const h=await hash("plut");
   o.studentAlreadyThere = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email, password:h });
+  o.city = await City.create({ name: 'Bratislavaaa'});
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
@@ -59,6 +60,27 @@ test('The student is able to register', async function() {
   expect(o.student).toBeDefined();
   expect(o.student.firstName).toBe('a');
   expect(o.student.lastName).toBe('b');
+});
+
+test("The student cannot register if he entered a city that does not belong to a country", async function (){
+  const { city } = o;
+  const ctx = {request:{body: { email: 'student@city.com', password:'plut', firstName: 'a', lastName: 'b', CityId: city.id }}};
+  try{
+    await register(ctx,noop);
+  }catch(e){
+    expect(e.status).toBe(400);
+    expect(e.message).toBeDefined();
+  }
+});
+
+test('The student cannot register if he is born in the future', async function() {
+  const ctx = {request:{body: { email: 'student@date.com' , password: "plut", firstName: 'a', lastName: 'b', dateOfBirth: '2022-11-11' }}};
+  try{
+    await register(ctx,noop);
+  }catch(e){
+    expect(e.status).toBe(401);
+    expect(e.message).toBeDefined();
+  }
 });
 
 //api test - here you can test the API with an actual HTTP call, a more realistic test

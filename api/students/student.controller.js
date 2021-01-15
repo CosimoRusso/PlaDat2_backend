@@ -46,6 +46,16 @@ exports.getApplications = async ctx => {
 exports.register = async ctx => {
   const { firstName, lastName, email, password, dateOfBirth, picture, CityId } = ctx.request.body;
   if (!email || !password) throw { status: 400, message: 'Email and password are required fields' };
+  if(CityId){
+    const city = await City.findOne({where:{ id: CityId}});
+    const countryExists = await Country.findOne({where:{ id: city.CountryId}});
+    if(!countryExists) throw { status: 400, message: 'This city does not belong to a country' };
+  }
+  if(dateOfBirth){
+    const insertedDate = new Date(dateOfBirth);
+    const todaysDate = new Date();
+    if(todaysDate<insertedDate) throw { status: 401, message: 'You cannot be born in the future' };
+  }
   const alreadyExists = await Student.findOne({where: {email}});
   if(alreadyExists) throw { status: 400, message: 'Email already used' };
   const hashedPassword = await hash(password);
