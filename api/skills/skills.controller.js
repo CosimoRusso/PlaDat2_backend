@@ -24,6 +24,7 @@ exports.createOne = async ctx => {
   const newSkill = await Skill.create({ name });
   if (!newSkill) throw {status: 500, message: 'Something went wrong while creating the skill'};
   ctx.body = newSkill;
+  ctx.status = 200;
 };
 
 exports.findByCategory = async ctx => {

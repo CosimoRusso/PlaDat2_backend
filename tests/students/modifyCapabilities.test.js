@@ -14,9 +14,11 @@ const o = {};
 beforeAll(async () => {
   o.student = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "student@modifyCapabilities.com" });
   o.studentAPI = await Student.create({ firstName: 'Pippo', lastName: 'Pluto', email: "studentAPI@modifyCapabilities.com" });
+  o.student2 = await Student.create({ firstName: 'Pepe', lastName: 'Pluto', email: "student2@modifyCapabilities.com" });
 
   o.skillCategory = await SkillCategory.create({name: "Modify capabilities"});
   o.skill = await Skill.create({name: "modify capabilities test skill 0", SkillCategoryId: o.skillCategory.id});
+  o.skill2 = await Skill.create({name: "modify capabilities test skill 2", SkillCategoryId: o.skillCategory.id});
   o.skillAlreadyExisting1 = await Skill.create({name: "modify capabilities test skill 1", SkillCategoryId: o.skillCategory.id});
   o.skillAlreadyExisting2 = await Skill.create({name: "modify capabilities test skill 2", SkillCategoryId: o.skillCategory.id});
   o.skillAlreadyExisting3 = await Skill.create({name: "modify capabilities test skill 3", SkillCategoryId: o.skillCategory.id});
@@ -34,6 +36,8 @@ beforeAll(async () => {
   o.studentApiSkill1 = await StudentSkill.create({StudentId: o.studentAPI.id, SkillId: o.skillAlreadyExisting1.id, rating: 3 });
   o.studentApiSkill2 = await StudentSkill.create({StudentId: o.studentAPI.id, SkillId: o.skillAlreadyExisting2.id, rating: 3 });
   o.studentApiSkill3 = await StudentSkill.create({StudentId: o.studentAPI.id, SkillId: o.skillAlreadyExisting3.id, rating: 3 });
+  o.student2Skill = await StudentSkill.create({StudentId: o.student2.id, SkillId: o.skill2.id, rating: 3 });
+
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
@@ -49,6 +53,18 @@ test("Skill already exist", async function (){
     expect(e.message).toBeDefined();
   }
 });
+
+test("Skill already exist v2", async function (){
+  const {student2, skill2} = o;
+  const ctx = {request: { body: {id: skill2.id, rating: 3,}}, user:student2};
+  try{
+    await addCapability(ctx,noop);
+  }catch(e){
+    expect(e.status).toBe(400);
+    expect(e.message).toBeDefined();
+  }
+});
+
 test("Add capability", async function (){
   const {student} = o;
   const ctx = {request: { body: {id: 4, rating: 3,}}, user:student};

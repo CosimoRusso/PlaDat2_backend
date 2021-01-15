@@ -1,6 +1,6 @@
 const r2 = require("r2");
 const { addOptionalSkill } = require("../../api/jobs/jobs.controller");
-const {  Job, Company, SkillSetOpt, Skill } = require('../../models').models;
+const {  Job, Company, SkillSetOpt, Skill, SkillSetReq } = require('../../models').models;
 const Sequelize = require('../../models/db');
 const signJWT = require("../../utils/signJWT");
 const cleanDatabase = require('../../utils/cleanDatabase.util');
@@ -19,8 +19,11 @@ beforeAll(async () => {
   o.job2 = await Job.create({name: 'Job 2', CompanyId: o.company.id});
   o.job3 = await Job.create({name: 'Job 3', CompanyId: o.company.id});
   o.job4 = await Job.create({name: 'Job 4', CompanyId: o.company2.id});
+  o.job5 = await Job.create({name: 'Job 4', CompanyId: o.company2.id});
   o.skill = await Skill.create({name: 'JavaScript'});
   o.skillSet = await SkillSetOpt.create({ JobId: o.job2.id, SkillId: o.skill.id});
+  o.skillSetReq = await SkillSetReq.create({ JobId: o.job5.id, SkillId: o.skill.id});
+
 });
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
@@ -49,6 +52,28 @@ test('Optional skill is added', async function() {
   test('Job does not belong to the company  ', async function() {
     const { job4, company, skill } = o;
     const ctx = { params:{jobId: job4.id, skillId: skill.id}, user: company};
+      try{
+          await addOptionalSkill(ctx, noop);
+      }catch(e){
+          expect(e.status).toBe(401);
+          expect(e.message).toBeDefined();
+      }
+    });
+
+    test('Skill does not exist', async function() {
+      const { job1, company } = o;
+      const ctx = { params:{jobId: job1.id, skillId: 6969}, user: company};
+      try{
+          await addOptionalSkill(ctx, noop);
+      }catch(e){
+          expect(e.status).toBe(400);
+          expect(e.message).toBeDefined();
+      }
+    });
+
+    test('Skill already exists in required skills', async function() {
+      const { job5, company2, skill } = o;
+      const ctx = { params:{jobId: job5.id, skillId: skill.id}, user: company2};
       try{
           await addOptionalSkill(ctx, noop);
       }catch(e){

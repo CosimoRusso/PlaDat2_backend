@@ -55,6 +55,40 @@ test('Jobs every information is updated', async function() {
     expect(job2.name).toBe('newName');
   });
 
+  test('Job does not belong to this company', async function() {
+    const { job5, company } = o;
+    const ctx = {request: { body: {jobId: job5.id, name: 'newName'} }, user: company};
+    try{
+      await update(ctx, noop);
+    }catch(e){
+      expect(e.status).toBe(401);
+      expect(e.message).toBeDefined();
+    }
+  });
+
+  test('Name cannot be null', async function() {
+    const { job, company } = o;
+    const ctx = {request: { body: {jobId: job.id, name: null} }, user: company};
+    try{
+      await update(ctx, noop);
+    }catch(e){
+      expect(e.status).toBe(400);
+      expect(e.message).toBeDefined();
+    }
+  });
+
+  test('Salary cannot be negative', async function() {
+    const { job, city2, company } = o;
+    newDate1 = new Date('2021-01-15');
+    const ctx = {request: { body: {jobId: job.id, name: 'newName', description: 'New description', timeLimit: newDate1, salary: -2500, partTime: true, remote: true, CityId: city2.id} }, user: company};
+    try{
+      await update(ctx, noop);
+    }catch(e){
+      expect(e.status).toBe(400);
+      expect(e.message).toBe('Salary cannot be negative');
+    }
+  });
+
 //api test
 test("Jobs every information is updated - API version", async function (){
     const { job3, company, city2 } = o;
