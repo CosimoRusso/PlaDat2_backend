@@ -17,6 +17,7 @@ beforeAll(async () => {
   o.studentNotApplied = await Student.create({ firstName: 'Lino', lastName: 'Topo', email: "topolino@notapplied.com" });
   o.studentAPI = await Student.create({ firstName: 'Rina', lastName: 'Pape', email: "paperina@checarina.it" });
   o.company = await Company.create({email: "company@home.com"});
+  o.company2 = await Company.create({email: "company2@home.com"});
   o.job = await Job.create({CompanyId: o.company.id});
   o.application = await Application.create({StudentId: o.student.id, JobId: o.job.id});
   o.applicationAPI = await Application.create({StudentId: o.studentAPI.id, JobId: o.job.id});
@@ -32,6 +33,17 @@ test("The company cannot discard a student that did not apply", async function (
     await companyDiscardStudent(ctx, noop);
   }catch(e){
     expect(e.status).toBe(400);
+    expect(e.message).toBeDefined();
+  }
+});
+
+test("The company cannot discard a student on a job that does not belong to them", async function (){
+  const { student, job, company2 } = o;
+  const ctx = {params: { studentId: student.id, jobId: job.id }, user:company2};
+  try{
+    await companyDiscardStudent(ctx, noop);
+  }catch(e){
+    expect(e.status).toBe(401);
     expect(e.message).toBeDefined();
   }
 });

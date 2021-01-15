@@ -23,6 +23,14 @@ beforeAll(async () => {
 
 afterAll(cleanDatabase.bind(null, o, sequelize));
 
+test("Send an email", async function (){
+  jest.setTimeout(30000);
+  const { student } = o;
+  const ctx = { request:{ body:{ message: "Message Test", subject: "Subject Test", companyEmail: "receiver@pladat.tk" }}, user: student };
+  await sendMail(ctx, noop);
+  expect(ctx.status).toBe(200);
+});
+
 test("Send an email - API version", async function (){
   jest.setTimeout(30000);
   const { student } = o;
