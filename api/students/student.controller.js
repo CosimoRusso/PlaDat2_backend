@@ -8,6 +8,7 @@ const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
 const nodemailer = require('nodemailer');
 const sequelize = new Sequelize().getInstance();
+const url = require('url');
 
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
@@ -157,6 +158,7 @@ exports.markApplicationAsSeen = async ctx => {
  */
 exports.searchJobs = async ctx => { 
   const ratings = await ctx.user.getStudentSkills()
+
   const today = pgDate(new Date());
 
   const alreadyExcludedJobs = await sequelize.dialect.queryGenerator.selectQuery("Matchings", {
@@ -193,24 +195,45 @@ exports.searchJobs = async ctx => {
     attributes: ['id'],
     where: {id: {[Op.notIn]: sequelize.literal('('+jobStudentIsNotQualifiedFor+')')}}
   }).slice(0, -1);// removes ';'
-
-  let jobs = await Job.findAll({
-    where:
-      {
-        timeLimit: { [Op.gt]: today },
-        id: {
-          [Op.and]: [
-            { [Op.notIn]: sequelize.literal('('+alreadyExcludedJobs+')') },
-            { [Op.notIn]: sequelize.literal('('+alreadyAppliedJobs+')') } ,
-            { [Op.in]: sequelize.literal('('+jobStudentIsQualifiedFor+')') }
-          ]  },
-      },
-    include: [
-      {model: Skill, as: "requiredSkills"},
-      {model: Skill, as: "optionalSkills"},
-    ]
-  });
-
+  let jobs = undefined;
+  if(ctx.request.query === undefined || ctx.request.query.city === undefined){
+    jobs = await Job.findAll({
+      where:
+        {
+          timeLimit: { [Op.gt]: today },
+          id: {
+            [Op.and]: [
+              { [Op.notIn]: sequelize.literal('('+alreadyExcludedJobs+')') },
+              { [Op.notIn]: sequelize.literal('('+alreadyAppliedJobs+')') } ,
+              { [Op.in]: sequelize.literal('('+jobStudentIsQualifiedFor+')') }
+            ]  },
+        },
+      include: [
+        {model: Skill, as: "requiredSkills"},
+        {model: Skill, as: "optionalSkills"},
+      ]
+    });
+  }
+  else{
+    if(isNaN(ctx.request.query.city)) throw { status: 400, message: 'The query is not well formatted, city id is needed for this API request to work' }
+    jobs = await Job.findAll({
+      where:
+        {
+          timeLimit: { [Op.gt]: today },
+          CityId: ctx.request.query.city,
+          id: {
+            [Op.and]: [
+              { [Op.notIn]: sequelize.literal('('+alreadyExcludedJobs+')') },
+              { [Op.notIn]: sequelize.literal('('+alreadyAppliedJobs+')') } ,
+              { [Op.in]: sequelize.literal('('+jobStudentIsQualifiedFor+')') }
+            ]  },
+        },
+      include: [
+        {model: Skill, as: "requiredSkills"},
+        {model: Skill, as: "optionalSkills"},
+      ]
+    });
+  }
   //calculate the fitness of the jobs first and then sort the jobs (more efficient because jobfitness is called only once and less problems with async functions)
   let comparisonArray = await Promise.all(jobs.map(async x => [await jobFitness(x, ratings), x]))
   
