@@ -401,7 +401,7 @@ paths:
       tags:
         - "student"
       summary: "List of jobs for the student"
-      description: "Fetches the job that the student will have to scroll through (and then accept/refuse)"
+      description: "Fetches the job that the student will have to scroll through (and then accept/refuse). Note that it also accepts query strings for the CityId to filter the results"
       operationId: "studentScrollJobs"
       parameters:
         - name: "remote"
