@@ -8,12 +8,11 @@ const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
 const nodemailer = require('nodemailer');
 const sequelize = new Sequelize().getInstance();
-const url = require('url');
 
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
   const student = await Student.findByPk(userId, {include: [
-    {model: Skill, as: 'skills', include: [{model: SkillCategory}]},
+    {model: Skill, as: 'skills', include: [{model: SkillCategory, include: [{model: LevelDescription}]}]},
       {model: City, include: [{model: Country}]}]});
   if (!student) throw {status: 404, message: "The requested user doesn't exist"};
   ctx.status = 200;
