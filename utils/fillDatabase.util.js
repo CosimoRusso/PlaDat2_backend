@@ -159,9 +159,9 @@ const JacobJones = await Student.create({firstName: "Jacob", lastName: "Jones", 
 
 //BUILD BUSINESSES
   const microsoft = await Company.create({name: "Microsoft", description: "A company that does computers", CityId: milan.id, email: "microsoft@pladat.tk", password: pwd});
-  const apple = await Company.create({name: "Apple", description: "A company that does computers that cost too much", CityId: vasteras.id, email: "apple@apple.com", password: pwd});
-  const google = await Company.create({name: "Google", description: "A company that likes your data quite a lot", CityId: vasteras.id, email: "google@gmail.com", password: pwd});
-  const ibm = await Company.create({name: "IBM", description: "A company that is in this field since before the field was born", CityId: milan.id, email: "ibm@ibm.com", password: pwd});
+  const apple = await Company.create({name: "Apple", description: "A company that does computers that cost too much", CityId: vasteras.id, email: "apple@pladat.tk", password: pwd});
+  const google = await Company.create({name: "Google", description: "A company that likes your data quite a lot", CityId: vasteras.id, email: "google@pladat.tk", password: pwd});
+  const ibm = await Company.create({name: "IBM", description: "A company that is in this field since before the field was born", CityId: milan.id, email: "ibm@pladat.tk", password: pwd});
   
 //BUILD JOBS
   const DeveloperJobMicrosoft = await Job.create({name: "DeveloperJobMicrosoft", description: "Developer job at Microsoft. We are searching for skilled students to help them grow in their professional field. They must have a proactive attitude and should be very motivate to work here, as even the internship workload is hard to sustain. This position offers the possibility of getting a position here at Microsoft, if the internship turns out to be successful ", CompanyId: microsoft.id, timeLimit: new Date("2022-05-01"), salary: 400, partTime: true, remote: false, CityId: milan.id});
