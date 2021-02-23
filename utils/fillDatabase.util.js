@@ -5,10 +5,7 @@ const { Op } = require("sequelize");
 let skills = require("../data/skills");
 let skillCategories = require("../data/categories");
 const { env } = require("../config");
-const cities = [
-    {name: "Milan", country: "IT", lat: "45.46427", lng: "9.18951"},
-    {name: "Västerås", country: "SE", lat: "59.61617", lng: "16.55276"},
-  ];
+const all_cities = require('all-the-cities')
 function getSkill(name){
   return skills.find(s => s.name === name);
 }
@@ -54,13 +51,13 @@ module.exports = async (models) => {
   await Promise.all(countrieslist.map(c => Country.create({name: c.name, code: c["alpha-2"]})));
 
   const countries = await Country.findAll();
-  await City.bulkCreate(cities.map(city => {
+  await City.bulkCreate(all_cities.filter(city=>city.population > 65000).map(city => { //the limit of 65000 is due to the limitations of the free version of our deployment platform 
     let countryId = countries.find(country => country.code === city.country).id;
     return {
       name: city.name,
       CountryId: countryId,
-      lat: city.lat,
-      long: city.lng,
+      lat: city.loc.coordinates[0],
+      long: city.loc.coordinates[1],
     }
   })); 
   if (env !== "production") return false; // if in local just add skills, countries and cities

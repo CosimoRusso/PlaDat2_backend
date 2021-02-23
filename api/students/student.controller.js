@@ -8,7 +8,6 @@ const Sequelize = require("../../models/db");
 const { hash, compare } = require('../../utils/password');
 const nodemailer = require('nodemailer');
 const sequelize = new Sequelize().getInstance();
-const url = require('url');
 
 exports.getOne = async ctx => {
   const { userId } = ctx.params;
