@@ -27,6 +27,7 @@
   "dependencies": {
     "@koa/cors": "2.2.3",
     "@koa/multer": "^3.0.0",
+    "all-the-cities": "^3.1.0",
     "aws-sdk": "^2.828.0",
     "bcrypt": "^5.0.0",
     "cities.json": "^1.1.5",
