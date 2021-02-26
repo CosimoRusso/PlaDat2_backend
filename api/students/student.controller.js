@@ -99,7 +99,7 @@ exports.apply = async ctx => {
   ctx.body = { message: 'Student applied' };
   ctx.status = 201;
 
-  sendEmail('info@pladat.tk', job.Company.email, "New Candidate", "Candidate to job " + job.name + ": " + student.email);
+  await sendEmail('info@pladat.tk', job.Company.email, "New Candidate", "Candidate to job " + job.name + ": " + student.email);
 };
 
 exports.discard = async ctx => {

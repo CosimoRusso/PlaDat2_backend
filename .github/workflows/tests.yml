@@ -35,6 +35,9 @@ jobs:
           DB_PASSWORD: pladat
           DB_DATABASE: pladat
           RESET_DB: true
+          EMAIL_PASSWORD: UY8oRQuH20LyYxzNIHBq
+          AWS_SECRET_ACCESS_KEY: x9iMXPb48Ze++NZC/7yKBujQwITcG/SsLPxjqYIw
+          AWS_SECRET_KEY_ID: AKIAJP6AE3FKYEU5R7YA
   deploy:
     needs: build
     runs-on: ubuntu-latest
