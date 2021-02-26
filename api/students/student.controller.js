@@ -375,7 +375,7 @@ const sendEmail = async (senderEmail, receiverEmail, subject, message) => {
       secure: true,
       auth: {
         user: 'info@pladat.tk',
-        pass: 'b87uC0RRE01MT90qXqzB'
+        pass: process.env.EMAIL_PASSWORD,
       },
       tls: {
         rejectUnauthorized: false

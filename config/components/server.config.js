@@ -10,6 +10,9 @@ const envSchema = joi
     NODE_ENV: joi.string().allow(['development', 'production', 'test']),
     PORT: joi.number(),
     API_VERSION: joi.number(),
+    EMAIL_PASSWORD: joi.string(),
+    AWS_SECRET_ACCESS_KEY: joi.string(),
+    AWS_SECRET_KEY_ID: joi.string(),
   })
   .unknown()
   .required();
@@ -32,6 +35,9 @@ const config = {
   },
   jwtSecret: envVars.JWT_SECRET || 'mySuperSecret',
   saltRounds: 7,
+  emailPassword: envVars.EMAIL_PASSWORD,
+  awsSecretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
+  awsSecreyKeyId: envVars.AWS_SECRET_KEY_ID,
 };
 
 module.exports = config;
