@@ -89,13 +89,17 @@ exports.login = async ctx => {
 exports.apply = async ctx => {
   const { jobId } = ctx.params;
   const studentId = ctx.user.id;
+  const student = await Student.findByPk(studentId);
 
-  const application = await Application.findOne({where: { JobId: jobId, StudentId: studentId }});
+  let application = await Application.findOne({where: { JobId: jobId, StudentId: studentId }});
   if(application) throw { status: 400, message: "This student already applied for this job." };
 
   await Application.create( {date: pgDate(new Date()), declined: null, StudentId: studentId, JobId: jobId});
+  const job = await Job.findByPk(jobId, {include: [{ model: Company }]});
   ctx.body = { message: 'Student applied' };
   ctx.status = 201;
+
+  sendEmail('info@pladat.tk', job.Company.email, "New Candidate", "Candidate to job " + job.name + ": " + student.email);
 };
 
 exports.discard = async ctx => {
